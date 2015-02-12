@@ -1,9 +1,8 @@
 # APILayer
 Sources for API layers we use in iOS apps, based on Alamofire (https://github.com/Alamofire/Alamofire).
 
-You might need to build Alamofire with 'carthage update'.
+To run the demo project you first have to build Alamofire with 'carthage update'.
 See https://github.com/Carthage/Carthage for more details on carthage.
-
 
 The class RequestParameterMapper allows very flexible mapping of custom entities to encodeable objects,
 which is handy if you are using URL encoding for example:
