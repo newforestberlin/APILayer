@@ -33,6 +33,8 @@ import Alamofire
 
 extension Alamofire.Request {
     
+    // MARK: Parsing method
+    
     public func responseObject<T: ResponseObjectSerializable>(completionHandler: (NSURLRequest, NSHTTPURLResponse?, T?, NSError?) -> Void) -> Self {
         let serializer: Serializer = { (request, response, data) in
             
@@ -54,7 +56,7 @@ extension Alamofire.Request {
                     return (result, nil)
                 }
                 
-                let errorMessage = "Parsing an entity was not successful. Valid flag was set to false."
+                let errorMessage = "Parsing an entity from endpoint '\(request.URL.absoluteString)' was not successful. Valid flag was set to false."
                 
                 let userInfo = [
                     NSLocalizedDescriptionKey: errorMessage,
@@ -73,5 +75,6 @@ extension Alamofire.Request {
         return response(serializer: serializer, completionHandler: { (request, response, object, error) in
             completionHandler(request, response, object as? T, error)
         })
-    }
+    }    
+    
 }

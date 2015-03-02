@@ -27,8 +27,8 @@ import Foundation
 public class DemoItem: ResponseObjectSerializable {
 
     // Properties of the entity. We make these optional so that parsing never fails
-    public let itemId: String?
-    public let title: String?
+    public let itemId: String
+    public let title: String
     public let awesomeCount: Int?
     
     // Keys for extracting from the parsed JSON
@@ -36,12 +36,11 @@ public class DemoItem: ResponseObjectSerializable {
 
     // Get property values from parsed JSON
     public required init(response: NSHTTPURLResponse, representation: AnyObject, valid: UnsafeMutablePointer<Bool>) {
-        itemId = representation.valueForKeyPath(keys.itemId) as? String
-        title = representation.valueForKeyPath(keys.title) as? String
-        awesomeCount = representation.valueForKeyPath(keys.awesomeCount) as? Int
-        
-        // Mark as invalid
-        // valid.memory = false
+        // Thanks to the extraction methods we do not need optionals. If something can't get extracted 
+        // because key is missing or type is invalid, the valid flag is set to false.
+        itemId = API.getStringFromRepresentation(representation, key: keys.itemId, valid: valid)
+        title = API.getStringFromRepresentation(representation, key: keys.title, valid: valid)
+        awesomeCount = representation.valueForKey(keys.awesomeCount) as? Int
     }
     
 }
