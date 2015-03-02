@@ -28,7 +28,7 @@ import Foundation
 import Alamofire
 
 @objc public protocol ResponseObjectSerializable {
-    init(response: NSHTTPURLResponse, representation: AnyObject)
+    init(response: NSHTTPURLResponse, representation: AnyObject, valid: UnsafeMutablePointer<Bool>)
 }
 
 extension Alamofire.Request {
@@ -44,7 +44,27 @@ extension Alamofire.Request {
             let (JSON: AnyObject?, serializationError) = JSONSerializer(request, response, data)
             
             if response != nil && JSON != nil {
-                return (T(response: response!, representation: JSON!), nil)
+                
+                // If parsing the object was not a complete success, the valid flag is set to false
+                var valid = true
+                
+                let result = T(response: response!, representation: JSON!, valid: &valid)
+                
+                if valid {
+                    return (result, nil)
+                }
+                
+                let errorMessage = "Parsing an entity was not successful. Valid flag was set to false."
+                
+                let userInfo = [
+                    NSLocalizedDescriptionKey: errorMessage,
+                    NSLocalizedFailureReasonErrorKey: errorMessage,
+                    NSLocalizedRecoverySuggestionErrorKey: errorMessage,
+                    NSLocalizedRecoveryOptionsErrorKey: "Check your code and the response"
+                ]
+                
+                return (nil, NSError(domain: "APILayer", code: 0x1, userInfo: userInfo))
+                
             } else {
                 return (nil, serializationError)
             }

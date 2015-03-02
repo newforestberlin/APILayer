@@ -33,12 +33,12 @@ public class DemoItems: ResponseObjectSerializable {
     let keys = (items: "items", misc: "tuple needs at least two elements")
     
     // Get property values from parsed JSON
-    public required init(response: NSHTTPURLResponse, representation: AnyObject) {
+    public required init(response: NSHTTPURLResponse, representation: AnyObject, valid: UnsafeMutablePointer<Bool>) {
         
         // Get all the items
         var itemList = [DemoItem]()
         for item in representation.valueForKeyPath(keys.items) as [AnyObject] {
-            let demoItem = DemoItem(response: response, representation: item)
+            let demoItem = DemoItem(response: response, representation: item, valid: valid)
             itemList.append(demoItem)
         }
         

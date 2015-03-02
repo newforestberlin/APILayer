@@ -35,10 +35,13 @@ public class DemoItem: ResponseObjectSerializable {
     let keys = (itemId: "id", title: "title", awesomeCount: "awesome_count")
 
     // Get property values from parsed JSON
-    public required init(response: NSHTTPURLResponse, representation: AnyObject) {
+    public required init(response: NSHTTPURLResponse, representation: AnyObject, valid: UnsafeMutablePointer<Bool>) {
         itemId = representation.valueForKeyPath(keys.itemId) as? String
         title = representation.valueForKeyPath(keys.title) as? String
         awesomeCount = representation.valueForKeyPath(keys.awesomeCount) as? Int
+        
+        // Mark as invalid
+        // valid.memory = false
     }
     
 }
