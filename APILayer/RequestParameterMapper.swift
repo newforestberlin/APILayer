@@ -19,7 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-// 
+//
 
 import Foundation
 
@@ -28,32 +28,32 @@ typealias RequestParameterMapperMethod = (filterMethod: (AnyObject) -> Bool, con
 
 // This class makes it easy to configure parameter construction in the router
 public class RequestParameterMapper {
-    
+
     // List of mapper methods used during parameterize()
     var methods: [RequestParameterMapperMethod]
 
     init(methods: [RequestParameterMapperMethod]) {
         self.methods = methods
     }
-    
+
     // Performs mapping from input tuples to entries in the resulting dictionary that is then used for parameter encoding.
     func parameterize(tuples: (key: String, value: AnyObject)...) -> [String: AnyObject] {
-        
+
         var result = [String: AnyObject]()
 
         // Iterate over all the mapper methods
         for method in methods {
-            // Perform filter on the input tuples. The current mapper method filters out all the items 
+            // Perform filter on the input tuples. The current mapper method filters out all the items
             // that do fit, then performs mapping on these items.
             result = tuples.filter { (x) in method.filterMethod(x.value) }.reduce(result) { (resultRunning, item) in
                 var mutableResultRunning = [String: AnyObject]()
-                mutableResultRunning += result
+                mutableResultRunning += resultRunning
                 mutableResultRunning += [item.key : method.constructMethod(item.value)]
                 return mutableResultRunning
             }
         }
-        
+
         return result
     }
-    
+
 }
