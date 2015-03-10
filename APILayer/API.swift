@@ -32,87 +32,87 @@ public protocol RouterProtocol {
 
 // This class functions as the main interface to the API layer.
 public class API {
-    
+
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
-    public class func request<T: ResponseObjectSerializable>(router: Router, complete: (T?, NSError?) -> ()) -> Request? {
-        
+    public class func request<T: ResponseObjectSerializable>(router: URLRequestConvertible, complete: (T?, NSError?) -> ()) -> Request? {
+
         var request = Alamofire.request(router)
         request.responseObject { (_, _, result: T?, error) in
             complete(result, error)
         }
-        
+
         return request
     }
-    
+
     // MARK: Value extraction methods, that return dummy values in case of failure (valid flag is set to false in this case)
     // These methods do not return optionals because we do not want optionals in our entity classes all over the place.
     // If parsing the fields does fail, the entity is just marked as invalid by setting valid to false. This makes
     // the responseObject method return nil for the entity.
-    
+
     class func getNSDateFromRepresentation(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> NSDate {
         if let value = representation.valueForKeyPath(key) as? NSDate {
             return value
         }
-        
+
         // In case of missing key, set valid flag to false to mark parsing as unsuccessful
         valid.memory = false
-        
+
         return NSDate()
     }
-    
+
     class func getIntFromRepresentation(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> Int {
         if let value = representation.valueForKeyPath(key) as? Int {
             return value
         }
-        
+
         // In case of missing key, set valid flag to false to mark parsing as unsuccessful
         valid.memory = false
-        
+
         return 0
     }
-    
+
     class func getStringFromRepresentation(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> String {
         if let value = representation.valueForKeyPath(key) as? String {
             return value
         }
-        
+
         // In case of missing key, set valid flag to false to mark parsing as unsuccessful
         valid.memory = false
-        
+
         return ""
     }
-    
+
     class func getBoolFromRepresentation(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> Bool {
         if let value = representation.valueForKeyPath(key) as? Bool {
             return value
         }
-        
+
         // In case of missing key, set valid flag to false to mark parsing as unsuccessful
         valid.memory = false
-        
+
         return false
     }
-    
+
     class func getDoubleFromRepresentation(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> Double {
         if let value = representation.valueForKeyPath(key) as? Double {
             return value
         }
-        
+
         // In case of missing key, set valid flag to false to mark parsing as unsuccessful
         valid.memory = false
-        
+
         return 0.0
     }
-    
+
     class func getFloatFromRepresentation(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> Float {
         if let value = representation.valueForKeyPath(key) as? Float {
             return value
         }
-        
+
         // In case of missing key, set valid flag to false to mark parsing as unsuccessful
         valid.memory = false
-        
+
         return 0.0
     }
-    
+
 }
