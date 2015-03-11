@@ -41,7 +41,7 @@ class ViewController: UIViewController {
         
         let tags = ["you & the gang", "mobile product consulting", "concepts", "ux & ui design", "prototypes", "architecture", "ios", "swift", "scala", "akka"]
         
-        API.request(.DemoResponse(firstName: "Ole", lastName: "Sprause", tags: tags), complete: { (items: DemoItems?, error) -> () in
+        API.request(Router.DemoResponse(firstName: "Ole", lastName: "Sprause", tags: tags), complete: { (items: DemoItems?, error) -> () in
             
             let missing = "<missing>"
             
