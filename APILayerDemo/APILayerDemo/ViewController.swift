@@ -39,9 +39,9 @@ class ViewController: UIViewController {
 
     @IBAction func doRequestAction(sender: AnyObject) {
         
-        let tags = ["you & the gang", "mobile product consulting", "concepts", "ux & ui design", "prototypes", "architecture", "ios", "swift", "scala", "akka"]
+        let tag = "you & the gang"
         
-        API.request(Router.DemoResponse(firstName: "Ole", lastName: "Sprause", tags: tags), complete: { (items: DemoItems?, error) -> () in
+        API.request(Router.DemoGETRequest(param: tag), complete: { (items: DemoItems?, error) -> () in
             
             let missing = "<missing>"
             
@@ -58,7 +58,6 @@ class ViewController: UIViewController {
                 self.textView.text = "Could not find any items! Error says \(error?.localizedDescription ?? missing)"
             }
         })
-        
     }
 
 }

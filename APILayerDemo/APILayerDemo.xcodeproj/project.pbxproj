@@ -13,14 +13,24 @@
 		7F117F271A8B518F0060A32D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7F117F261A8B518F0060A32D /* Images.xcassets */; };
 		7F117F2A1A8B518F0060A32D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7F117F281A8B518F0060A32D /* LaunchScreen.xib */; };
 		7F117F361A8B518F0060A32D /* APILayerDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F117F351A8B518F0060A32D /* APILayerDemoTests.swift */; };
-		7F4628591A8B542C0075C0FB /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F4628581A8B542C0075C0FB /* Alamofire.framework */; };
 		7F4628641A8B56620075C0FB /* AlamofireExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F46285D1A8B56620075C0FB /* AlamofireExtension.swift */; };
 		7F4628651A8B56620075C0FB /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F46285E1A8B56620075C0FB /* API.swift */; };
-		7F4628671A8B56620075C0FB /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4628601A8B56620075C0FB /* Globals.swift */; };
-		7F4628681A8B56620075C0FB /* RequestParameterMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4628611A8B56620075C0FB /* RequestParameterMapper.swift */; };
+		7F4628681A8B56620075C0FB /* ParameterMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4628611A8B56620075C0FB /* ParameterMapper.swift */; };
 		7F4628691A8B56620075C0FB /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4628621A8B56620075C0FB /* Router.swift */; };
 		7F46286A1A8B56620075C0FB /* DemoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4628631A8B56620075C0FB /* DemoItem.swift */; };
 		7F46286E1A8B5FEE0075C0FB /* DemoItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F46286D1A8B5FEE0075C0FB /* DemoItems.swift */; };
+		9DD010A31AB49CA0003AD961 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DD010A21AB49CA0003AD961 /* Alamofire.framework */; };
+		9DD010A41AB4AAF2003AD961 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F46285E1A8B56620075C0FB /* API.swift */; };
+		9DD010A51AB4AB01003AD961 /* ParameterMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4628611A8B56620075C0FB /* ParameterMapper.swift */; };
+		9DD010A61AB4AB17003AD961 /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF63E961AB4804100B527B9 /* Mapper.swift */; };
+		9DD010A71AB4AB1A003AD961 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4628621A8B56620075C0FB /* Router.swift */; };
+		9DD010A81AB4AB28003AD961 /* APIProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF63E9A1AB4827000B527B9 /* APIProtocols.swift */; };
+		9DD010A91AB4AB54003AD961 /* Alamofire.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9DD010A21AB49CA0003AD961 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9DD010AA1AB4AB76003AD961 /* AlamofireExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F46285D1A8B56620075C0FB /* AlamofireExtension.swift */; };
+		9DD010AB1AB4ABFC003AD961 /* DemoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4628631A8B56620075C0FB /* DemoItem.swift */; };
+		9DD010AC1AB4ABFC003AD961 /* DemoItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F46286D1A8B5FEE0075C0FB /* DemoItems.swift */; };
+		9DF63E971AB4804100B527B9 /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF63E961AB4804100B527B9 /* Mapper.swift */; };
+		9DF63E9B1AB4827000B527B9 /* APIProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF63E9A1AB4827000B527B9 /* APIProtocols.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +43,28 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		9DF63E981AB480A100B527B9 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9DD010A91AB4AB54003AD961 /* Alamofire.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9DF63E9C1AB484BD00B527B9 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		7F117F1A1A8B518F0060A32D /* APILayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APILayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F117F1E1A8B518F0060A32D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -44,14 +76,15 @@
 		7F117F2F1A8B518F0060A32D /* APILayerDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APILayerDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F117F341A8B518F0060A32D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7F117F351A8B518F0060A32D /* APILayerDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APILayerDemoTests.swift; sourceTree = "<group>"; };
-		7F4628581A8B542C0075C0FB /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = ../Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		7F46285D1A8B56620075C0FB /* AlamofireExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlamofireExtension.swift; path = ../../APILayer/AlamofireExtension.swift; sourceTree = "<group>"; };
 		7F46285E1A8B56620075C0FB /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = API.swift; path = ../../APILayer/API.swift; sourceTree = "<group>"; };
-		7F4628601A8B56620075C0FB /* Globals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Globals.swift; path = ../../APILayer/Globals.swift; sourceTree = "<group>"; };
-		7F4628611A8B56620075C0FB /* RequestParameterMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RequestParameterMapper.swift; path = ../../APILayer/RequestParameterMapper.swift; sourceTree = "<group>"; };
+		7F4628611A8B56620075C0FB /* ParameterMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ParameterMapper.swift; path = ../../APILayer/ParameterMapper.swift; sourceTree = "<group>"; };
 		7F4628621A8B56620075C0FB /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Router.swift; path = ../../APILayer/Router.swift; sourceTree = "<group>"; };
 		7F4628631A8B56620075C0FB /* DemoItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DemoItem.swift; path = ../../APILayer/DemoItem.swift; sourceTree = "<group>"; };
 		7F46286D1A8B5FEE0075C0FB /* DemoItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DemoItems.swift; path = ../../APILayer/DemoItems.swift; sourceTree = "<group>"; };
+		9DD010A21AB49CA0003AD961 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
+		9DF63E961AB4804100B527B9 /* Mapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mapper.swift; sourceTree = "<group>"; };
+		9DF63E9A1AB4827000B527B9 /* APIProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIProtocols.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,7 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7F4628591A8B542C0075C0FB /* Alamofire.framework in Frameworks */,
+				9DD010A31AB49CA0003AD961 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,7 +109,6 @@
 		7F117F111A8B518F0060A32D = {
 			isa = PBXGroup;
 			children = (
-				7F4628581A8B542C0075C0FB /* Alamofire.framework */,
 				7F117F1C1A8B518F0060A32D /* APILayerDemo */,
 				7F117F321A8B518F0060A32D /* APILayerDemoTests */,
 				7F117F1B1A8B518F0060A32D /* Products */,
@@ -106,6 +138,7 @@
 		7F117F1D1A8B518F0060A32D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				9DD010A21AB49CA0003AD961 /* Alamofire.framework */,
 				7F117F261A8B518F0060A32D /* Images.xcassets */,
 				7F117F1E1A8B518F0060A32D /* Info.plist */,
 			);
@@ -151,10 +184,10 @@
 		7F46286B1A8B5FCF0075C0FB /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				9DF63E9A1AB4827000B527B9 /* APIProtocols.swift */,
 				7F46285D1A8B56620075C0FB /* AlamofireExtension.swift */,
 				7F46285E1A8B56620075C0FB /* API.swift */,
-				7F4628601A8B56620075C0FB /* Globals.swift */,
-				7F4628611A8B56620075C0FB /* RequestParameterMapper.swift */,
+				7F4628611A8B56620075C0FB /* ParameterMapper.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -164,6 +197,7 @@
 			children = (
 				7F46286F1A8B62090075C0FB /* Model */,
 				7F4628621A8B56620075C0FB /* Router.swift */,
+				9DF63E961AB4804100B527B9 /* Mapper.swift */,
 			);
 			name = Specific;
 			sourceTree = "<group>";
@@ -188,6 +222,7 @@
 				7F117F171A8B518F0060A32D /* Frameworks */,
 				7F117F181A8B518F0060A32D /* Resources */,
 				7F46285A1A8B54490075C0FB /* ShellScript */,
+				9DF63E9C1AB484BD00B527B9 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -205,6 +240,7 @@
 				7F117F2B1A8B518F0060A32D /* Sources */,
 				7F117F2C1A8B518F0060A32D /* Frameworks */,
 				7F117F2D1A8B518F0060A32D /* Resources */,
+				9DF63E981AB480A100B527B9 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -298,10 +334,11 @@
 				7F4628691A8B56620075C0FB /* Router.swift in Sources */,
 				7F117F221A8B518F0060A32D /* ViewController.swift in Sources */,
 				7F4628641A8B56620075C0FB /* AlamofireExtension.swift in Sources */,
+				9DF63E9B1AB4827000B527B9 /* APIProtocols.swift in Sources */,
 				7F46286A1A8B56620075C0FB /* DemoItem.swift in Sources */,
-				7F4628671A8B56620075C0FB /* Globals.swift in Sources */,
+				9DF63E971AB4804100B527B9 /* Mapper.swift in Sources */,
 				7F4628651A8B56620075C0FB /* API.swift in Sources */,
-				7F4628681A8B56620075C0FB /* RequestParameterMapper.swift in Sources */,
+				7F4628681A8B56620075C0FB /* ParameterMapper.swift in Sources */,
 				7F46286E1A8B5FEE0075C0FB /* DemoItems.swift in Sources */,
 				7F117F201A8B518F0060A32D /* AppDelegate.swift in Sources */,
 			);
@@ -311,6 +348,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9DD010A81AB4AB28003AD961 /* APIProtocols.swift in Sources */,
+				9DD010A61AB4AB17003AD961 /* Mapper.swift in Sources */,
+				9DD010A41AB4AAF2003AD961 /* API.swift in Sources */,
+				9DD010AA1AB4AB76003AD961 /* AlamofireExtension.swift in Sources */,
+				9DD010A71AB4AB1A003AD961 /* Router.swift in Sources */,
+				9DD010AB1AB4ABFC003AD961 /* DemoItem.swift in Sources */,
+				9DD010A51AB4AB01003AD961 /* ParameterMapper.swift in Sources */,
+				9DD010AC1AB4ABFC003AD961 /* DemoItems.swift in Sources */,
 				7F117F361A8B518F0060A32D /* APILayerDemoTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -429,6 +474,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/ole/Development/youandthegang/APILayer/Carthage/Build/iOS,
+					"$(PROJECT_DIR)/APILayerDemo",
 				);
 				INFOPLIST_FILE = APILayerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -443,6 +489,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/ole/Development/youandthegang/APILayer/Carthage/Build/iOS,
+					"$(PROJECT_DIR)/APILayerDemo",
 				);
 				INFOPLIST_FILE = APILayerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -457,6 +504,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					/Users/ricki/Code/YandtG/POCs/APILayer/Carthage/Build/iOS,
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -476,6 +524,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					/Users/ricki/Code/YandtG/POCs/APILayer/Carthage/Build/iOS,
 				);
 				INFOPLIST_FILE = APILayerDemoTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

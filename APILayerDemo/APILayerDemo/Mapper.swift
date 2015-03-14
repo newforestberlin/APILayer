@@ -21,31 +21,26 @@
 // THE SOFTWARE.
 //
 
+
 import Foundation
 
-// Type for items returned by demo "API" response
-public class DemoItems: ResponseObjectSerializable {
-    
-    // Keys for extracting from the parsed JSON
-    public class var keys: (items: String, misc: String) {
-        return ("items", "tuple needs at least two elements")
-    }
-    
-    // Properties of the entity. We make these optional so that parsing never fails
-    public let items: [DemoItem]
-    
-    // Get property values from parsed JSON
-    public required init(response: NSHTTPURLResponse, representation: AnyObject, valid: UnsafeMutablePointer<Bool>) {
-        
-        // Get all the items
-        var itemList = [DemoItem]()
-        for item in representation.valueForKeyPath(DemoItems.keys.items) as [AnyObject] {
-            let demoItem = DemoItem(response: response, representation: item, valid: valid)
-            itemList.append(demoItem)
+class Mapper: ParameterMapper {
+
+    override func parametersForRouter(router: RouterProtocol) -> [String : AnyObject] {
+        if let route = router as? Router {
+            
+            switch route {
+            case .DemoGETRequest(let param):
+                return [DemoItem.keys.title : "random title sent to backend"]
+            case .DemoPOSTRequest(let param):
+                return [:]
+            case .DemoPUTRequest(let param):
+                return [:]
+            case .DemoDELETERequest(let param):
+                return [:]
+            }
         }
         
-        // Keep the list
-        items = itemList
+        return [:]
     }
-    
 }

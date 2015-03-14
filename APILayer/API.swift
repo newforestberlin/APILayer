@@ -24,95 +24,53 @@
 import Foundation
 import Alamofire
 
-// Protocol for API routers (this makes sure we use the same pattern always)
-public protocol RouterProtocol {
-    var method: Alamofire.Method { get }
-    var path: String { get }
+// Wrapper to make NSURLRequest conform to URLRequestConvertible
+class RequestWrapper: URLRequestConvertible {
+    let request: NSURLRequest
+    init(request: NSURLRequest) {
+        self.request = request
+    }
+    
+    var URLRequest: NSURLRequest { return request }
 }
+
+// Temp solutions until Class variables are supperted in Swift
+private var API_mapper = ParameterMapper()
 
 // This class functions as the main interface to the API layer.
 public class API {
 
+    // A user of the API is mean to implement a subclass of ParameterWrapper and set it to this property
+    public class var parameterMapper: ParameterMapper {
+        get {
+        return API_mapper
+        }
+        set {
+            API_mapper = newValue
+        }
+    }
+    
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
-    public class func request<T: ResponseObjectSerializable>(router: URLRequestConvertible, complete: (T?, NSError?) -> ()) -> Request? {
-
-        var request = Alamofire.request(router)
+    public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSError?) -> ()) -> Request? {
+        
+        // Get base URL
+        let URL = NSURL(string: router.baseURLString)
+        
+        // Add relative path for specific case
+        let mutableURLRequest = NSMutableURLRequest(URL: URL!.URLByAppendingPathComponent(router.path))
+        
+        // Get method for this case
+        mutableURLRequest.HTTPMethod = router.method.rawValue
+        
+        let parameters = parameterMapper.parametersForRouter(router)
+        let encoding = router.encoding
+        let requestTuple = encoding.encode(mutableURLRequest, parameters: parameters)
+        
+        var request = Alamofire.request(RequestWrapper(request: requestTuple.0))
         request.responseObject { (_, _, result: T?, error) in
             complete(result, error)
         }
-
+        
         return request
     }
-
-    // MARK: Value extraction methods, that return dummy values in case of failure (valid flag is set to false in this case)
-    // These methods do not return optionals because we do not want optionals in our entity classes all over the place.
-    // If parsing the fields does fail, the entity is just marked as invalid by setting valid to false. This makes
-    // the responseObject method return nil for the entity.
-
-    class func getNSDateFromRepresentation(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> NSDate {
-        if let value = representation.valueForKeyPath(key) as? NSDate {
-            return value
-        }
-
-        // In case of missing key, set valid flag to false to mark parsing as unsuccessful
-        valid.memory = false
-
-        return NSDate()
-    }
-
-    class func getIntFromRepresentation(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> Int {
-        if let value = representation.valueForKeyPath(key) as? Int {
-            return value
-        }
-
-        // In case of missing key, set valid flag to false to mark parsing as unsuccessful
-        valid.memory = false
-
-        return 0
-    }
-
-    class func getStringFromRepresentation(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> String {
-        if let value = representation.valueForKeyPath(key) as? String {
-            return value
-        }
-
-        // In case of missing key, set valid flag to false to mark parsing as unsuccessful
-        valid.memory = false
-
-        return ""
-    }
-
-    class func getBoolFromRepresentation(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> Bool {
-        if let value = representation.valueForKeyPath(key) as? Bool {
-            return value
-        }
-
-        // In case of missing key, set valid flag to false to mark parsing as unsuccessful
-        valid.memory = false
-
-        return false
-    }
-
-    class func getDoubleFromRepresentation(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> Double {
-        if let value = representation.valueForKeyPath(key) as? Double {
-            return value
-        }
-
-        // In case of missing key, set valid flag to false to mark parsing as unsuccessful
-        valid.memory = false
-
-        return 0.0
-    }
-
-    class func getFloatFromRepresentation(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> Float {
-        if let value = representation.valueForKeyPath(key) as? Float {
-            return value
-        }
-
-        // In case of missing key, set valid flag to false to mark parsing as unsuccessful
-        valid.memory = false
-
-        return 0.0
-    }
-
 }

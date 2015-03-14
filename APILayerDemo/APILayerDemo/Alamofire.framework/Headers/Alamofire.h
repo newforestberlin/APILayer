@@ -1,6 +1,6 @@
-// The MIT License (MIT)
+// Alamofire.h
 //
-// Copyright (c) 2015 you & the gang UG(haftungsbeschränkt)
+// Copyright (c) 2014–2015 Alamofire (http://alamofire.org)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,14 +19,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-//
 
-import Foundation
+#import <Foundation/Foundation.h>
 
-// Makes it possible to extend dictionaries by other dictionaries
-func +=<K, V> (inout left: Dictionary<K, V>, right: Dictionary<K, V>) -> Dictionary<K, V> {
-    for (k, v) in right {
-        left.updateValue(v, forKey: k)
-    }
-    return left
-}
+FOUNDATION_EXPORT double AlamofireVersionNumber;
+FOUNDATION_EXPORT const unsigned char AlamofireVersionString[];

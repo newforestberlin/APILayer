@@ -26,21 +26,25 @@ import Foundation
 // Type for items returned by demo "API" response
 public class DemoItem: ResponseObjectSerializable {
 
-    // Properties of the entity. We make these optional so that parsing never fails
+    // Keys for serializing JSON
+    class var keys: (itemId :String, title :String, awesomeCount: String) {
+        return ("id", "title", "awesome_count")
+    }
+    
+    // Properties of the entity. Optional values can be nil in the JSON, non-optional values must be present or the request will fail
     public let itemId: String
     public let title: String
     public let awesomeCount: Int?
-    
-    // Keys for extracting from the parsed JSON
-    let keys = (itemId: "id", title: "title", awesomeCount: "awesome_count")
 
     // Get property values from parsed JSON
     public required init(response: NSHTTPURLResponse, representation: AnyObject, valid: UnsafeMutablePointer<Bool>) {
         // Thanks to the extraction methods we do not need optionals. If something can't get extracted 
-        // because key is missing or type is invalid, the valid flag is set to false.
-        itemId = API.getStringFromRepresentation(representation, key: keys.itemId, valid: valid)
-        title = API.getStringFromRepresentation(representation, key: keys.title, valid: valid)
-        awesomeCount = representation.valueForKey(keys.awesomeCount) as? Int
+        // because key is missing or type is invalid, the valid flag is set to false and a default values is returned.
+        let mapper = API.parameterMapper
+        itemId = mapper.valueFromRepresentation(representation, key: DemoItem.keys.itemId, valid: valid)
+        title = mapper.valueFromRepresentation(representation, key: DemoItem.keys.title, valid: valid)
+        //Notice 'valid' flag is not passed here - this means the return value is optional
+        awesomeCount = mapper.valueFromRepresentation(representation, key: DemoItem.keys.awesomeCount)
     }
     
 }
