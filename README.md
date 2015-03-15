@@ -10,8 +10,8 @@ Most elegant way to use this is with Carthage (https://github.com/Carthage/Carth
 
 1. Add a Cartfile to your projects root folder with these two lines:
 
-    github "Alamofire/Alamofire" >= 1.1
-    github "youandthegang/APILayer" >= 1.0.1
+        github "Alamofire/Alamofire" >= 1.1
+        github "youandthegang/APILayer" >= 1.0.1
 
 2. Call 'carthage update' on the console on that folder. This fetches the newest tagged versions of the two frameworks and builds them, placing the resulting frameworks in Carthage/Build/iOS
 3. Drag the two frameworks from Carthage/Build/iOS into your Xcode project, at the targets 'Linked Frameworks and Libraries'
