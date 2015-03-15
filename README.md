@@ -1,39 +1,21 @@
 # APILayer
 Sources for API layers we use in iOS apps, based on Alamofire (https://github.com/Alamofire/Alamofire).
 
-To run the demo project you first have to build Alamofire with 'carthage update'.
-See https://github.com/Carthage/Carthage for more details on carthage.
+## Usage 
 
-The class RequestParameterMapper allows very flexible mapping of custom entities to encodeable objects,
-which is handy if you are using URL encoding for example:
+Most elegant way to use this is with Carthage (https://github.com/Carthage/Carthage): 
 
-    // Parameter mapper, initialized with the API specific parameter mappers (static because shared)
-    private static var parameterMapper = RequestParameterMapper(
-        methods: [
+1. Add a Cartfile to your projects root folder with these two lines:
+    github "Alamofire/Alamofire" >= 1.1
+    github "youandthegang/APILayer" >= 1.0.1
+2. Call 'carthage update' on the console on that folder. This fetches the newest tagged versions of the two frameworks and builds them, placing the resulting frameworks in Carthage/Build/iOS
+3. Drag the two frameworks from Carthage/Build/iOS into your Xcode project, at the targets 'Linked Frameworks and Libraries'
+4. Add a 'Copy Files' phase to your targets 'Build Phases'. Set 'Destination' to 'Frameworks'. Add both frameworks to the file list.
 
-            // Mapper method for string values
-            (
-                filterMethod: {(item: AnyObject) -> Bool in return (item as? String) != nil},
-                constructMethod: {(item: AnyObject) -> AnyObject in return item as String }
-            ),
+## Demo project
 
-            // Mapper method for arrays of strings (turns them into joined string)
-            (
-                filterMethod: {(item: AnyObject) -> Bool in return (item as? [String]) != nil},
-                constructMethod: {(item: AnyObject) -> AnyObject in return ",".join(item as [String]) }
-            )
-        ]
-    )
-
-Then during request construction in the Router we use this parameterMapper to fill the params dictionary before encoding:
+To run the demo project you first have to build Alamofire with 'carthage update'. 
 
 
-    // Add mapped parameters to params dictionary.
-    params += Router.parameterMapper.parameterize(
-        (paramKeys.firstName, firstName),
-        (paramKeys.lastName, lastName),
-        (paramKeys.tags, tags)
-    )
 
-    // The parameterMapper must guarantee that all objets put into the params dictionary are encodeable by this method.
-    return ParameterEncoding.URL.encode(mutableURLRequest, parameters: params).0
+
