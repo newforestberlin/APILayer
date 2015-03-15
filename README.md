@@ -7,13 +7,95 @@ The APILayer framework sits on top of Alamofire (https://github.com/Alamofire/Al
 The framework consists of four main components:
 
 - API: Main interface to the API layer, that is performing requests and has a configurable parameter mapper
-- RouterProtocol: This protocol is an extension of the pattern used in the README of Alamofire. It ensures usage of this awesome pattern. 
+- RouterProtocol: This protocol is an extension of the pattern used in the README of Alamofire.
 - ParameterMapper: Generates request parameter dictionaries from router cases. Also maps response values to native types and vice versa. Has a configurable date formatter. 
 - ResponseObjectSerializable: This protocol is an extension of the one used in the Alamofire examples. We added a valid inout variable to the constructor, so that the value extraction can invalidate a parsed model entity. This minimizes the usage of optionals in model entity classes. 
 
 ## Usage 
 
-Most elegant way to use this is with Carthage (https://github.com/Carthage/Carthage): 
+To implement your custom API layer you have to implement the RouterProtocol protocol, that is used by the API.request() method: 
+     
+        public protocol RouterProtocol {
+                var method: Alamofire.Method { get }
+                var path: String { get }
+                var encoding: ParameterEncoding { get }
+                var baseURLString: String { get }
+        }
+
+This allows very flexible implementation of the actual routing logic. We prefer the pattern used by the Alamofire README file, as an enum with one case for each API endpoint:
+
+        public enum Router: RouterProtocol {
+    
+                case DemoGETRequest(param: String)
+                case DemoPOSTRequest(param: String)
+    
+                public var baseURLString: String {
+                        return "http://pixelogik.de/"
+                }
+
+                public var method: Alamofire.Method {
+                        switch self {
+                        case DemoGETRequest:
+                                return .GET
+                        case DemoPOSTRequest:
+                                return .POST    
+                        }
+                }
+    
+                public var path: String {
+                        switch self {
+                        case .DemoGETRequest:
+                                return "static/apilayer-test.json"
+                        case DemoPOSTRequest:
+                                return "not/implemented"
+                        }
+                }
+    
+                public var encoding: ParameterEncoding {
+                        switch self {
+                        case .DemoGETRequest:
+                                return ParameterEncoding.URL
+                        case DemoPOSTRequest:
+                                return ParameterEncoding.JSON
+                        }
+                }
+
+        }
+
+Furthermore you have to implement the ResponseObjectSerializable protocol in your response class. This protocol specifies how response / model entities are constructed from the response data:
+
+        public class DemoItem: ResponseObjectSerializable {
+
+            class var keys: (itemId :String, title :String, awesomeCount: String) { return ("id", "title", "awesome_count") }
+    
+            // Properties of the entity. Optional values can be nil in the JSON, non-optional values must be present or the request will fail
+            let itemId: String
+            let title: String
+            let awesomeCount: Int?
+
+            // Get property values from parsed JSON
+            required init(response: NSHTTPURLResponse, representation: AnyObject, valid: UnsafeMutablePointer<Bool>) {
+                // Thanks to the extraction methods we do not need optionals. If something can't get extracted 
+                // because key is missing or type is invalid, the valid flag is set to false and a default values is returned.        
+                itemId = API.parameterMapper.valueFromRepresentation(representation, key: DemoItem.keys.itemId, valid: valid)
+                title = API.parameterMapper.valueFromRepresentation(representation, key: DemoItem.keys.title, valid: valid)
+                // Notice 'valid' flag is not passed here - this means the return value is optional
+                awesomeCount = API.parameterMapper.valueFromRepresentation(representation, key: DemoItem.keys.awesomeCount)
+            }
+    
+        }
+
+Then you can make API requests like this: 
+
+        API.request(Router.DemoGETRequest(param: tag), complete: { (item: DemoItem?, error) -> () in            
+            if let validItem = item {            
+                // We have a valid item...
+            }
+        })
+
+## Getting the framework
+
+Most elegant way to get the framework is with Carthage (https://github.com/Carthage/Carthage): 
 
 1. Add a Cartfile to your projects root folder with these two lines:
 
@@ -55,9 +137,6 @@ Sometimes you also need types from Alamofire, in which case you also have to imp
                 public var method: Alamofire.Method {
 
         ...
-
-## Demo project
-
 
 ## Demo project
 
