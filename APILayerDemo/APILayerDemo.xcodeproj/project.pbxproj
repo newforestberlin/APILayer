@@ -16,7 +16,7 @@
 		7F1F36DF1AB63A9000AB7CE2 /* APILayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F1F36DE1AB63A9000AB7CE2 /* APILayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F1F36E51AB63A9000AB7CE2 /* APILayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F1F36DA1AB63A9000AB7CE2 /* APILayer.framework */; };
 		7F1F36EC1AB63A9000AB7CE2 /* APILayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1F36EB1AB63A9000AB7CE2 /* APILayerTests.swift */; };
-		7F1F36F31AB63ACF00AB7CE2 /* APIProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF63E9A1AB4827000B527B9 /* APIProtocols.swift */; };
+		7F1F36F31AB63ACF00AB7CE2 /* RouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF63E9A1AB4827000B527B9 /* RouterProtocol.swift */; };
 		7F1F36F41AB63AD000AB7CE2 /* AlamofireExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F46285D1A8B56620075C0FB /* AlamofireExtension.swift */; };
 		7F1F36F51AB63AD200AB7CE2 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F46285E1A8B56620075C0FB /* API.swift */; };
 		7F1F36F61AB63AD300AB7CE2 /* ParameterMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4628611A8B56620075C0FB /* ParameterMapper.swift */; };
@@ -32,13 +32,13 @@
 		9DD010A51AB4AB01003AD961 /* ParameterMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4628611A8B56620075C0FB /* ParameterMapper.swift */; };
 		9DD010A61AB4AB17003AD961 /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF63E961AB4804100B527B9 /* Mapper.swift */; };
 		9DD010A71AB4AB1A003AD961 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4628621A8B56620075C0FB /* Router.swift */; };
-		9DD010A81AB4AB28003AD961 /* APIProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF63E9A1AB4827000B527B9 /* APIProtocols.swift */; };
+		9DD010A81AB4AB28003AD961 /* RouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF63E9A1AB4827000B527B9 /* RouterProtocol.swift */; };
 		9DD010A91AB4AB54003AD961 /* Alamofire.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9DD010A21AB49CA0003AD961 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9DD010AA1AB4AB76003AD961 /* AlamofireExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F46285D1A8B56620075C0FB /* AlamofireExtension.swift */; };
 		9DD010AB1AB4ABFC003AD961 /* DemoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4628631A8B56620075C0FB /* DemoItem.swift */; };
 		9DD010AC1AB4ABFC003AD961 /* DemoItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F46286D1A8B5FEE0075C0FB /* DemoItems.swift */; };
 		9DF63E971AB4804100B527B9 /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF63E961AB4804100B527B9 /* Mapper.swift */; };
-		9DF63E9B1AB4827000B527B9 /* APIProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF63E9A1AB4827000B527B9 /* APIProtocols.swift */; };
+		9DF63E9B1AB4827000B527B9 /* RouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF63E9A1AB4827000B527B9 /* RouterProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,7 +106,7 @@
 		7F46286D1A8B5FEE0075C0FB /* DemoItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DemoItems.swift; path = ../../APILayer/DemoItems.swift; sourceTree = "<group>"; };
 		9DD010A21AB49CA0003AD961 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
 		9DF63E961AB4804100B527B9 /* Mapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mapper.swift; sourceTree = "<group>"; };
-		9DF63E9A1AB4827000B527B9 /* APIProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIProtocols.swift; sourceTree = "<group>"; };
+		9DF63E9A1AB4827000B527B9 /* RouterProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -261,7 +261,7 @@
 		7F46286B1A8B5FCF0075C0FB /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				9DF63E9A1AB4827000B527B9 /* APIProtocols.swift */,
+				9DF63E9A1AB4827000B527B9 /* RouterProtocol.swift */,
 				7F46285D1A8B56620075C0FB /* AlamofireExtension.swift */,
 				7F46285E1A8B56620075C0FB /* API.swift */,
 				7F4628611A8B56620075C0FB /* ParameterMapper.swift */,
@@ -480,7 +480,7 @@
 				7F4628691A8B56620075C0FB /* Router.swift in Sources */,
 				7F117F221A8B518F0060A32D /* ViewController.swift in Sources */,
 				7F4628641A8B56620075C0FB /* AlamofireExtension.swift in Sources */,
-				9DF63E9B1AB4827000B527B9 /* APIProtocols.swift in Sources */,
+				9DF63E9B1AB4827000B527B9 /* RouterProtocol.swift in Sources */,
 				7F46286A1A8B56620075C0FB /* DemoItem.swift in Sources */,
 				9DF63E971AB4804100B527B9 /* Mapper.swift in Sources */,
 				7F4628651A8B56620075C0FB /* API.swift in Sources */,
@@ -494,7 +494,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9DD010A81AB4AB28003AD961 /* APIProtocols.swift in Sources */,
+				9DD010A81AB4AB28003AD961 /* RouterProtocol.swift in Sources */,
 				9DD010A61AB4AB17003AD961 /* Mapper.swift in Sources */,
 				9DD010A41AB4AAF2003AD961 /* API.swift in Sources */,
 				9DD010AA1AB4AB76003AD961 /* AlamofireExtension.swift in Sources */,
@@ -510,7 +510,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7F1F36F31AB63ACF00AB7CE2 /* APIProtocols.swift in Sources */,
+				7F1F36F31AB63ACF00AB7CE2 /* RouterProtocol.swift in Sources */,
 				7F1F36F41AB63AD000AB7CE2 /* AlamofireExtension.swift in Sources */,
 				7F1F36F51AB63AD200AB7CE2 /* API.swift in Sources */,
 				7F1F36F61AB63AD300AB7CE2 /* ParameterMapper.swift in Sources */,
@@ -828,6 +828,7 @@
 				7F1F36EE1AB63A9000AB7CE2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7F1F36F21AB63A9000AB7CE2 /* Build configuration list for PBXNativeTarget "APILayerTests" */ = {
 			isa = XCConfigurationList;
@@ -836,6 +837,7 @@
 				7F1F36F01AB63A9000AB7CE2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

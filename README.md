@@ -1,16 +1,15 @@
 # APILayer
 
-Sources for API layers we use in iOS apps, based on Alamofire (https://github.com/Alamofire/Alamofire).
+The APILayer framework sits on top of Alamofire (https://github.com/Alamofire/Alamofire) and provides a high level abstraction for API layers that are often needed in iOS applications to communicate with backends / APIs. 
 
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-## What is this
-
-The APILayer framework sits on top of Alamofire and consists of four main classes, 
+The framework consists of four main components:
 
 - API: Main interface to the API layer, that is performing requests and has a configurable parameter mapper
-- ParameterMapper: 
-
+- RouterProtocol: This protocol is an extension of the pattern used in the README of Alamofire. It ensures usage of this awesome pattern. 
+- ParameterMapper: Generates request parameter dictionaries from router cases. Also maps response values to native types and vice versa. Has a configurable date formatter. 
+- ResponseObjectSerializable: This protocol is an extension of the one used in the Alamofire examples. We added a valid inout variable to the constructor, so that the value extraction can invalidate a parsed model entity. This minimizes the usage of optionals in model entity classes. 
 
 ## Usage 
 

@@ -22,24 +22,12 @@
 //
 
 import Foundation
+import Alamofire
 
-class Mapper: ParameterMapper {
-
-    override func parametersForRouter(router: RouterProtocol) -> [String : AnyObject] {
-        if let route = router as? Router {
-            
-            switch route {
-            case .DemoGETRequest(let param):
-                return [DemoItem.keys.title : "random title sent to backend"]
-            case .DemoPOSTRequest(let param):
-                return [:]
-            case .DemoPUTRequest(let param):
-                return [:]
-            case .DemoDELETERequest(let param):
-                return [:]
-            }
-        }
-        
-        return [:]
-    }
+// Protocol for API routers (this makes sure we use the same pattern always)
+public protocol RouterProtocol {
+    var method: Alamofire.Method { get }
+    var path: String { get }
+    var encoding: ParameterEncoding { get }
+    var baseURLString: String { get }
 }

@@ -23,7 +23,7 @@
 
 import Foundation
 
-// MARK : required protocols and extension for generic to implement T() as an initializer
+// MARK : required protocols and extensions for generic to implement T() as an initializer
 public protocol Defaultable {init()}
 extension Int: Defaultable {}
 extension String: Defaultable {}
