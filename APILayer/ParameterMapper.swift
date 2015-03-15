@@ -88,8 +88,7 @@ public class ParameterMapper {
         return dateFormatter.stringFromDate(date)
     }
     
-    //
-    func parametersForRouter(router: RouterProtocol) -> [String : AnyObject] {
+    public func parametersForRouter(router: RouterProtocol) -> [String : AnyObject] {
         println("You need to implement this method in your ParameterMapper subclass")
         return [:]
     }
