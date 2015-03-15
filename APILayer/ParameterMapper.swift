@@ -37,13 +37,8 @@ public class ParameterMapper {
     
     var dateFormatter: NSDateFormatter = NSDateFormatter()
     
-    // MARK: Value extraction methods, that return dummy values in case of failure (valid flag is set to false in this case)
-    // These methods do not return optionals because we do not want optionals in our entity classes all over the place.
-    // If parsing the fields does fail, the entity is just marked as invalid by setting valid to false. This makes
-    // the responseObject method return nil for the entity.
-    
     // Function for populating a 'let' property. i.e. returns property or returns defualt property and sets 'valid' to false
-    public func valueFromRepresentation<T: Defaultable>(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> T {
+    public final func valueFromRepresentation<T: Defaultable>(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> T {
         
         if let value = representation.valueForKeyPath(key) as? T {
             return value
@@ -55,7 +50,7 @@ public class ParameterMapper {
     }
     
     // Function for populating a 'var' property. i.e. returns property or nil
-    public func valueFromRepresentation<T: Defaultable>(representation: AnyObject, key: String) -> T? {
+    public final func valueFromRepresentation<T: Defaultable>(representation: AnyObject, key: String) -> T? {
         if let value = representation.valueForKeyPath(key) as? T {
             return value
         }
@@ -63,7 +58,7 @@ public class ParameterMapper {
         return nil
     }
     
-    public func dateFromRepresentation(representation: AnyObject, key: String) -> NSDate? {
+    public final func dateFromRepresentation(representation: AnyObject, key: String) -> NSDate? {
         if let value = representation.valueForKeyPath(key) as? String {
             if let date = dateFormatter.dateFromString(value) {
                 return date
@@ -73,7 +68,7 @@ public class ParameterMapper {
         return nil
     }
     
-    public func dateFromRepresentation(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> NSDate {
+    public final func dateFromRepresentation(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> NSDate {
         if let value = representation.valueForKeyPath(key) as? String {
             if let date = dateFormatter.dateFromString(value) {
                 return date
@@ -84,7 +79,7 @@ public class ParameterMapper {
         return NSDate()
     }
     
-    public func stringFromDate(date: NSDate) -> String {
+    public final func stringFromDate(date: NSDate) -> String {
         return dateFormatter.stringFromDate(date)
     }
     
