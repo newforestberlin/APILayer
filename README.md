@@ -140,7 +140,7 @@ Sometimes you also need types from Alamofire, in which case you also have to imp
 
 ## Demo project
 
-To run the demo project you first have to build Alamofire with 'carthage update'. 
+To run the demo project you first have to build Alamofire with 'carthage update'. Then just open it and run. 
 
 
 
