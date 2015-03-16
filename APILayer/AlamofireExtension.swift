@@ -28,7 +28,7 @@ import Foundation
 import Alamofire
 
 @objc public protocol ResponseObjectSerializable {
-    init(response: NSHTTPURLResponse, representation: AnyObject, valid: UnsafeMutablePointer<Bool>)
+    init(response: NSHTTPURLResponse, representation: AnyObject, error: UnsafeMutablePointer<NSError?>)
 }
 
 extension Alamofire.Request {
@@ -38,7 +38,7 @@ extension Alamofire.Request {
     public func responseObject<T: ResponseObjectSerializable>(completionHandler: (NSURLRequest, NSHTTPURLResponse?, T?, NSError?) -> Void) -> Self {
         let serializer: Serializer = { (request, response, data) in
             
-            if response?.statusCode != 200 && response?.statusCode != 201 {
+            if response?.statusCode < 200 && response?.statusCode >= 300 {
                 return (nil, NSError(domain: "httpStatus", code: 0, userInfo: nil))
             }
             
@@ -48,24 +48,22 @@ extension Alamofire.Request {
             if response != nil && JSON != nil {
                 
                 // If parsing the object was not a complete success, the valid flag is set to false
-                var valid = true
+                var error: NSError?
                 
-                let result = T(response: response!, representation: JSON!, valid: &valid)
+                let result = T(response: response!, representation: JSON!, error: &error)
                 
-                if valid {
+                if let validError = error {
+                    // Construct a new error, based on the internal errors userInfo dictionary and add the URL of the request
+                    var newUserInfo = validError.userInfo ?? [NSObject : AnyObject]()
+                    
+                    newUserInfo[NSURLErrorKey] = request.URL.absoluteString
+                    
+                    return (nil, NSError(domain: validError.domain, code: validError.code, userInfo: newUserInfo))
+                }
+                else {
+                    // No error, return result
                     return (result, nil)
                 }
-                
-                let errorMessage = "Parsing an entity from endpoint '\(request.URL.absoluteString)' was not successful. Valid flag was set to false."
-                
-                let userInfo = [
-                    NSLocalizedDescriptionKey: errorMessage,
-                    NSLocalizedFailureReasonErrorKey: errorMessage,
-                    NSLocalizedRecoverySuggestionErrorKey: errorMessage,
-                    NSLocalizedRecoveryOptionsErrorKey: "Check your code and the response"
-                ]
-                
-                return (nil, NSError(domain: "APILayer", code: 0x1, userInfo: userInfo))
                 
             } else {
                 return (nil, serializationError)

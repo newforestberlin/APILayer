@@ -37,14 +37,15 @@ public class DemoItem: ResponseObjectSerializable {
     public let awesomeCount: Int?
 
     // Get property values from parsed JSON
-    public required init(response: NSHTTPURLResponse, representation: AnyObject, valid: UnsafeMutablePointer<Bool>) {
+    public required init(response: NSHTTPURLResponse, representation: AnyObject, error: UnsafeMutablePointer<NSError?>) {
         // Thanks to the extraction methods we do not need optionals. If something can't get extracted 
         // because key is missing or type is invalid, the valid flag is set to false and a default values is returned.
         let mapper = API.parameterMapper
-        itemId = mapper.valueFromRepresentation(representation, key: DemoItem.keys.itemId, valid: valid)
-        title = mapper.valueFromRepresentation(representation, key: DemoItem.keys.title, valid: valid)
+        itemId = mapper.valueFromRepresentation(representation, key: DemoItem.keys.itemId, error: error)
+        title = mapper.valueFromRepresentation(representation, key: DemoItem.keys.title, error: error)
         //Notice 'valid' flag is not passed here - this means the return value is optional
         awesomeCount = mapper.valueFromRepresentation(representation, key: DemoItem.keys.awesomeCount)
     }
     
 }
+

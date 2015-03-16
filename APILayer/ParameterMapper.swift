@@ -33,18 +33,19 @@ extension Double: Defaultable {}
 extension Bool: Defaultable {}
 extension Optional: Defaultable {}
 
-public class ParameterMapper {
+public class ParameterMapper {        
     
     var dateFormatter: NSDateFormatter = NSDateFormatter()
     
-    // Function for populating a 'let' property. i.e. returns property or returns defualt property and sets 'valid' to false
-    public final func valueFromRepresentation<T: Defaultable>(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> T {
+    // Function for populating a 'let' property. i.e. returns property or returns default property and sets 'error' to a value
+    public final func valueFromRepresentation<T: Defaultable>(representation: AnyObject, key: String, error: UnsafeMutablePointer<NSError?>) -> T {
         
         if let value = representation.valueForKeyPath(key) as? T {
             return value
         }
         
-        valid.memory = false
+        let errorDescription = "Could not extract value for key \(key). Key is missing."
+        error.memory = NSError(domain: "APILayer.ParameterMapper.\(__FUNCTION__)", code: 0x1, userInfo: [NSLocalizedDescriptionKey: errorDescription, NSLocalizedFailureReasonErrorKey: representation])
         
         return T()
     }
@@ -68,14 +69,22 @@ public class ParameterMapper {
         return nil
     }
     
-    public final func dateFromRepresentation(representation: AnyObject, key: String, valid: UnsafeMutablePointer<Bool>) -> NSDate {
+    public final func dateFromRepresentation(representation: AnyObject, key: String, error: UnsafeMutablePointer<NSError?>) -> NSDate {
         if let value = representation.valueForKeyPath(key) as? String {
             if let date = dateFormatter.dateFromString(value) {
                 return date
             }
-            println("Invalid 'dateString'!!")
+            
+            let errorDescription = "Could not parse date for key '\(key)'. Date formatter might not recognize format."
+            error.memory = NSError(domain: "APILayer.ParameterMapper.\(__FUNCTION__)", code: 0x1, userInfo: [NSLocalizedDescriptionKey: errorDescription, NSLocalizedFailureReasonErrorKey: representation])
+            
+            return NSDate()
+            
         }
-        valid.memory = false
+
+        let errorDescription = "Could not extract value for key '\(key)'. Key is missing."
+        error.memory = NSError(domain: "APILayer.ParameterMapper.\(__FUNCTION__)", code: 0x1, userInfo: [NSLocalizedDescriptionKey: errorDescription, NSLocalizedFailureReasonErrorKey: representation])
+        
         return NSDate()
     }
     
