@@ -100,4 +100,9 @@ public class ParameterMapper {
         println("You need to implement this method in your ParameterMapper subclass")
         return [:]
     }
+    
+    public func headersForRouter(router: RouterProtocol) -> [String : String] {
+        return [:]
+    }
+    
 }
