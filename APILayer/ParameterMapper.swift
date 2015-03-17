@@ -35,7 +35,7 @@ extension Optional: Defaultable {}
 
 public class ParameterMapper {        
     
-    var dateFormatter: NSDateFormatter = NSDateFormatter()
+    public var dateFormatter: NSDateFormatter = NSDateFormatter()
     
     // Function for populating a 'let' property. i.e. returns property or returns default property and sets 'error' to a value
     public final func valueFromRepresentation<T: Defaultable>(representation: AnyObject, key: String, error: UnsafeMutablePointer<NSError?>) -> T {
