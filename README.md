@@ -9,7 +9,7 @@ The framework consists of four main components:
 - API: Main interface to the API layer, that is performing requests and has a configurable parameter mapper
 - RouterProtocol: This protocol is an extension of the pattern used in the README of Alamofire.
 - ParameterMapper: Generates request parameter dictionaries from router cases. Also maps response values to native types and vice versa. Has a configurable date formatter. 
-- ResponseObjectSerializable: This protocol is an extension of the one used in the Alamofire examples. We added a valid inout variable to the constructor, so that the value extraction can invalidate a parsed model entity. This minimizes the usage of optionals in model entity classes. 
+- ResponseObjectSerializable: This protocol is an extension of the one used in the Alamofire examples. We added a NSError? inout variable to the constructor, so that the value extraction can invalidate a parsed model entity by specifying an error. This minimizes the usage of optionals in model entity classes. 
 
 ## Usage 
 
@@ -74,12 +74,12 @@ Furthermore you have to implement the ResponseObjectSerializable protocol in you
             let awesomeCount: Int?
 
             // Get property values from parsed JSON
-            required init(response: NSHTTPURLResponse, representation: AnyObject, valid: UnsafeMutablePointer<Bool>) {
+            required init(response: NSHTTPURLResponse, representation: AnyObject, error: UnsafeMutablePointer<NSError?>) {
                 // Thanks to the extraction methods we do not need optionals. If something can't get extracted 
-                // because key is missing or type is invalid, the valid flag is set to false and a default values is returned.        
-                itemId = API.parameterMapper.valueFromRepresentation(representation, key: DemoItem.keys.itemId, valid: valid)
-                title = API.parameterMapper.valueFromRepresentation(representation, key: DemoItem.keys.title, valid: valid)
-                // Notice 'valid' flag is not passed here - this means the return value is optional
+                // because key is missing or type is invalid, the error is set and a default value is returned.        
+                itemId = API.parameterMapper.valueFromRepresentation(representation, key: DemoItem.keys.itemId, error: error)
+                title = API.parameterMapper.valueFromRepresentation(representation, key: DemoItem.keys.title, error: error)
+                // Notice 'error' parameter is not passed here - this means the return value is optional
                 awesomeCount = API.parameterMapper.valueFromRepresentation(representation, key: DemoItem.keys.awesomeCount)
             }
     
