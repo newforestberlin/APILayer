@@ -61,6 +61,11 @@ public class API {
         
         // Get method for this case
         mutableURLRequest.HTTPMethod = router.method.rawValue
+
+        // Add optional header values
+        for (headerKey, headerValue) in parameterMapper.headersForRouter(router) {
+            mutableURLRequest.addValue(headerValue, forHTTPHeaderField: headerKey)
+        }
         
         let parameters = parameterMapper.parametersForRouter(router)
         let encoding = router.encoding
