@@ -22,6 +22,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class ViewController: UIViewController {
 
@@ -40,7 +41,7 @@ class ViewController: UIViewController {
     @IBAction func doRequestAction(sender: AnyObject) {
         
         let tag = "you & the gang"
-        
+                
         API.request(Router.DemoGETRequest(param: tag), complete: { (items: DemoItems?, error) -> () in
             
             let missing = "<missing>"
@@ -58,6 +59,11 @@ class ViewController: UIViewController {
                 self.textView.text = "Could not find any items! Error says \(error?.localizedDescription ?? missing)"
             }
         })
+
+        API.request(Router.DemoGETArrayRequest(param: tag), complete: { (items: [DemoItem]?, error) -> () in
+            println(items)
+        })
+    
     }
 
 }
