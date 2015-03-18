@@ -47,7 +47,6 @@ extension Alamofire.Request {
             
             if response != nil && JSON != nil {
                 
-                // If parsing the object was not a complete success, the valid flag is set to false
                 var error: NSError?
                 
                 let result = T(response: response!, representation: JSON!, error: &error)
@@ -75,4 +74,55 @@ extension Alamofire.Request {
         })
     }    
     
+    public func responseObjects<T: ResponseObjectSerializable>(completionHandler: (NSURLRequest, NSHTTPURLResponse?, [T]?, NSError?) -> Void) -> Self {
+        let serializer: Serializer = { (request, response, data) in
+            
+            if response?.statusCode < 200 && response?.statusCode >= 300 {
+                return (nil, NSError(domain: "httpStatus", code: 0, userInfo: nil))
+            }
+            
+            let JSONSerializer = Request.JSONResponseSerializer(options: .AllowFragments)
+            let (JSON: AnyObject?, serializationError) = JSONSerializer(request, response, data)
+            
+            if response != nil && JSON != nil {
+                
+                if let jsonArray = JSON as? [AnyObject] {
+                    var error: NSError?
+                    
+                    var result: [T] = []
+                    
+                    for item in jsonArray {
+                        let obj = T(response: response!, representation: item, error: &error)
+
+                        if let validError = error {
+                            // Construct a new error, based on the internal errors userInfo dictionary and add the URL of the request
+                            var newUserInfo = validError.userInfo ?? [NSObject : AnyObject]()
+                            
+                            newUserInfo[NSURLErrorKey] = request.URL.absoluteString
+                            
+                            return (nil, NSError(domain: validError.domain, code: validError.code, userInfo: newUserInfo))
+                        }
+                        else {
+                            result.append(obj)
+                        }
+                    }
+                    
+                    // No error, return result
+                    return (result, nil)
+                }
+                else {
+                    // Not an array
+                    return (nil, NSError(domain: "APILayer", code: 1, userInfo: [ NSLocalizedDescriptionKey : "Returned JSON object from '\(request.URL.absoluteString)' is not an array" ]))
+                }
+                
+            } else {
+                return (nil, serializationError)
+            }
+        }
+        
+        return response(serializer: serializer, completionHandler: { (request, response, object, error) in
+            completionHandler(request, response, object as? [T], error)
+        })
+    }
+
 }

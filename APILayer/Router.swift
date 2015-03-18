@@ -32,6 +32,7 @@ public enum Router: RouterProtocol {
     
     // Cases for all the different API calls
     case DemoGETRequest(param: String)
+    case DemoGETArrayRequest(param: String)
     case DemoPOSTRequest(param: String)
     case DemoPUTRequest(param: String)
     case DemoDELETERequest(param: String)
@@ -44,13 +45,13 @@ public enum Router: RouterProtocol {
     // Methods for all the different calls
     public var method: Alamofire.Method {
         switch self {
-        case DemoGETRequest:
+        case .DemoGETRequest, .DemoGETArrayRequest:
             return .GET
-        case DemoPOSTRequest:
+        case .DemoPOSTRequest:
             return .POST
-        case DemoPUTRequest:
+        case .DemoPUTRequest:
             return .PUT
-        case DemoDELETERequest:
+        case .DemoDELETERequest:
             return .DELETE
         }
     }
@@ -60,24 +61,26 @@ public enum Router: RouterProtocol {
         switch self {
         case .DemoGETRequest:
             return "static/apilayer-test.json"
-        case DemoPOSTRequest:
+        case .DemoGETArrayRequest:
+            return "static/apilayer-test-array.json"
+        case .DemoPOSTRequest:
             return "not/implemented"
-        case DemoPUTRequest:
+        case .DemoPUTRequest:
             return "not/implemented"
-        case DemoDELETERequest:
+        case .DemoDELETERequest:
             return "not/implemented"
         }
     }
     
     public var encoding: ParameterEncoding {
         switch self {
-        case .DemoGETRequest:
+        case .DemoGETRequest, .DemoGETArrayRequest:
             return ParameterEncoding.URL
-        case DemoPOSTRequest:
+        case .DemoPOSTRequest:
             return ParameterEncoding.JSON
-        case DemoPUTRequest:
+        case .DemoPUTRequest:
             return ParameterEncoding.JSON
-        case DemoDELETERequest:
+        case .DemoDELETERequest:
             return ParameterEncoding.JSON
         }
     }

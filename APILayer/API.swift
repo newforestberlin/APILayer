@@ -50,9 +50,7 @@ public class API {
         }
     }
     
-    // Performs request with the specified Router. Completion block is called in case of success / failure later on.
-    public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSError?) -> ()) -> Request? {
-        
+    internal class func internalRequest(router: RouterProtocol) -> Request {
         // Get base URL
         let URL = NSURL(string: router.baseURLString)
         
@@ -61,7 +59,7 @@ public class API {
         
         // Get method for this case
         mutableURLRequest.HTTPMethod = router.method.rawValue
-
+        
         // Add optional header values
         for (headerKey, headerValue) in parameterMapper.headersForRouter(router) {
             mutableURLRequest.addValue(headerValue, forHTTPHeaderField: headerKey)
@@ -71,11 +69,30 @@ public class API {
         let encoding = router.encoding
         let requestTuple = encoding.encode(mutableURLRequest, parameters: parameters)
         
-        var request = Alamofire.request(RequestWrapper(request: requestTuple.0))
+        return Alamofire.request(RequestWrapper(request: requestTuple.0))
+    }
+    
+    // Performs request with the specified Router. Completion block is called in case of success / failure later on.
+    public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSError?) -> ()) -> Request {
+               
+        var request = API.internalRequest(router)
+        
         request.responseObject { (_, _, result: T?, error) in
             complete(result, error)
         }
         
         return request
     }
+    
+    // Performs request with the specified Router. Completion block is called in case of success / failure later on.
+    public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: ([T]?, NSError?) -> ()) -> Request {
+        
+        var request = API.internalRequest(router)
+        request.responseObjects { (_, _, result: [T]?, error) in
+            complete(result, error)
+        }
+        
+        return request
+    }
+    
 }

@@ -30,10 +30,11 @@ class APILayerDemoTests: XCTestCase {
     func testGETEndpoint() {
         
         let getExpectation = expectationWithDescription("getExpectation")
+        let getArrayExpectation = expectationWithDescription("getArrayExpectation")
         
         API.request(Router.DemoGETRequest(param: "test"), complete: { (items: DemoItems?, error) -> () in
             
-            XCTAssertTrue(items != nil, "There was a problem with the returned value from GETEndpoint()")
+            XCTAssertTrue(items != nil, "There was a problem with the returned value from DemoGETRequest()")
             
             var report = ""
             let missing = "<missing>"
@@ -59,6 +60,14 @@ class APILayerDemoTests: XCTestCase {
             getExpectation.fulfill()
             
         })
+        
+        API.request(Router.DemoGETArrayRequest(param: "test"), complete: { (items: [DemoItem]?, error) -> () in
+            XCTAssertTrue(items != nil, "There was a problem with the returned value from DemoGETArrayRequest()")
+            XCTAssertTrue(items!.count > 0, "There was a problem with the returned value from DemoGETArrayRequest()")
+            
+            getArrayExpectation.fulfill()
+        })
+
         
         waitForExpectationsWithTimeout(40, handler: { (error: NSError!) -> Void in })
     }
