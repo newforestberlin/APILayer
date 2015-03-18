@@ -41,7 +41,7 @@ public class ParameterMapper {
     public init() {
     }
     
-    // Function for populating a 'let' property. i.e. returns property or returns default property and sets 'error' to a value
+    // Function for populating a non-optional property. i.e. returns property or returns default property and sets 'error' to a value
     public final func valueFromRepresentation<T: Defaultable>(representation: AnyObject, key: String, error: UnsafeMutablePointer<NSError?>) -> T {
         
         if let value = representation.valueForKeyPath(key) as? T {
@@ -54,7 +54,7 @@ public class ParameterMapper {
         return T()
     }
     
-    // Function for populating a 'var' property. i.e. returns property or nil
+    // Function for populating an optional property. i.e. returns property or nil
     public final func valueFromRepresentation<T: Defaultable>(representation: AnyObject, key: String) -> T? {
         if let value = representation.valueForKeyPath(key) as? T {
             return value
@@ -91,7 +91,28 @@ public class ParameterMapper {
         
         return NSDate()
     }
+
+    // Function for populating an optional array property. i.e. returns property or nil
+    public final func valueFromRepresentation<T: AnyObject>(representation: AnyObject, key: String) -> [T]? {
+        if let value = representation.valueForKeyPath(key) as? [T] {
+            return value
+        }
+        
+        return nil
+    }
     
+    // Function for populating an non-optional array property. i.e. returns property or empty array
+    public final func valueFromRepresentation<T: AnyObject>(representation: AnyObject, key: String, error: UnsafeMutablePointer<NSError?>) -> [T] {
+        if let value = representation.valueForKeyPath(key) as? [T] {
+            return value
+        }
+        
+        let errorDescription = "Could not extract value for key \(key). Key is missing."
+        error.memory = NSError(domain: "APILayer.ParameterMapper.\(__FUNCTION__)", code: 0x1, userInfo: [NSLocalizedDescriptionKey: errorDescription, NSLocalizedFailureReasonErrorKey: representation])
+        
+        return []
+    }
+
     public final func stringFromDate(date: NSDate) -> String {
         return dateFormatter.stringFromDate(date)
     }
