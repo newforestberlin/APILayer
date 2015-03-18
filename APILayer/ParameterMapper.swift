@@ -93,8 +93,8 @@ public class ParameterMapper {
     }
 
     // Function for populating an optional array property. i.e. returns property or nil
-    public final func valueFromRepresentation<T: AnyObject>(representation: AnyObject, key: String) -> [T]? {
-        if let value = representation.valueForKeyPath(key) as? [T] {
+    public final func arrayFromRepresentation(representation: AnyObject, key: String) -> [String]? {
+        if let value = representation.valueForKeyPath(key) as? [String] {
             return value
         }
         
@@ -102,8 +102,8 @@ public class ParameterMapper {
     }
     
     // Function for populating an non-optional array property. i.e. returns property or empty array
-    public final func valueFromRepresentation<T: AnyObject>(representation: AnyObject, key: String, error: UnsafeMutablePointer<NSError?>) -> [T] {
-        if let value = representation.valueForKeyPath(key) as? [T] {
+    public final func arrayFromRepresentation(representation: AnyObject, key: String, error: UnsafeMutablePointer<NSError?>) -> [String] {
+        if let value = representation.valueForKeyPath(key) as? [String] {
             return value
         }
         
