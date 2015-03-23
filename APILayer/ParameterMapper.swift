@@ -118,7 +118,7 @@ public class ParameterMapper {
     }
     
     public func parametersForRouter(router: RouterProtocol) -> [String : AnyObject] {
-        println("You need to implement this method in your ParameterMapper subclass")
+        println("You need to implement the method parametersForRouter() in your ParameterMapper subclass in order to have parameters in your requests")
         return [:]
     }
     
