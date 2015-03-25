@@ -82,17 +82,6 @@ public class API {
         }
         
         return request
-    }
-    
-    // Performs request with the specified Router. Completion block is called in case of success / failure later on.
-    public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: ([T]?, NSError?) -> ()) -> Request {
-        
-        var request = API.internalRequest(router)
-        request.responseObjects { (_, _, result: [T]?, error) in
-            complete(result, error)
-        }
-        
-        return request
-    }
+    }  
     
 }
