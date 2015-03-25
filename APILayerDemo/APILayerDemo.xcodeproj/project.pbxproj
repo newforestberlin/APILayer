@@ -10,10 +10,11 @@
 		7D3E976F1AC16B3F004B8CEE /* RouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3E976E1AC16B3F004B8CEE /* RouterProtocol.swift */; };
 		7D3E97701AC16B43004B8CEE /* RouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3E976E1AC16B3F004B8CEE /* RouterProtocol.swift */; };
 		7D3E97711AC16B43004B8CEE /* RouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3E976E1AC16B3F004B8CEE /* RouterProtocol.swift */; };
-		7D3E97731AC16C62004B8CEE /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D3E97721AC16C62004B8CEE /* Alamofire.framework */; };
-		7D3E97751AC16C83004B8CEE /* Alamofire.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7D3E97721AC16C62004B8CEE /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		7D3E97781AC16D89004B8CEE /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D3E97721AC16C62004B8CEE /* Alamofire.framework */; };
-		7D3E97791AC16D89004B8CEE /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7D3E97721AC16C62004B8CEE /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7D75496F1AC30ABD0096906C /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D75496E1AC30ABD0096906C /* Alamofire.framework */; };
+		7D7549701AC30AF70096906C /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D75496E1AC30ABD0096906C /* Alamofire.framework */; };
+		7D7549711AC30AFE0096906C /* Alamofire.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7D75496E1AC30ABD0096906C /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7D7549721AC30B1B0096906C /* Alamofire.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7D75496E1AC30ABD0096906C /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7D7549731AC30B2D0096906C /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7D75496E1AC30ABD0096906C /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7F117F201A8B518F0060A32D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F117F1F1A8B518F0060A32D /* AppDelegate.swift */; };
 		7F117F221A8B518F0060A32D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F117F211A8B518F0060A32D /* ViewController.swift */; };
 		7F117F251A8B518F0060A32D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F117F231A8B518F0060A32D /* Main.storyboard */; };
@@ -57,7 +58,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				7D3E97751AC16C83004B8CEE /* Alamofire.framework in CopyFiles */,
+				7D7549711AC30AFE0096906C /* Alamofire.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,7 +68,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				7D3E97791AC16D89004B8CEE /* Alamofire.framework in Embed Frameworks */,
+				7D7549731AC30B2D0096906C /* Alamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -78,6 +79,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				7D7549721AC30B1B0096906C /* Alamofire.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,7 +87,7 @@
 
 /* Begin PBXFileReference section */
 		7D3E976E1AC16B3F004B8CEE /* RouterProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RouterProtocol.swift; path = ../../APILayer/RouterProtocol.swift; sourceTree = "<group>"; };
-		7D3E97721AC16C62004B8CEE /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = ../Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		7D75496E1AC30ABD0096906C /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = ../Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		7F117F1A1A8B518F0060A32D /* APILayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APILayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F117F1E1A8B518F0060A32D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7F117F1F1A8B518F0060A32D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -114,7 +116,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7D3E97781AC16D89004B8CEE /* Alamofire.framework in Frameworks */,
+				7D75496F1AC30ABD0096906C /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,7 +131,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7D3E97731AC16C62004B8CEE /* Alamofire.framework in Frameworks */,
+				7D7549701AC30AF70096906C /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,7 +141,7 @@
 		7F117F111A8B518F0060A32D = {
 			isa = PBXGroup;
 			children = (
-				7D3E97721AC16C62004B8CEE /* Alamofire.framework */,
+				7D75496E1AC30ABD0096906C /* Alamofire.framework */,
 				7F117F1C1A8B518F0060A32D /* APILayerDemo */,
 				7F117F321A8B518F0060A32D /* APILayerDemoTests */,
 				7F1F36DB1AB63A9000AB7CE2 /* APILayer */,
@@ -578,6 +580,7 @@
 					/Users/ole/Development/youandthegang/APILayer/Carthage/Build/iOS,
 					"$(PROJECT_DIR)/APILayerDemo",
 					/Users/olee/Development/youandthegang/APILayer/Carthage/Build/iOS,
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = APILayerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -594,6 +597,7 @@
 					/Users/ole/Development/youandthegang/APILayer/Carthage/Build/iOS,
 					"$(PROJECT_DIR)/APILayerDemo",
 					/Users/olee/Development/youandthegang/APILayer/Carthage/Build/iOS,
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = APILayerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
