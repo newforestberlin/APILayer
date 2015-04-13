@@ -35,11 +35,11 @@ public class DemoItems: ResponseObjectSerializable {
     public let items: [DemoItem]
     
     // Get property values from parsed JSON
-    public required init(response: NSHTTPURLResponse, representation: AnyObject, error: UnsafeMutablePointer<NSError?>) {
+    @objc public required init(response: NSHTTPURLResponse, representation: AnyObject, error: UnsafeMutablePointer<NSError?>) {
         
         // Get all the items
         var itemList = [DemoItem]()
-        for item in representation.valueForKeyPath(DemoItems.keys.items) as [AnyObject] {
+        for item in representation.valueForKeyPath(DemoItems.keys.items) as! [AnyObject] {
             let demoItem = DemoItem(response: response, representation: item, error: error)
             itemList.append(demoItem)
         }
