@@ -26,11 +26,11 @@ import Alamofire
 
 // We unfortunately have to use this extra class for collection parsing because Swift has problems with
 // generic types being used as generic types (A<T> as <T> in another class / method).
-class CollectionResponse: ResponseObjectSerializable {
+public class CollectionResponse: ResponseObjectSerializable {
     
     let items: [AnyObject]
     
-    @objc required init(response: NSHTTPURLResponse, representation: AnyObject, error: UnsafeMutablePointer<NSError?>) {
+    @objc required public init(response: NSHTTPURLResponse, representation: AnyObject, error: UnsafeMutablePointer<NSError?>) {
         
         if let itemsArray = representation.valueForKeyPath(API.parameterMapper.collectionResponseItemsKey) as? [AnyObject] {
             items = itemsArray

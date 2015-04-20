@@ -129,4 +129,42 @@ public class ParameterMapper {
         return [:]
     }
     
+    // MARK: Entity array parsing
+    
+    public final func entityArray<T: ResponseObjectSerializable>(response: NSHTTPURLResponse, representation: AnyObject, key: String) -> [T]? {
+        
+        if let validObject: AnyObject = representation.valueForKey(key) {
+            var result = [T]()
+            
+            if let validArray = validObject as? [AnyObject] {
+                for candidateItem in validArray {
+                    if let validDict = candidateItem as? [String: AnyObject] {
+                        
+                        var error: NSError?
+                        let entity = T(response: response, representation: validDict, error: &error)
+                        
+                        if error == nil {
+                            // Parsing entity worked
+                            result.append(entity)
+                        }
+                    }
+                }
+            }
+            
+            return result
+        }
+        
+        return nil
+    }
+    
+    public final func entityArray<T: ResponseObjectSerializable>(response: NSHTTPURLResponse, representation: AnyObject, key: String, error: UnsafeMutablePointer<NSError?>) -> [T] {
+        let result: [T]? = entityArray(response, representation: representation, key: key)
+        
+        if result == nil {
+            error.memory = NSError(domain: "Mapper", code: 1, userInfo: [NSLocalizedDescriptionKey: "Key for entity array was missing"])
+        }
+        
+        return result ?? [T]()
+    }
+    
 }

@@ -86,7 +86,7 @@ public class API {
     
     // We unfortunately have to use this extra call for collection parsing because Swift has problems with
     // generic types being used as generic types (A<T> as <T> in another class / method).
-    class func requestCollection<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (CollectionEntity<T>?, NSError?) -> ()) {
+    public class func requestCollection<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (CollectionEntity<T>?, NSError?) -> ()) {
         
         API.request(router, complete: { (collectionResponse: CollectionResponse?, error) -> () in
             
