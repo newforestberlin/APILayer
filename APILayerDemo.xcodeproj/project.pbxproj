@@ -31,6 +31,12 @@
 		7D56AB701AC3119D00B9B90C /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D56AB6F1AC3119D00B9B90C /* Alamofire.framework */; };
 		7D56AB711AC3119D00B9B90C /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D56AB6F1AC3119D00B9B90C /* Alamofire.framework */; };
 		7D56AB721AC3119D00B9B90C /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D56AB6F1AC3119D00B9B90C /* Alamofire.framework */; };
+		7D5761B11AE52E5400BE78B8 /* CollectionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5761B01AE52E5400BE78B8 /* CollectionResponse.swift */; };
+		7D5761B21AE52E5400BE78B8 /* CollectionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5761B01AE52E5400BE78B8 /* CollectionResponse.swift */; };
+		7D5761B31AE52E5400BE78B8 /* CollectionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5761B01AE52E5400BE78B8 /* CollectionResponse.swift */; };
+		7D5761B51AE52E9600BE78B8 /* CollectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5761B41AE52E9600BE78B8 /* CollectionEntity.swift */; };
+		7D5761B61AE52E9600BE78B8 /* CollectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5761B41AE52E9600BE78B8 /* CollectionEntity.swift */; };
+		7D5761B71AE52E9600BE78B8 /* CollectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5761B41AE52E9600BE78B8 /* CollectionEntity.swift */; };
 		7F117F201A8B518F0060A32D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F117F1F1A8B518F0060A32D /* AppDelegate.swift */; };
 		7F117F221A8B518F0060A32D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F117F211A8B518F0060A32D /* ViewController.swift */; };
 		7F117F251A8B518F0060A32D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F117F231A8B518F0060A32D /* Main.storyboard */; };
@@ -92,6 +98,8 @@
 		7D56AB581AC3117F00B9B90C /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Router.swift; path = Core/Router.swift; sourceTree = SOURCE_ROOT; };
 		7D56AB591AC3117F00B9B90C /* RouterProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RouterProtocol.swift; path = Core/RouterProtocol.swift; sourceTree = SOURCE_ROOT; };
 		7D56AB6F1AC3119D00B9B90C /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		7D5761B01AE52E5400BE78B8 /* CollectionResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionResponse.swift; sourceTree = "<group>"; };
+		7D5761B41AE52E9600BE78B8 /* CollectionEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionEntity.swift; sourceTree = "<group>"; };
 		7F117F1A1A8B518F0060A32D /* APILayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APILayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F117F1E1A8B518F0060A32D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7F117F1F1A8B518F0060A32D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -240,6 +248,8 @@
 				7D56AB571AC3117F00B9B90C /* ParameterMapper.swift */,
 				7D56AB581AC3117F00B9B90C /* Router.swift */,
 				7D56AB591AC3117F00B9B90C /* RouterProtocol.swift */,
+				7D5761B01AE52E5400BE78B8 /* CollectionResponse.swift */,
+				7D5761B41AE52E9600BE78B8 /* CollectionEntity.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -423,7 +433,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D5761B11AE52E5400BE78B8 /* CollectionResponse.swift in Sources */,
 				7D56AB5A1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */,
+				7D5761B51AE52E9600BE78B8 /* CollectionEntity.swift in Sources */,
 				7F117F221A8B518F0060A32D /* ViewController.swift in Sources */,
 				7D56AB6C1AC3117F00B9B90C /* RouterProtocol.swift in Sources */,
 				9DF63E971AB4804100B527B9 /* Mapper.swift in Sources */,
@@ -442,10 +454,12 @@
 			files = (
 				7D56AB6D1AC3117F00B9B90C /* RouterProtocol.swift in Sources */,
 				7D56AB6A1AC3117F00B9B90C /* Router.swift in Sources */,
+				7D5761B61AE52E9600BE78B8 /* CollectionEntity.swift in Sources */,
 				9DD010A61AB4AB17003AD961 /* Mapper.swift in Sources */,
 				7D56AB641AC3117F00B9B90C /* DemoItems.swift in Sources */,
 				7D56AB611AC3117F00B9B90C /* DemoItem.swift in Sources */,
 				7D56AB5B1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */,
+				7D5761B21AE52E5400BE78B8 /* CollectionResponse.swift in Sources */,
 				7D56AB671AC3117F00B9B90C /* ParameterMapper.swift in Sources */,
 				7D56AB5E1AC3117F00B9B90C /* API.swift in Sources */,
 				7F117F361A8B518F0060A32D /* APILayerDemoTests.swift in Sources */,
@@ -458,10 +472,12 @@
 			files = (
 				7D56AB5F1AC3117F00B9B90C /* API.swift in Sources */,
 				7D56AB6E1AC3117F00B9B90C /* RouterProtocol.swift in Sources */,
+				7D5761B71AE52E9600BE78B8 /* CollectionEntity.swift in Sources */,
 				7D56AB651AC3117F00B9B90C /* DemoItems.swift in Sources */,
 				7D56AB5C1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */,
 				7D56AB621AC3117F00B9B90C /* DemoItem.swift in Sources */,
 				7D56AB6B1AC3117F00B9B90C /* Router.swift in Sources */,
+				7D5761B31AE52E5400BE78B8 /* CollectionResponse.swift in Sources */,
 				7D56AB681AC3117F00B9B90C /* ParameterMapper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

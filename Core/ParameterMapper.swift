@@ -37,6 +37,10 @@ public class ParameterMapper {
     
     public var dateFormatter: NSDateFormatter = NSDateFormatter()
     
+    // These keys are used in CollectionResponse to get item array and optional item count.
+    public var collectionResponseItemsKey = "items"
+    public var collectionResponseCountKey = "count"
+    
     // This makes the constructor available to the public. Otherwise subclasses can't get initialized
     public init() {
     }
