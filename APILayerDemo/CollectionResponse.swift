@@ -28,18 +28,9 @@ import Alamofire
 // generic types being used as generic types (A<T> as <T> in another class / method).
 class CollectionResponse: ResponseObjectSerializable {
     
-    let count: Int
     let items: [AnyObject]
     
     @objc required init(response: NSHTTPURLResponse, representation: AnyObject, error: UnsafeMutablePointer<NSError?>) {
-        
-        if let itemCount = representation.valueForKeyPath(API.parameterMapper.collectionResponseCountKey) as? Int {
-            count = itemCount
-        }
-        else {
-            count = 0
-            error.memory = NSError(domain: "CollectionResponse", code: 1, userInfo: [NSLocalizedDescriptionKey: "No 'count' key or invalid value in collection JSON", NSLocalizedFailureReasonErrorKey: representation])
-        }
         
         if let itemsArray = representation.valueForKeyPath(API.parameterMapper.collectionResponseItemsKey) as? [AnyObject] {
             items = itemsArray

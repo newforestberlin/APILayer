@@ -41,15 +41,34 @@ class ViewController: UIViewController {
     @IBAction func doRequestAction(sender: AnyObject) {
         
         let tag = "you & the gang"
-                
-        API.request(Router.DemoGETRequest(param: tag), complete: { (items: DemoItems?, error) -> () in
-            
+
+        // This is ONE way to do it. For collections the requestCollection is easier to use, because you do not need a wrapping entity.
+        
+//        API.request(Router.DemoGETRequest(param: tag), complete: { (items: DemoItems?, error) -> () in
+//            
+//            let missing = "<missing>"
+//            
+//            if let validItems = items {
+//                var report = ""
+//                
+//                for item in validItems.items {
+//                    report = report + "itemId=\(item.itemId ?? missing), title=\(item.title ?? missing) ac=\(item.awesomeCount ?? 0)\n"
+//                }
+//                
+//                self.textView.text = report
+//            }
+//            else {
+//                self.textView.text = "Could not find any items! Error says \(error?.localizedDescription ?? missing)"
+//            }
+//        })
+        
+        API.requestCollection(Router.DemoGETRequest(param: tag), complete: { (collection: CollectionEntity<DemoItem>?, error) -> () in
             let missing = "<missing>"
             
-            if let validItems = items {
+            if let collection = collection {
                 var report = ""
                 
-                for item in validItems.items {
+                for item in collection.items {
                     report = report + "itemId=\(item.itemId ?? missing), title=\(item.title ?? missing) ac=\(item.awesomeCount ?? 0)\n"
                 }
                 
@@ -58,6 +77,8 @@ class ViewController: UIViewController {
             else {
                 self.textView.text = "Could not find any items! Error says \(error?.localizedDescription ?? missing)"
             }
+            
+            
         })
         
     }
