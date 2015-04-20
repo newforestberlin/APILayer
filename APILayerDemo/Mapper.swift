@@ -31,8 +31,6 @@ class Mapper: ParameterMapper {
             switch route {
             case .DemoGETRequest(let param):
                 return [DemoItem.keys.title : "random title sent to backend"]
-            case .DemoGETArrayRequest(let param):
-                return [DemoItem.keys.title : "random title sent to backend"]
             case .DemoPOSTRequest(let param):
                 return [:]
             case .DemoPUTRequest(let param):

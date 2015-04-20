@@ -55,7 +55,9 @@ extension Alamofire.Request {
                     // Construct a new error, based on the internal errors userInfo dictionary and add the URL of the request
                     var newUserInfo = validError.userInfo ?? [NSObject : AnyObject]()
                     
-                    newUserInfo[NSURLErrorKey] = request.URL.absoluteString
+                    if let urlString = request.URL?.absoluteString {
+                        newUserInfo[NSURLErrorKey] = urlString
+                    }                    
                     
                     return (nil, NSError(domain: validError.domain, code: validError.code, userInfo: newUserInfo))
                 }

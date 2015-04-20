@@ -59,11 +59,7 @@ class ViewController: UIViewController {
                 self.textView.text = "Could not find any items! Error says \(error?.localizedDescription ?? missing)"
             }
         })
-
-        API.request(Router.DemoGETArrayRequest(param: tag), complete: { (items: [DemoItem]?, error) -> () in
-            println(items)
-        })
-    
+        
     }
 
 }
