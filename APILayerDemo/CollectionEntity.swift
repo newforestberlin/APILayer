@@ -28,7 +28,7 @@ import Alamofire
 // generic types being used as generic types (A<T> as <T> in another class / method).
 public class CollectionEntity<T: ResponseObjectSerializable> {
     
-    var items: [T]
+    public var items: [T]
     
     init(response: NSHTTPURLResponse, collection: CollectionResponse, error: UnsafeMutablePointer<NSError?>) {
         
