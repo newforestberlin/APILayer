@@ -28,7 +28,7 @@ import Alamofire
 // generic types being used as generic types (A<T> as <T> in another class / method).
 public class CollectionResponse: ResponseObjectSerializable {
     
-    let items: [AnyObject]
+    public let items: [AnyObject]
     
     @objc required public init(response: NSHTTPURLResponse, representation: AnyObject, error: UnsafeMutablePointer<NSError?>) {
         
