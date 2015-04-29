@@ -67,6 +67,12 @@ extension Alamofire.Request {
                 }
                 
             } else {
+                
+                if let statusCode = response?.statusCode where statusCode == 200 {
+                    // No response might be ok with status code 200, the caller must know
+                    return (statusCode, serializationError)
+                }
+                
                 return (nil, serializationError)
             }
         }
