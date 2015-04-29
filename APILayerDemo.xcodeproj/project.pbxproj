@@ -28,15 +28,14 @@
 		7D56AB6C1AC3117F00B9B90C /* RouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB591AC3117F00B9B90C /* RouterProtocol.swift */; };
 		7D56AB6D1AC3117F00B9B90C /* RouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB591AC3117F00B9B90C /* RouterProtocol.swift */; };
 		7D56AB6E1AC3117F00B9B90C /* RouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB591AC3117F00B9B90C /* RouterProtocol.swift */; };
-		7D56AB701AC3119D00B9B90C /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D56AB6F1AC3119D00B9B90C /* Alamofire.framework */; };
-		7D56AB711AC3119D00B9B90C /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D56AB6F1AC3119D00B9B90C /* Alamofire.framework */; };
-		7D56AB721AC3119D00B9B90C /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D56AB6F1AC3119D00B9B90C /* Alamofire.framework */; };
 		7D5761B11AE52E5400BE78B8 /* CollectionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5761B01AE52E5400BE78B8 /* CollectionResponse.swift */; };
 		7D5761B21AE52E5400BE78B8 /* CollectionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5761B01AE52E5400BE78B8 /* CollectionResponse.swift */; };
 		7D5761B31AE52E5400BE78B8 /* CollectionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5761B01AE52E5400BE78B8 /* CollectionResponse.swift */; };
 		7D5761B51AE52E9600BE78B8 /* CollectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5761B41AE52E9600BE78B8 /* CollectionEntity.swift */; };
 		7D5761B61AE52E9600BE78B8 /* CollectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5761B41AE52E9600BE78B8 /* CollectionEntity.swift */; };
 		7D5761B71AE52E9600BE78B8 /* CollectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5761B41AE52E9600BE78B8 /* CollectionEntity.swift */; };
+		7D74B40D1AF11B7E0060DB32 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D74B40C1AF11B7E0060DB32 /* Alamofire.framework */; };
+		7D74B40E1AF11B7E0060DB32 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D74B40C1AF11B7E0060DB32 /* Alamofire.framework */; };
 		7F117F201A8B518F0060A32D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F117F1F1A8B518F0060A32D /* AppDelegate.swift */; };
 		7F117F221A8B518F0060A32D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F117F211A8B518F0060A32D /* ViewController.swift */; };
 		7F117F251A8B518F0060A32D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F117F231A8B518F0060A32D /* Main.storyboard */; };
@@ -97,9 +96,9 @@
 		7D56AB571AC3117F00B9B90C /* ParameterMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ParameterMapper.swift; path = Core/ParameterMapper.swift; sourceTree = SOURCE_ROOT; };
 		7D56AB581AC3117F00B9B90C /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Router.swift; path = Core/Router.swift; sourceTree = SOURCE_ROOT; };
 		7D56AB591AC3117F00B9B90C /* RouterProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RouterProtocol.swift; path = Core/RouterProtocol.swift; sourceTree = SOURCE_ROOT; };
-		7D56AB6F1AC3119D00B9B90C /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		7D5761B01AE52E5400BE78B8 /* CollectionResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionResponse.swift; sourceTree = "<group>"; };
 		7D5761B41AE52E9600BE78B8 /* CollectionEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionEntity.swift; sourceTree = "<group>"; };
+		7D74B40C1AF11B7E0060DB32 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		7F117F1A1A8B518F0060A32D /* APILayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APILayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F117F1E1A8B518F0060A32D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7F117F1F1A8B518F0060A32D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -122,7 +121,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7D56AB701AC3119D00B9B90C /* Alamofire.framework in Frameworks */,
+				7D74B40D1AF11B7E0060DB32 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,7 +129,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7D56AB711AC3119D00B9B90C /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,7 +136,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7D56AB721AC3119D00B9B90C /* Alamofire.framework in Frameworks */,
+				7D74B40E1AF11B7E0060DB32 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,7 +146,7 @@
 		7F117F111A8B518F0060A32D = {
 			isa = PBXGroup;
 			children = (
-				7D56AB6F1AC3119D00B9B90C /* Alamofire.framework */,
+				7D74B40C1AF11B7E0060DB32 /* Alamofire.framework */,
 				7F117F1C1A8B518F0060A32D /* APILayerDemo */,
 				7F117F321A8B518F0060A32D /* APILayerDemoTests */,
 				7F1F36DB1AB63A9000AB7CE2 /* APILayer */,
@@ -671,6 +669,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/APILayerDemo",
 					"$(PROJECT_DIR)/Carthage/Build/iOS/**",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -701,6 +700,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/APILayerDemo",
 					"$(PROJECT_DIR)/Carthage/Build/iOS/**",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = APILayer/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";

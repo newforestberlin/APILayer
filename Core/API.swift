@@ -84,6 +84,19 @@ public class API {
         return request
     }
     
+    // Performs request with the specified Router. Completion block is called in case of success / failure later on.
+    public class func requestStatus(router: RouterProtocol, complete: (Int, NSError?) -> ()) -> Request {
+        
+        var request = API.internalRequest(router)
+        
+        request.response { (internalRequest, response, resultObject, error) -> Void in
+            let statusCode = response?.statusCode ?? 0
+            complete(statusCode, error)
+        }
+        
+        return request
+    }
+
     // We unfortunately have to use this extra call for collection parsing because Swift has problems with
     // generic types being used as generic types (A<T> as <T> in another class / method).
     public class func requestCollection<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (CollectionEntity<T>?, NSError?) -> ()) {
