@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D02B4391AF2213E00712B71 /* MockingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D02B4381AF2213E00712B71 /* MockingProtocol.swift */; };
+		7D02B43A1AF2213E00712B71 /* MockingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D02B4381AF2213E00712B71 /* MockingProtocol.swift */; };
+		7D02B43B1AF2213E00712B71 /* MockingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D02B4381AF2213E00712B71 /* MockingProtocol.swift */; };
 		7D56AB5A1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB531AC3117F00B9B90C /* AlamofireExtension.swift */; };
 		7D56AB5B1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB531AC3117F00B9B90C /* AlamofireExtension.swift */; };
 		7D56AB5C1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB531AC3117F00B9B90C /* AlamofireExtension.swift */; };
@@ -89,6 +92,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7D02B4381AF2213E00712B71 /* MockingProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockingProtocol.swift; sourceTree = "<group>"; };
 		7D56AB531AC3117F00B9B90C /* AlamofireExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlamofireExtension.swift; path = Core/AlamofireExtension.swift; sourceTree = SOURCE_ROOT; };
 		7D56AB541AC3117F00B9B90C /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = API.swift; path = Core/API.swift; sourceTree = SOURCE_ROOT; };
 		7D56AB551AC3117F00B9B90C /* DemoItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DemoItem.swift; path = Core/DemoItem.swift; sourceTree = SOURCE_ROOT; };
@@ -248,6 +252,7 @@
 				7D56AB591AC3117F00B9B90C /* RouterProtocol.swift */,
 				7D5761B01AE52E5400BE78B8 /* CollectionResponse.swift */,
 				7D5761B41AE52E9600BE78B8 /* CollectionEntity.swift */,
+				7D02B4381AF2213E00712B71 /* MockingProtocol.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -437,6 +442,7 @@
 				7F117F221A8B518F0060A32D /* ViewController.swift in Sources */,
 				7D56AB6C1AC3117F00B9B90C /* RouterProtocol.swift in Sources */,
 				9DF63E971AB4804100B527B9 /* Mapper.swift in Sources */,
+				7D02B4391AF2213E00712B71 /* MockingProtocol.swift in Sources */,
 				7D56AB631AC3117F00B9B90C /* DemoItems.swift in Sources */,
 				7D56AB691AC3117F00B9B90C /* Router.swift in Sources */,
 				7F117F201A8B518F0060A32D /* AppDelegate.swift in Sources */,
@@ -460,6 +466,7 @@
 				7D5761B21AE52E5400BE78B8 /* CollectionResponse.swift in Sources */,
 				7D56AB671AC3117F00B9B90C /* ParameterMapper.swift in Sources */,
 				7D56AB5E1AC3117F00B9B90C /* API.swift in Sources */,
+				7D02B43A1AF2213E00712B71 /* MockingProtocol.swift in Sources */,
 				7F117F361A8B518F0060A32D /* APILayerDemoTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -470,6 +477,7 @@
 			files = (
 				7D56AB5F1AC3117F00B9B90C /* API.swift in Sources */,
 				7D56AB6E1AC3117F00B9B90C /* RouterProtocol.swift in Sources */,
+				7D02B43B1AF2213E00712B71 /* MockingProtocol.swift in Sources */,
 				7D5761B71AE52E9600BE78B8 /* CollectionEntity.swift in Sources */,
 				7D56AB651AC3117F00B9B90C /* DemoItems.swift in Sources */,
 				7D56AB5C1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */,

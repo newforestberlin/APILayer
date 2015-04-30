@@ -37,19 +37,32 @@ class RequestWrapper: URLRequestConvertible {
 // Temp solutions until Class variables are supperted in Swift
 private var API_mapper = ParameterMapper()
 
+// If this one is set it might return mock path postfixes for router cases, in which case the API does use mock data from local filesystem
+private var API_mocker: MockingProtocol?
+
 // This class functions as the main interface to the API layer.
 public class API {
 
     // A user of the API is mean to implement a subclass of ParameterWrapper and set it to this property
     public class var parameterMapper: ParameterMapper {
         get {
-        return API_mapper
+            return API_mapper
         }
         set {
             API_mapper = newValue
         }
     }
     
+    // A user of the API is mean to implement a subclass of ParameterWrapper and set it to this property
+    public class var mocker: MockingProtocol? {
+        get {
+            return API_mocker
+        }
+        set {
+            API_mocker = newValue
+        }
+    }
+
     internal class func internalRequest(router: RouterProtocol) -> Request {
         // Get base URL
         let URL = NSURL(string: router.baseURLString)
@@ -74,11 +87,18 @@ public class API {
     
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
     public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSError?) -> ()) -> Request {
-               
-        var request = API.internalRequest(router)
         
-        request.responseObject { (_, _, result: T?, error) in
-            complete(result, error)
+        var request = API.internalRequest(router)
+
+        if let mocker = API_mocker, let path = mocker.path(forRouter: router) {
+            request.mockObject(forPath: path, withRouter: router, completionHandler: { (_, _, result: T?, error) -> Void in
+                complete(result, error)
+            })
+        }
+        else {
+            request.responseObject { (_, _, result: T?, error) in
+                complete(result, error)
+            }
         }
         
         return request
