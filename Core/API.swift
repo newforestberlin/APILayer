@@ -105,12 +105,12 @@ public class API {
     }
 
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
-    public class func requestString(router: RouterProtocol, complete: (String?, NSError?) -> ()) -> Request {
+    public class func requestString(router: RouterProtocol, complete: (String?, NSHTTPURLResponse?, NSError?) -> ()) -> Request {
         
         var request = API.internalRequest(router)
-        
+                
         request.responseString(encoding: NSStringEncoding(NSUTF8StringEncoding)) { (internalRequest, response, responseString: String?, error) -> Void in
-            complete(responseString, error)
+            complete(responseString, response, error)
         }
         
         return request
