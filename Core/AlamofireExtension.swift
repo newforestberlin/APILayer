@@ -77,4 +77,53 @@ extension Alamofire.Request {
         })
     }    
     
+    public func mockObject<T: ResponseObjectSerializable>(forPath path: String, withRouter router: RouterProtocol, completionHandler: (NSURLRequest, NSHTTPURLResponse?, T?, NSError?) -> Void) -> Self {
+        
+        let mockRequest = NSURLRequest()
+        let mockURL = NSURL(string: router.path)
+        var mockResponse: NSHTTPURLResponse?
+        
+        if let mockData = NSData(contentsOfFile: path) {
+            
+            var jsonError: NSError?
+            if let jsonObject: AnyObject = NSJSONSerialization.JSONObjectWithData(mockData, options: NSJSONReadingOptions.AllowFragments, error: &jsonError) {
+                
+                var parsingError: NSError?
+                let result = T(response: response!, representation: jsonObject, error: &parsingError)
+
+                if let validError = parsingError {
+                    if let mockURL = mockURL {
+                        mockResponse = NSHTTPURLResponse(URL: mockURL, statusCode: 401, HTTPVersion: nil, headerFields: nil)
+                    }
+
+                    // Construct a new error, based on the internal errors userInfo dictionary and add the URL of the request
+                    var newUserInfo = validError.userInfo ?? [NSObject : AnyObject]()
+                    
+                    if let urlString = request.URL?.absoluteString {
+                        newUserInfo[NSURLErrorKey] = urlString
+                    }
+                    
+                    completionHandler(mockRequest, mockResponse, nil, NSError(domain: validError.domain, code: validError.code, userInfo: newUserInfo))
+                }
+                else {
+                    // No error, return result
+                    if let mockURL = mockURL {
+                        mockResponse = NSHTTPURLResponse(URL: mockURL, statusCode: 200, HTTPVersion: nil, headerFields: nil)
+                    }
+                    
+                    completionHandler(mockRequest, mockResponse, result, nil)
+                }
+                
+            }
+            else {
+                // JSON deserialization failed
+                
+                // ERROR
+            }
+        }
+        
+        return self
+    }
+
+    
 }
