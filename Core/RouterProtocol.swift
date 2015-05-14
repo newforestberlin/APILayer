@@ -30,4 +30,6 @@ public protocol RouterProtocol {
     var path: String { get }
     var encoding: ParameterEncoding { get }
     var baseURLString: String { get }
+    var urlEncode: Bool { get }
 }
+

@@ -65,11 +65,18 @@ public class API {
 
     internal class func internalRequest(router: RouterProtocol) -> Request {
         // Get base URL
-        let URL = NSURL(string: router.baseURLString)
+        
+        var URL: NSURL?
+        if router.urlEncode {
+            URL = NSURL(string: router.baseURLString)?.URLByAppendingPathComponent(router.path)
+        }
+        else {
+            URL = NSURL(string: router.path, relativeToURL: NSURL(string: router.baseURLString))
+        }
         
         // Add relative path for specific case
-        let mutableURLRequest = NSMutableURLRequest(URL: URL!.URLByAppendingPathComponent(router.path))
-        
+        let mutableURLRequest = NSMutableURLRequest(URL: URL!)
+
         // Get method for this case
         mutableURLRequest.HTTPMethod = router.method.rawValue
         
@@ -81,7 +88,7 @@ public class API {
         let parameters = parameterMapper.parametersForRouter(router)
         let encoding = router.encoding
         let requestTuple = encoding.encode(mutableURLRequest, parameters: parameters)
-        
+                
         return Alamofire.request(RequestWrapper(request: requestTuple.0))
     }
     
