@@ -27,7 +27,6 @@
 		7D56AB681AC3117F00B9B90C /* ParameterMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB571AC3117F00B9B90C /* ParameterMapper.swift */; };
 		7D56AB691AC3117F00B9B90C /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB581AC3117F00B9B90C /* Router.swift */; };
 		7D56AB6A1AC3117F00B9B90C /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB581AC3117F00B9B90C /* Router.swift */; };
-		7D56AB6B1AC3117F00B9B90C /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB581AC3117F00B9B90C /* Router.swift */; };
 		7D56AB6C1AC3117F00B9B90C /* RouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB591AC3117F00B9B90C /* RouterProtocol.swift */; };
 		7D56AB6D1AC3117F00B9B90C /* RouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB591AC3117F00B9B90C /* RouterProtocol.swift */; };
 		7D56AB6E1AC3117F00B9B90C /* RouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB591AC3117F00B9B90C /* RouterProtocol.swift */; };
@@ -482,7 +481,6 @@
 				7D56AB651AC3117F00B9B90C /* DemoItems.swift in Sources */,
 				7D56AB5C1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */,
 				7D56AB621AC3117F00B9B90C /* DemoItem.swift in Sources */,
-				7D56AB6B1AC3117F00B9B90C /* Router.swift in Sources */,
 				7D5761B31AE52E5400BE78B8 /* CollectionResponse.swift in Sources */,
 				7D56AB681AC3117F00B9B90C /* ParameterMapper.swift in Sources */,
 			);
