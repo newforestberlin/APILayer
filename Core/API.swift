@@ -284,4 +284,17 @@ public class API {
         return request
     }
     
+    // Performs request with the specified Router. Completion block is called in case of success / failure later on.
+    public class func requestStatus(router: RouterProtocol, complete: (Int, NSError?) -> ()) -> Request {
+        
+        var request = API.createRequest(forRouter: router)
+        
+        request.response { (internalRequest, response, resultObject, error) -> Void in
+            let statusCode = response?.statusCode ?? 0
+            complete(statusCode, error)
+        }
+        
+        return request
+    }
+    
 }
