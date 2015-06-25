@@ -40,6 +40,12 @@ private var API_mapper = ParameterMapper()
 // If this one is set it might return mock paths for router cases, in which case the API does use mock data from local filesystem
 private var API_mocker: MockingProtocol?
 
+// This flag indicates if we are currently refreshing the auth token
+private var API_currentlyRefreshingAuthToken = false
+
+// This queue is used to delay requests when a token refresh is needed. The requests are then performed after the refresh is done.
+private var API_waitingOperations = NSOperationQueue()
+
 // This class functions as the main interface to the API layer.
 public class API {
 
@@ -66,6 +72,9 @@ public class API {
     // MARK: Private request methods
 
     private class func createRequest(forRouter router: RouterProtocol) -> Request {
+        
+        // Make sure the operation queue is sequential
+        API_waitingOperations.maxConcurrentOperationCount = 1
         
         // Get base URL
         var URL: NSURL?

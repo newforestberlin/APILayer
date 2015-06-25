@@ -44,8 +44,9 @@ public class ParameterMapper {
     public init() {
     }
     
-    // Function for populating a non-optional property. i.e. returns property or returns default property and sets 'error' to a value
-    public final func valueFromRepresentation<T: Defaultable>(representation: AnyObject, key: String, error: UnsafeMutablePointer<NSError?>) -> T {
+    // MARK: General purpose value parsing
+    
+    public func valueFromRepresentation<T: Defaultable>(representation: AnyObject, key: String, error: UnsafeMutablePointer<NSError?>) -> T {
         
         if let value = representation.valueForKeyPath(key) as? T {
             return value
@@ -57,8 +58,7 @@ public class ParameterMapper {
         return T()
     }
     
-    // Function for populating an optional property. i.e. returns property or nil
-    public final func valueFromRepresentation<T: Defaultable>(representation: AnyObject, key: String) -> T? {
+    public func valueFromRepresentation<T: Defaultable>(representation: AnyObject, key: String) -> T? {
         if let value = representation.valueForKeyPath(key) as? T {
             return value
         }
@@ -66,7 +66,9 @@ public class ParameterMapper {
         return nil
     }
     
-    public final func dateFromRepresentation(representation: AnyObject, key: String) -> NSDate? {
+    // MARK: Date parsing
+    
+    public func dateFromRepresentation(representation: AnyObject, key: String) -> NSDate? {
         if let value = representation.valueForKeyPath(key) as? String {
             if let date = dateFormatter.dateFromString(value) {
                 return date
@@ -76,7 +78,7 @@ public class ParameterMapper {
         return nil
     }
     
-    public final func dateFromRepresentation(representation: AnyObject, key: String, error: UnsafeMutablePointer<NSError?>) -> NSDate {
+    public func dateFromRepresentation(representation: AnyObject, key: String, error: UnsafeMutablePointer<NSError?>) -> NSDate {
         if let value = representation.valueForKeyPath(key) as? String {
             if let date = dateFormatter.dateFromString(value) {
                 return date
@@ -94,9 +96,10 @@ public class ParameterMapper {
         
         return NSDate()
     }
+    
+    // MARK: Array parsing
 
-    // Function for populating an optional array property. i.e. returns property or nil
-    public final func arrayFromRepresentation(representation: AnyObject, key: String) -> [String]? {
+    public func arrayFromRepresentation(representation: AnyObject, key: String) -> [String]? {
         if let value = representation.valueForKeyPath(key) as? [String] {
             return value
         }
@@ -104,8 +107,7 @@ public class ParameterMapper {
         return nil
     }
     
-    // Function for populating an non-optional array property. i.e. returns property or empty array
-    public final func arrayFromRepresentation(representation: AnyObject, key: String, error: UnsafeMutablePointer<NSError?>) -> [String] {
+    public func arrayFromRepresentation(representation: AnyObject, key: String, error: UnsafeMutablePointer<NSError?>) -> [String] {
         if let value = representation.valueForKeyPath(key) as? [String] {
             return value
         }
@@ -115,49 +117,99 @@ public class ParameterMapper {
         
         return []
     }
+    
+    public func arrayFromRepresentation(representation: AnyObject, key: String) -> [Int]? {
+        if let value = representation.valueForKeyPath(key) as? [Int] {
+            return value
+        }
+        
+        return nil
+    }
+    
+    // MARK: Date formatting
 
-    public final func stringFromDate(date: NSDate) -> String {
+    public func stringFromDate(date: NSDate) -> String {
         return dateFormatter.stringFromDate(date)
     }
+    
+    // MARK: Parameters for routers
     
     public func parametersForRouter(router: RouterProtocol) -> [String : AnyObject] {
         println("You need to implement the method parametersForRouter() in your ParameterMapper subclass in order to have parameters in your requests")
         return [:]
     }
     
+    // MARK: Headers for routers
+    
     public func headersForRouter(router: RouterProtocol) -> [String : String] {
         return [:]
     }
     
+    // MARK: Entity parsing
+    
+    public func entity<T: ResponseObjectSerializable>(response: NSHTTPURLResponse, representation: AnyObject, key: String) -> T? {
+        
+        if let candidateObject: AnyObject = representation.valueForKey(key) {
+            if let validDict = candidateObject as? [String: AnyObject] {
+                
+                var error: NSError?
+                let entity = T(response: response, representation: validDict, error: &error)
+                
+                if error == nil {
+                    return entity
+                }
+            }
+        }
+        
+        return nil
+    }
+
     // MARK: Entity array parsing
     
-    public final func entityArray<T: ResponseObjectSerializable>(response: NSHTTPURLResponse, representation: AnyObject, key: String) -> [T]? {
+    public func entityArray<T: ResponseObjectSerializable>(response: NSHTTPURLResponse, representation: AnyObject) -> [T]? {
         
-        if let validObject: AnyObject = representation.valueForKey(key) {
-            var result = [T]()
-            
-            if let validArray = validObject as? [AnyObject] {
-                for candidateItem in validArray {
-                    if let validDict = candidateItem as? [String: AnyObject] {
-                        
-                        var error: NSError?
-                        let entity = T(response: response, representation: validDict, error: &error)
-                        
-                        if error == nil {
-                            // Parsing entity worked
-                            result.append(entity)
-                        }
+        var result = [T]()
+        
+        if let validArray = representation as? [AnyObject] {
+            for candidateItem in validArray {
+                if let validDict = candidateItem as? [String: AnyObject] {
+                    
+                    var error: NSError?
+                    let entity = T(response: response, representation: validDict, error: &error)
+                    
+                    if error == nil {
+                        // Parsing entity worked
+                        result.append(entity)
                     }
                 }
             }
-            
-            return result
+        }
+        
+        return result
+    }
+    
+    
+    public func entityArray<T: ResponseObjectSerializable>(response: NSHTTPURLResponse, representation: AnyObject, key: String) -> [T]? {
+        
+        if let validObject: AnyObject = representation.valueForKey(key) {
+            return entityArray(response, representation: validObject)
         }
         
         return nil
     }
     
-    public final func entityArray<T: ResponseObjectSerializable>(response: NSHTTPURLResponse, representation: AnyObject, key: String, error: UnsafeMutablePointer<NSError?>) -> [T] {
+    public func entityArray<T: ResponseObjectSerializable>(response: NSHTTPURLResponse, representation: AnyObject, error: UnsafeMutablePointer<NSError?>) -> [T] {
+        let result: [T]? = entityArray(response, representation: representation)
+        
+        if result == nil {
+            error.memory = NSError(domain: "ParameterMapper", code: 1, userInfo: [NSLocalizedDescriptionKey: "Key for entity array was missing"])
+        }
+        
+        return result ?? [T]()
+    }
+        
+    public func entityArray<T: ResponseObjectSerializable>(response: NSHTTPURLResponse, representation: AnyObject, key: String, error: UnsafeMutablePointer<NSError?>) -> [T] {
+        
         let result: [T]? = entityArray(response, representation: representation, key: key)
         
         if result == nil {

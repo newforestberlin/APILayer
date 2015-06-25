@@ -248,7 +248,6 @@
 				7D56AB531AC3117F00B9B90C /* AlamofireExtension.swift */,
 				7D56AB541AC3117F00B9B90C /* API.swift */,
 				7D56AB571AC3117F00B9B90C /* ParameterMapper.swift */,
-				7D56AB581AC3117F00B9B90C /* Router.swift */,
 				7D56AB591AC3117F00B9B90C /* RouterProtocol.swift */,
 				7D5761B01AE52E5400BE78B8 /* CollectionResponse.swift */,
 				7D5761B41AE52E9600BE78B8 /* CollectionEntity.swift */,
@@ -262,6 +261,7 @@
 			children = (
 				7F46286F1A8B62090075C0FB /* Model */,
 				9DF63E961AB4804100B527B9 /* Mapper.swift */,
+				7D56AB581AC3117F00B9B90C /* Router.swift */,
 			);
 			name = Specific;
 			sourceTree = "<group>";
