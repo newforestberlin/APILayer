@@ -39,6 +39,9 @@
 		7D5761B71AE52E9600BE78B8 /* CollectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5761B41AE52E9600BE78B8 /* CollectionEntity.swift */; };
 		7D74B40D1AF11B7E0060DB32 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D74B40C1AF11B7E0060DB32 /* Alamofire.framework */; };
 		7D74B40E1AF11B7E0060DB32 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D74B40C1AF11B7E0060DB32 /* Alamofire.framework */; };
+		7DB07EF71B3C46AF002B98AD /* TokenRefreshOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB07EF61B3C46AF002B98AD /* TokenRefreshOperation.swift */; };
+		7DB07EF81B3C540B002B98AD /* TokenRefreshOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB07EF61B3C46AF002B98AD /* TokenRefreshOperation.swift */; };
+		7DB07EF91B3C545B002B98AD /* TokenRefreshOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB07EF61B3C46AF002B98AD /* TokenRefreshOperation.swift */; };
 		7F117F201A8B518F0060A32D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F117F1F1A8B518F0060A32D /* AppDelegate.swift */; };
 		7F117F221A8B518F0060A32D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F117F211A8B518F0060A32D /* ViewController.swift */; };
 		7F117F251A8B518F0060A32D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F117F231A8B518F0060A32D /* Main.storyboard */; };
@@ -103,6 +106,7 @@
 		7D5761B01AE52E5400BE78B8 /* CollectionResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionResponse.swift; sourceTree = "<group>"; };
 		7D5761B41AE52E9600BE78B8 /* CollectionEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionEntity.swift; sourceTree = "<group>"; };
 		7D74B40C1AF11B7E0060DB32 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		7DB07EF61B3C46AF002B98AD /* TokenRefreshOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenRefreshOperation.swift; sourceTree = "<group>"; };
 		7F117F1A1A8B518F0060A32D /* APILayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APILayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F117F1E1A8B518F0060A32D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7F117F1F1A8B518F0060A32D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -252,6 +256,7 @@
 				7D5761B01AE52E5400BE78B8 /* CollectionResponse.swift */,
 				7D5761B41AE52E9600BE78B8 /* CollectionEntity.swift */,
 				7D02B4381AF2213E00712B71 /* MockingProtocol.swift */,
+				7DB07EF61B3C46AF002B98AD /* TokenRefreshOperation.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -438,6 +443,7 @@
 			files = (
 				7D5761B11AE52E5400BE78B8 /* CollectionResponse.swift in Sources */,
 				7D56AB5A1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */,
+				7DB07EF71B3C46AF002B98AD /* TokenRefreshOperation.swift in Sources */,
 				7D5761B51AE52E9600BE78B8 /* CollectionEntity.swift in Sources */,
 				7F117F221A8B518F0060A32D /* ViewController.swift in Sources */,
 				7D56AB6C1AC3117F00B9B90C /* RouterProtocol.swift in Sources */,
@@ -457,6 +463,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D56AB6D1AC3117F00B9B90C /* RouterProtocol.swift in Sources */,
+				7DB07EF91B3C545B002B98AD /* TokenRefreshOperation.swift in Sources */,
 				7D56AB6A1AC3117F00B9B90C /* Router.swift in Sources */,
 				7D5761B61AE52E9600BE78B8 /* CollectionEntity.swift in Sources */,
 				9DD010A61AB4AB17003AD961 /* Mapper.swift in Sources */,
@@ -480,6 +487,7 @@
 				7D02B43B1AF2213E00712B71 /* MockingProtocol.swift in Sources */,
 				7D5761B71AE52E9600BE78B8 /* CollectionEntity.swift in Sources */,
 				7D56AB651AC3117F00B9B90C /* DemoItems.swift in Sources */,
+				7DB07EF81B3C540B002B98AD /* TokenRefreshOperation.swift in Sources */,
 				7D56AB5C1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */,
 				7D56AB621AC3117F00B9B90C /* DemoItem.swift in Sources */,
 				7D56AB6B1AC3117F00B9B90C /* Router.swift in Sources */,
