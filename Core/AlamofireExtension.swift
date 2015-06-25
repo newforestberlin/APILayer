@@ -39,7 +39,7 @@ extension Alamofire.Request {
         let serializer: Serializer = { (request, response, data) in
             
             if response?.statusCode < 200 && response?.statusCode >= 300 {
-                return (nil, NSError(domain: "httpStatus", code: 0, userInfo: nil))
+                return (nil, NSError(domain: "APILayer.httpStatus", code: 0, userInfo: nil))
             }
             
             let JSONSerializer = Request.JSONResponseSerializer(options: .AllowFragments)
@@ -117,8 +117,13 @@ extension Alamofire.Request {
             }
             else {
                 // JSON deserialization failed
+                var newUserInfo = [NSObject : AnyObject]()
                 
-                // ERROR
+                if let urlString = request.URL?.absoluteString {
+                    newUserInfo[NSURLErrorKey] = urlString
+                }
+                
+                completionHandler(mockRequest, nil, nil, NSError(domain: "APILayer", code: 0, userInfo: newUserInfo))
             }
         }
         
