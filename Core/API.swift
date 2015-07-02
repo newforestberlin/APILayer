@@ -197,13 +197,11 @@ public class API {
     
     // MARK: Private request method
     
-    private class func completeRequest<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSHTTPURLResponse?, NSError?) -> ()) -> Request {
+    private class func completeRequest<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSHTTPURLResponse?, NSError?) -> ()) {
         println("completeRequest \(router.path)")
-
-        // TODO: This request is not used !
-        var request = API.createRequest(forRouter: router)
         
         if let mocker = API_mocker, let path = mocker.path(forRouter: router) {
+            let request = API.createRequest(forRouter: router)
             request.mockObject(forPath: path, withRouter: router, completionHandler: { (_, response: NSHTTPURLResponse?, result: T?, error) -> Void in
                 complete(result, response, error)
             })
@@ -211,13 +209,11 @@ public class API {
         else {
             enqueueRouter(router, complete: complete)
         }
-        
-        return request
     }
     
     // MARK: Public request methods
     
-    public class func tokenRefresh<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSHTTPURLResponse?, NSError?) -> ()) -> Request {
+    public class func tokenRefresh<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSHTTPURLResponse?, NSError?) -> ()) {
 
         var request = API.createRequest(forRouter: router)
         
@@ -227,25 +223,24 @@ public class API {
             complete(result, response, error)
         }
         
-        return request
     }
     
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
-    public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSError?) -> ()) -> Request {
+    public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSError?) -> ()) {
         println("request \(router.path)")
 
-        return API.completeRequest(router, complete: { (result, response, error) -> () in
+        API.completeRequest(router, complete: { (result, response, error) -> () in
             complete(result, error)
         })
     }
     
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
     // This version also gives the http response to the completion block
-    public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSHTTPURLResponse?, NSError?) -> ()) -> Request {
+    public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSHTTPURLResponse?, NSError?) -> ()) {
 
         println("request \(router.path)")
 
-        return API.completeRequest(router, complete: { (result, response, error) -> () in
+        API.completeRequest(router, complete: { (result, response, error) -> () in
             complete(result, response, error)
         })
     }
@@ -283,7 +278,7 @@ public class API {
     // MARK: Methods to help with debugging
     
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
-    public class func requestString(router: RouterProtocol, complete: (String?, NSHTTPURLResponse?, NSError?) -> ()) -> Request {
+    public class func requestString(router: RouterProtocol, complete: (String?, NSHTTPURLResponse?, NSError?) -> ()) {
         
         var request = API.createRequest(forRouter: router)
         
@@ -291,11 +286,10 @@ public class API {
             complete(responseString, response, error)
         }
         
-        return request
     }
     
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
-    public class func requestStatus(router: RouterProtocol, complete: (Int, NSError?) -> ()) -> Request {
+    public class func requestStatus(router: RouterProtocol, complete: (Int, NSError?) -> ()) {
         
         var request = API.createRequest(forRouter: router)
         
@@ -304,7 +298,6 @@ public class API {
             complete(statusCode, error)
         }
         
-        return request
     }
     
 }
