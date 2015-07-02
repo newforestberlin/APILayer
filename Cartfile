@@ -1,2 +1,3 @@
-github "youandthegang/Alamofire" >= 1.1.10
+github "Alamofire/Alamofire" >= 1.1
+
 

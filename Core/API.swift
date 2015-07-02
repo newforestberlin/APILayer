@@ -101,7 +101,6 @@ public class API {
     // MARK: Request creation from routers
 
     private class func createRequest(forRouter router: RouterProtocol) -> Request {
-        println("createRequest \(router.path)")
         
         // Make sure the operation queue is sequential
         API_operations.maxConcurrentOperationCount = 1
@@ -136,7 +135,6 @@ public class API {
     // MARK: Request performing 
     
     private class func performRouter<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSHTTPURLResponse?, NSError?) -> ()) {
-        println("performRouter \(router.path)")
 
         // Do the actual request
         var request = API.createRequest(forRouter: router)
@@ -181,8 +179,6 @@ public class API {
     // MARK: Request enqueueing
     
     private class func enqueueRouter<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSHTTPURLResponse?, NSError?) -> ()) {
-        println("enqueueRouter \(router.path)")
-
 
         var blockOperation = NSBlockOperation(block: {
             self.performRouter(router, complete: complete)
@@ -198,7 +194,6 @@ public class API {
     // MARK: Private request method
     
     private class func completeRequest<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSHTTPURLResponse?, NSError?) -> ()) {
-        println("completeRequest \(router.path)")
         
         if let mocker = API_mocker, let path = mocker.path(forRouter: router) {
             let request = API.createRequest(forRouter: router)
@@ -227,7 +222,6 @@ public class API {
     
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
     public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSError?) -> ()) {
-        println("request \(router.path)")
 
         API.completeRequest(router, complete: { (result, response, error) -> () in
             complete(result, error)
@@ -237,8 +231,6 @@ public class API {
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
     // This version also gives the http response to the completion block
     public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSHTTPURLResponse?, NSError?) -> ()) {
-
-        println("request \(router.path)")
 
         API.completeRequest(router, complete: { (result, response, error) -> () in
             complete(result, response, error)
@@ -251,7 +243,6 @@ public class API {
     // generic types being used as generic types (A<T> as <T> in another class / method).
     public class func requestCollection<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (CollectionEntity<T>?, NSError?) -> ()) {
         
-        println("requestCollection \(router.path)")
 
         API.request(router, complete: { (collectionResponse: CollectionResponse?, error) -> () in
             
