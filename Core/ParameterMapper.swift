@@ -219,4 +219,14 @@ public class ParameterMapper {
         return result ?? [T]()
     }
     
+    // Swift compiler sometimes picks the wrong overload of the method, so this helps with that
+    
+    public func optionalEntityArray<T: ResponseObjectSerializable>(response: NSHTTPURLResponse, representation: AnyObject) -> [T]? {
+        return entityArray(response, representation: representation)
+    }
+    
+    public func optionalEntityArray<T: ResponseObjectSerializable>(response: NSHTTPURLResponse, representation: AnyObject, key: String) -> [T]? {
+        return entityArray(response, representation: representation, key: key)
+    }
+    
 }
