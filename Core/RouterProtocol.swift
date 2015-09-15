@@ -31,5 +31,6 @@ public protocol RouterProtocol {
     var encoding: ParameterEncoding { get }
     var baseURLString: String { get }
     var urlEncode: Bool { get }
+    var responseType: AnyClass? { get }
 }
 

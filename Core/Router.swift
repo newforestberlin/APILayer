@@ -58,6 +58,11 @@ public enum Router: RouterProtocol {
         }
     }
     
+    // Response object types for routes
+    public var responseType: AnyClass? {
+        return nil
+    }
+    
     // Relative paths for all the different calls
     public var path: String {
         switch self {
