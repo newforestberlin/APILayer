@@ -43,7 +43,7 @@ extension Alamofire.Request {
             }
             
             let JSONSerializer = Request.JSONResponseSerializer(options: .AllowFragments)
-            let (JSON: AnyObject?, serializationError) = JSONSerializer(request, response, data)
+            let (JSON, serializationError): (AnyObject?, NSError?) = JSONSerializer(request, response, data)
             
             if response != nil && JSON != nil {
                 
@@ -86,7 +86,8 @@ extension Alamofire.Request {
         if let mockData = NSData(contentsOfFile: path) {
             
             var jsonError: NSError?
-            if let jsonObject: AnyObject = NSJSONSerialization.JSONObjectWithData(mockData, options: NSJSONReadingOptions.AllowFragments, error: &jsonError) {
+            do {
+                let jsonObject: AnyObject = try NSJSONSerialization.JSONObjectWithData(mockData, options: NSJSONReadingOptions.AllowFragments)
                 
                 var parsingError: NSError?
                 let result = T(response: response!, representation: jsonObject, error: &parsingError)
@@ -114,8 +115,8 @@ extension Alamofire.Request {
                     completionHandler(mockRequest, mockResponse, result, nil)
                 }
                 
-            }
-            else {
+            } catch var error as NSError {
+                jsonError = error
                 // JSON deserialization failed
                 var newUserInfo = [NSObject : AnyObject]()
                 

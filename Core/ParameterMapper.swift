@@ -73,7 +73,7 @@ public class ParameterMapper {
             if let date = dateFormatter.dateFromString(value) {
                 return date
             }
-            println("Invalid 'dateString'!!")
+            print("Invalid 'dateString'!!")
         }
         return nil
     }
@@ -135,7 +135,7 @@ public class ParameterMapper {
     // MARK: Parameters for routers
     
     public func parametersForRouter(router: RouterProtocol) -> [String : AnyObject] {
-        println("You need to implement the method parametersForRouter() in your ParameterMapper subclass in order to have parameters in your requests")
+        print("You need to implement the method parametersForRouter() in your ParameterMapper subclass in order to have parameters in your requests")
         return [:]
     }
     

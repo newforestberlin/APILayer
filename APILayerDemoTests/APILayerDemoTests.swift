@@ -54,7 +54,7 @@ class APILayerDemoTests: XCTestCase {
                 report = "Could not find any items! Error says \(error?.localizedDescription ?? missing)"
             }
             
-            println(report)
+            print(report)
             
             getExpectation.fulfill()
             

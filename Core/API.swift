@@ -180,7 +180,7 @@ public class API {
     
     private class func enqueueRouter<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSHTTPURLResponse?, NSError?) -> ()) {
 
-        var blockOperation = NSBlockOperation(block: {
+        let blockOperation = NSBlockOperation(block: {
             self.performRouter(router, complete: complete)
         })
         
