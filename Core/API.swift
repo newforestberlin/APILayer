@@ -242,7 +242,7 @@ public class API {
     
     // MARK: Helper method for requesting collections
 
-    public class func requestCollection<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (CollectionEntity<T>?, ErrorType?) -> ()) {
+    public class func requestCollection<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (Result<CollectionEntity<T>>) -> ()) {
         
         API.request(router) { (result: Result<CollectionResponse>) -> () in
             
@@ -252,16 +252,16 @@ public class API {
                 do {
                     
                     let result = try CollectionEntity<T>(collection: value)
-                    complete(result, nil)
+                    complete(Result<CollectionEntity<T>>.Success(result))
                     
                 } catch let thrownError {
                     
-                    complete(nil, thrownError)
+                    complete(Result<CollectionEntity<T>>.Failure(nil, thrownError))
                 }
                 
             case .Failure(_, let errorType):
                 
-                complete(nil, errorType)
+                complete(Result<CollectionEntity<T>>.Failure(nil, errorType))
             }
             
         }

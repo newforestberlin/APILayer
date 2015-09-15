@@ -62,10 +62,11 @@ class ViewController: UIViewController {
 //            }
 //        })
         
-        API.requestCollection(Router.DemoGETRequest(param: tag), complete: { (collection: CollectionEntity<DemoItem>?, error) -> () in
-            let missing = "<missing>"
+        API.requestCollection(Router.DemoGETRequest(param: tag)) { (result: Result<CollectionEntity<DemoItem>>) -> () in
             
-            if let collection = collection {
+            let missing = "<missing>"
+                                    
+            if let collection = result.value {
                 var report = ""
                 
                 for item in collection.items {
@@ -78,8 +79,8 @@ class ViewController: UIViewController {
                 self.textView.text = "Could not find any items!"
             }
             
-            
-        })
+        }
+        
         
     }
 

@@ -43,4 +43,8 @@ public class CollectionResponse: ResponseObjectSerializable {
         }
     }
     
+    public required init() {
+        items = []
+    }
+    
 }

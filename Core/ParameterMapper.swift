@@ -65,7 +65,7 @@ public class ParameterMapper {
     
     // MARK: General purpose value parsing
     
-    public func optValue<T: Defaultable>(fromRepresentation representation: AnyObject, key: String) -> T? {
+    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String) -> T? {
         
         if let value = representation.valueForKeyPath(key) as? T {
             return value
@@ -74,18 +74,20 @@ public class ParameterMapper {
         return nil
     }
 
-    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String) throws -> T {
+    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> T {
         
         if let value = representation.valueForKeyPath(key) as? T {
             return value
         }
         
-        throw ResponseObjectDeserializationError.MissingKey(description: "Could not extract value for key \(key). Key is missing.")
+        error = ResponseObjectDeserializationError.MissingKey(description: "Could not extract value for key \(key). Key is missing.")
+                
+        return T()
     }
     
     // MARK: Date parsing
     
-    public func optDate(fromRepresentation representation: AnyObject, key: String) -> NSDate? {
+    public func date(fromRepresentation representation: AnyObject, key: String) -> NSDate? {
         
         if let value = representation.valueForKeyPath(key) as? String {
             if let date = dateFormatter.dateFromString(value) {
@@ -96,7 +98,7 @@ public class ParameterMapper {
         return nil
     }
     
-    public func date(fromRepresentation representation: AnyObject, key: String) throws -> NSDate {
+    public func date(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> NSDate {
         
         if let value = representation.valueForKeyPath(key) as? String {
             if let date = dateFormatter.dateFromString(value) {
@@ -104,12 +106,14 @@ public class ParameterMapper {
             }
         }
         
-        throw ResponseObjectDeserializationError.MissingKey(description: "Could not parse date for key '\(key)'. Date formatter might not recognize format.")
+        error = ResponseObjectDeserializationError.MissingKey(description: "Could not parse date for key '\(key)'. Date formatter might not recognize format.")
+        
+        return NSDate()
     }
     
     // MARK: Array parsing
 
-    public func optArray(fromRepresentation representation: AnyObject, key: String) -> [String]? {
+    public func array(fromRepresentation representation: AnyObject, key: String) -> [String]? {
         
         if let value = representation.valueForKeyPath(key) as? [String] {
             return value
@@ -118,16 +122,18 @@ public class ParameterMapper {
         return nil
     }
     
-    public func array(fromRepresentation representation: AnyObject, key: String) throws -> [String] {
+    public func array(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> [String] {
         
         if let value = representation.valueForKeyPath(key) as? [String] {
             return value
         }
         
-        throw ResponseObjectDeserializationError.MissingKey(description: "Could not extract value for key \(key). Key is missing.")
+        error = ResponseObjectDeserializationError.MissingKey(description: "Could not extract value for key \(key). Key is missing.")
+        
+        return []
     }
     
-    public func optArray(fromRepresentation representation: AnyObject, key: String) -> [Int]? {
+    public func array(fromRepresentation representation: AnyObject, key: String) -> [Int]? {
         
         if let value = representation.valueForKeyPath(key) as? [Int] {
             return value
@@ -136,19 +142,21 @@ public class ParameterMapper {
         return nil
     }
     
-    public func array(fromRepresentation representation: AnyObject, key: String) throws -> [Int] {
+    public func array(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> [Int] {
         
         if let value = representation.valueForKeyPath(key) as? [Int] {
             return value
         }
         
-        throw ResponseObjectDeserializationError.MissingKey(description: "Could not extract value for key \(key). Key is missing.")
+        error = ResponseObjectDeserializationError.MissingKey(description: "Could not extract value for key \(key). Key is missing.")
+        
+        return []
     }
 
     
     // MARK: Entity parsing
     
-    public func optEntity<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String) -> T? {
+    public func entity<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String) -> T? {
         
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
@@ -165,27 +173,36 @@ public class ParameterMapper {
         return nil
     }
 
-    public func entity<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String) throws -> T {
+    public func entity<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> T {
         
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
-                let entity = try T(representation: validDict)
-                return entity
+                do {
+                    
+                    let entity = try T(representation: validDict)
+                    return entity
+                    
+                } catch {
+                    // Return default object (we do not want to throw, otherwise "let" properties would be a problem in response entities)
+                    return T()
+                }
                 
             } else {
-                throw ResponseObjectDeserializationError.InvalidValue(description: "Could not parse entity for key '\(key)'. Value is not a dictionary.")
+                error = ResponseObjectDeserializationError.InvalidValue(description: "Could not parse entity for key '\(key)'. Value is not a dictionary.")
             }
         }
         else {
-            throw ResponseObjectDeserializationError.MissingKey(description: "Could not parse entity for key '\(key)'. Key is missing.")
+            error = ResponseObjectDeserializationError.MissingKey(description: "Could not parse entity for key '\(key)'. Key is missing.")
         }
         
+        // Return default object (we do not want to throw, otherwise "let" properties would be a problem in response entities)
+        return T()
     }
 
     // MARK: Entity array parsing
     
-    public func optEntityArray<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject) -> [T]? {
+    public func entityArray<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject) -> [T]? {
         
         if let validArray = representation as? [AnyObject] {
             
@@ -211,20 +228,23 @@ public class ParameterMapper {
     }
     
     
-    public func entityArray<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String) throws -> [T] {
+    public func entityArray<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> [T] {
         
         if let validObject: AnyObject = representation.valueForKey(key) {
             
-            if let validArray: [T] = optEntityArray(fromRepresentation: validObject) {
+            let validArray: [T]? = entityArray(fromRepresentation: validObject)
+            if let validArray = validArray{
                 return validArray
             }
             else {
-                throw ResponseObjectDeserializationError.InvalidValue(description: "Could not parse entity array for key '\(key)'. Value is invalid.")
+                error = ResponseObjectDeserializationError.InvalidValue(description: "Could not parse entity array for key '\(key)'. Value is invalid.")
             }
             
         }
         
-        throw ResponseObjectDeserializationError.MissingKey(description: "Could not parse entity array for key '\(key)'. Key is missing.")
+        error = ResponseObjectDeserializationError.MissingKey(description: "Could not parse entity array for key '\(key)'. Key is missing.")
+        
+        return []
     }
     
 //    public func entityArray<T: ResponseObjectSerializable>(representation: AnyObject, error: UnsafeMutablePointer<NSError?>) -> [T] throws {

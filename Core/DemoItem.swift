@@ -38,26 +38,21 @@ public class DemoItem: ResponseObjectSerializable {
     public required init(representation: AnyObject) throws {
         
         let mapper = API.parameterMapper
+        var error: ErrorType?
         
-        do {
-            
-            let itemId_ : String = try mapper.value(fromRepresentation: representation, key: keys.itemId)
-            let title_ : String = try mapper.value(fromRepresentation: representation, key: keys.title)
-            let awesomeCount_ : Int? = mapper.optValue(fromRepresentation: representation, key: keys.awesomeCount)
-            
-            itemId = itemId_
-            title = title_
-            awesomeCount = awesomeCount_
-            
-        } catch let thrownError {
-            
-            itemId = ""
-            title = ""
-            awesomeCount = nil
-            
-            throw thrownError
+        itemId = mapper.value(fromRepresentation: representation, key: keys.itemId, error: &error)
+        title = mapper.value(fromRepresentation: representation, key: keys.title, error: &error)
+        awesomeCount = mapper.value(fromRepresentation: representation, key: keys.awesomeCount)
+        
+        if let error = error {
+            throw error
         }
-        
+    }
+    
+    public required init() {
+        itemId = ""
+        title = ""
+        awesomeCount = nil
     }
     
 }

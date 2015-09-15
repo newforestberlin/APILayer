@@ -38,6 +38,7 @@ enum ResponseObjectDeserializationError: ErrorType {
 // the parameter mapper to get values from the representation.
 public protocol ResponseObjectSerializable {
     init(representation: AnyObject) throws
+    init()
 }
 
 extension Alamofire.Request {

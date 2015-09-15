@@ -27,9 +27,7 @@ import Foundation
 public class DemoItems: ResponseObjectSerializable {
     
     // Keys for extracting from the parsed JSON
-    public class var keys: (items: String, misc: String) {
-        return ("items", "tuple needs at least two elements")
-    }
+    let keys = (items: "items", dummy: "dummy")
     
     // Properties of the entity. We make these optional so that parsing never fails
     public let items: [DemoItem]
@@ -37,24 +35,18 @@ public class DemoItems: ResponseObjectSerializable {
     // Get property values from parsed JSON
     public required init(representation: AnyObject) throws {
         
-        // Get all the items
+        let mapper = API.parameterMapper
+        var error: ErrorType?
         
-        do {
-            var itemList = [DemoItem]()
-            for item in representation.valueForKeyPath(DemoItems.keys.items) as! [AnyObject] {
-                let demoItem = try DemoItem(representation: item)
-                itemList.append(demoItem)
-            }
-            
-            // Keep the list
-            items = itemList
-            
-        } catch let thrownError {
-            
-            items = []            
-            throw thrownError
+        items = mapper.entityArray(fromRepresentation: representation, key: keys.items, error: &error)
+        
+        if let error = error {
+            throw error
         }
-        
+    }
+    
+    public required init() {
+        items = []
     }
     
 }
