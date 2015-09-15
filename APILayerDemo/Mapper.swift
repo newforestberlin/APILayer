@@ -29,13 +29,13 @@ class Mapper: ParameterMapper {
         if let route = router as? Router {
             
             switch route {
-            case .DemoGETRequest(let param):
-                return [DemoItem.keys.title : "random title sent to backend"]
-            case .DemoPOSTRequest(let param):
+            case .DemoGETRequest(_):
+                return ["title" : "random title sent to backend"]
+            case .DemoPOSTRequest(_):
                 return [:]
-            case .DemoPUTRequest(let param):
+            case .DemoPUTRequest(_):
                 return [:]
-            case .DemoDELETERequest(let param):
+            case .DemoDELETERequest(_):
                 return [:]
             }
         }

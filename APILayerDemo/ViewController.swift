@@ -75,7 +75,7 @@ class ViewController: UIViewController {
                 self.textView.text = report
             }
             else {
-                self.textView.text = "Could not find any items! Error says \(error?.localizedDescription ?? missing)"
+                self.textView.text = "Could not find any items!"
             }
             
             

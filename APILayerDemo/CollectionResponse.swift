@@ -30,14 +30,16 @@ public class CollectionResponse: ResponseObjectSerializable {
     
     public let items: [AnyObject]
     
-    @objc required public init(response: NSHTTPURLResponse, representation: AnyObject, error: UnsafeMutablePointer<NSError?>) {
+    required public init(representation: AnyObject) throws {
         
-        if let itemsArray = representation.valueForKeyPath(API.parameterMapper.collectionResponseItemsKey) as? [AnyObject] {
+        let itemsKey = API.parameterMapper.collectionResponseItemsKey
+        
+        if let itemsArray = representation.valueForKeyPath(itemsKey) as? [AnyObject] {
             items = itemsArray
         }
         else {
             items = []
-            error.memory = NSError(domain: "CollectionResponse", code: 1, userInfo: [NSLocalizedDescriptionKey: "No 'items' key or invalid value in collection JSON", NSLocalizedFailureReasonErrorKey: representation])
+            throw ResponseObjectDeserializationError.MissingKey(description: "The '\(itemsKey)' key is missing in this collection response" )
         }
     }
     
