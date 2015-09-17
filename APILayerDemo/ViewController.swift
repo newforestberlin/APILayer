@@ -56,7 +56,7 @@ class ViewController: UIViewController {
                 self.textView.text = "Could not find any items!"
             }
             
-            API.request(Router.GetEntity(id: "123"), complete: { (result: Result<DemoEntity>) -> () in
+            API.request(Router.GetEntity(id: "123")) { (result: Result<DemoEntity>) -> () in
                 
                 if let entity = result.value {
                     self.textView.text = "\(self.textView.text)\n\nEntity has name \(entity.firstName) \(entity.lastName)"
@@ -64,7 +64,7 @@ class ViewController: UIViewController {
                 else {
                     self.textView.text = "\(self.textView.text)\n\nCould not retrieve entity from endpoint"
                 }
-            })
+            }
         }
         
     }
