@@ -34,11 +34,8 @@ enum ResponseObjectDeserializationError: ErrorType {
 }
 
 // Protocol for objects that can be constructed from parsed JSON. 
-// Might throw a ResponseObjectDeserializationError case when using 
-// the parameter mapper to get values from the representation.
 public protocol ResponseObjectSerializable {
-    init(representation: AnyObject) throws
-    init()
+    init(representation: AnyObject, inout error: ErrorType?)
 }
 
 extension Alamofire.Request {
@@ -52,20 +49,35 @@ extension Alamofire.Request {
             switch result {
             case .Success(let value):
                 
-                // We do have a valid JSON structure
+                // Try to construct object from JSON structure
+                var error: ErrorType?
+                let object = T(representation: value, error: &error)
                 
-                do {
-                    
-                    // Try to construct object from JSON structure
-                    let object = try T(representation: value)
-                    completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Success(object))
-                    
-                } catch let thrownError {
-                    
+                if let error = error {
                     // Call completion handler with error result
-                    completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Failure(nil, thrownError))
+                    completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Failure(nil, error))
                     
+                } else {
+                    
+                    // Call completion handler wiht result
+                    completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Success(object))
                 }
+                
+                
+                
+//                do {
+//                    
+//                    // Try to construct object from JSON structure
+//                    var error: ErrorType?
+//                    let object = try T(representation: value, error: &error)
+//                    completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Success(object))
+//                    
+//                } catch let thrownError {
+//                    
+//                    // Call completion handler with error result
+//                    completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Failure(nil, thrownError))
+//                    
+//                }
             
             case .Failure(let data, let error):
                 
@@ -79,19 +91,28 @@ extension Alamofire.Request {
         
         if let mockData = NSData(contentsOfFile: path) {
             
+            // Load JSON from mock response file
             do {
-                // Load JSON from mock response file
+                
                 let jsonObject: AnyObject = try NSJSONSerialization.JSONObjectWithData(mockData, options: NSJSONReadingOptions.AllowFragments)
                 
                 // Try to construct the object from the JSON structure
-                let object = try T(representation: jsonObject)
-                completionHandler(Result<T>.Success(object))
+                var error: ErrorType?
+                let object = T(representation: jsonObject, error: &error)
                 
-            } catch let thrownError {
-                
-                completionHandler(Result<T>.Failure(nil, thrownError))
-                
+                if let error = error {
+                    
+                    completionHandler(Result<T>.Failure(nil, error))
+                    
+                } else {
+                    
+                    completionHandler(Result<T>.Success(object))
+                }
             }
+            catch let error {
+                
+                completionHandler(Result<T>.Failure(nil, error))
+            }            
         }
         
         return self

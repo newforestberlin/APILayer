@@ -31,24 +31,13 @@ class DemoEntity: ResponseObjectSerializable {
     let lastName: String
     let age: Int
     
-    required init(representation: AnyObject) throws {
+    required init(representation: AnyObject, inout error: ErrorType?) {
         
         let mapper = API.parameterMapper
-        var error: ErrorType?
         
         firstName = mapper.value(fromRepresentation: representation, key: keys.firstName, error: &error)
         lastName = mapper.value(fromRepresentation: representation, key: keys.lastName, error: &error)
         age = mapper.value(fromRepresentation: representation, key: keys.age, error: &error)
-        
-        if let error = error {
-            throw error
-        }
-    }
-    
-    required init() {
-        firstName = ""
-        lastName = ""
-        age = 0
     }
     
 }

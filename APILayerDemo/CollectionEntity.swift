@@ -30,13 +30,16 @@ public class CollectionEntity<T: ResponseObjectSerializable> {
     
     public var items: [T]
     
-    init(collection: CollectionResponse) throws {
+    init(collection: CollectionResponse) {
         
         items = []
         
         for item in collection.items {
-            let object = try T(representation: item)
-            items.append(object)
+            var error: ErrorType?
+            let object = T(representation: item, error: &error)
+            if error == nil {
+                items.append(object)
+            }
         }
     }
     

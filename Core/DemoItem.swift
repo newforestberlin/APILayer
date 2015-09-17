@@ -31,24 +31,13 @@ class DemoItem: ResponseObjectSerializable {
     let title: String
     let awesomeCount: Int?
 
-    required init(representation: AnyObject) throws {
+    required init(representation: AnyObject, inout error: ErrorType?) {
         
         let mapper = API.parameterMapper
-        var error: ErrorType?
         
         itemId = mapper.value(fromRepresentation: representation, key: keys.itemId, error: &error)
         title = mapper.value(fromRepresentation: representation, key: keys.title, error: &error)
         awesomeCount = mapper.value(fromRepresentation: representation, key: keys.awesomeCount)
-        
-        if let error = error {
-            throw error
-        }
-    }
-    
-    required init() {
-        itemId = ""
-        title = ""
-        awesomeCount = nil
     }
     
 }

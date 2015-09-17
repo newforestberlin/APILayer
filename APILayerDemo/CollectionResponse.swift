@@ -30,7 +30,7 @@ public class CollectionResponse: ResponseObjectSerializable {
     
     public let items: [AnyObject]
     
-    required public init(representation: AnyObject) throws {
+    required public init(representation: AnyObject, inout error: ErrorType?) {
         
         let itemsKey = API.parameterMapper.collectionResponseItemsKey
         
@@ -39,12 +39,8 @@ public class CollectionResponse: ResponseObjectSerializable {
         }
         else {
             items = []
-            throw ResponseObjectDeserializationError.MissingKey(description: "The '\(itemsKey)' key is missing in this collection response" )
+            error = ResponseObjectDeserializationError.MissingKey(description: "The '\(itemsKey)' key is missing in this collection response" )
         }
-    }
-    
-    public required init() {
-        items = []
     }
     
 }
