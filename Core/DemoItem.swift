@@ -23,19 +23,15 @@
 
 import Foundation
 
-// Type for items returned by demo "API" response
-public class DemoItem: ResponseObjectSerializable {
+class DemoItem: ResponseObjectSerializable {
 
-    // Keys for serializing JSON
     let keys = (itemId: "id", title: "title", awesomeCount: "awesome_count")
     
-    // Properties of the entity. Optional values can be nil in the JSON, non-optional values must be present or the request will fail
-    public let itemId: String
-    public let title: String
-    public let awesomeCount: Int?
+    let itemId: String
+    let title: String
+    let awesomeCount: Int?
 
-    // Get property values from parsed JSON
-    public required init(representation: AnyObject) throws {
+    required init(representation: AnyObject) throws {
         
         let mapper = API.parameterMapper
         var error: ErrorType?
@@ -49,7 +45,7 @@ public class DemoItem: ResponseObjectSerializable {
         }
     }
     
-    public required init() {
+    required init() {
         itemId = ""
         title = ""
         awesomeCount = nil

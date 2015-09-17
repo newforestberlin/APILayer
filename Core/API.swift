@@ -54,7 +54,7 @@ class RequestWrapper: URLRequestConvertible {
 private var API_mapper = ParameterMapper()
 
 // If this one is set it might return mock paths for router cases, in which case the API does use mock data from local filesystem
-private var API_mocker: MockingProtocol?
+private var API_mocker: MockProtocol?
 
 // This queue is used to delay requests when a token refresh is needed. The requests are then performed after the refresh is done.
 private var API_operations = NSOperationQueue()
@@ -79,7 +79,7 @@ public class API {
     }
     
     // A user of the API is mean to implement a subclass of ParameterWrapper and set it to this property
-    public class var mocker: MockingProtocol? {
+    public class var mocker: MockProtocol? {
         get {
             return API_mocker
         }
@@ -229,7 +229,7 @@ public class API {
             complete(result)
         }
     }
-    
+
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
     // This version also gives the http response to the completion block
     public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (Result<T>, NSHTTPURLResponse?) -> ()) {

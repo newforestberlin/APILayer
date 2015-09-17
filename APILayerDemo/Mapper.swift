@@ -26,17 +26,13 @@ import Foundation
 class Mapper: ParameterMapper {
 
     override func parametersForRouter(router: RouterProtocol) -> [String : AnyObject] {
-        if let route = router as? Router {
-            
-            switch route {
-            case .DemoGETRequest(_):
-                return ["title" : "random title sent to backend"]
-            case .DemoPOSTRequest(_):
-                return [:]
-            case .DemoPUTRequest(_):
-                return [:]
-            case .DemoDELETERequest(_):
-                return [:]
+        
+        if let router = router as? Router {
+            switch router {
+            case .GetEntity(let id):
+                return ["id": id]
+            default:
+                ()
             }
         }
         

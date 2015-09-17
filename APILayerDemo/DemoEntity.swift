@@ -23,30 +23,33 @@
 
 import Foundation
 
-// Type for items returned by demo "API" response
-public class DemoItems: ResponseObjectSerializable {
+class DemoEntity: ResponseObjectSerializable {
     
-    // Keys for extracting from the parsed JSON
-    let keys = (items: "items", dummy: "dummy")
+    let keys = (firstName: "firstname", lastName: "lastname", age: "age")
     
-    // Properties of the entity. We make these optional so that parsing never fails
-    public let items: [DemoItem]
+    let firstName: String
+    let lastName: String
+    let age: Int
     
-    // Get property values from parsed JSON
-    public required init(representation: AnyObject) throws {
+    required init(representation: AnyObject) throws {
         
         let mapper = API.parameterMapper
         var error: ErrorType?
         
-        items = mapper.entityArray(fromRepresentation: representation, key: keys.items, error: &error)
+        firstName = mapper.value(fromRepresentation: representation, key: keys.firstName, error: &error)
+        lastName = mapper.value(fromRepresentation: representation, key: keys.lastName, error: &error)
+        age = mapper.value(fromRepresentation: representation, key: keys.age, error: &error)
         
         if let error = error {
             throw error
         }
     }
     
-    public required init() {
-        items = []
+    required init() {
+        firstName = ""
+        lastName = ""
+        age = 0
     }
     
 }
+

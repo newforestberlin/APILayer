@@ -39,33 +39,10 @@ class ViewController: UIViewController {
     }
 
     @IBAction func doRequestAction(sender: AnyObject) {
-        
-        let tag = "you & the gang"
-
-        // This is ONE way to do it. For collections the requestCollection is easier to use, because you do not need a wrapping entity.
-        
-//        API.request(Router.DemoGETRequest(param: tag), complete: { (items: DemoItems?, error) -> () in
-//            
-//            let missing = "<missing>"
-//            
-//            if let validItems = items {
-//                var report = ""
-//                
-//                for item in validItems.items {
-//                    report = report + "itemId=\(item.itemId ?? missing), title=\(item.title ?? missing) ac=\(item.awesomeCount ?? 0)\n"
-//                }
-//                
-//                self.textView.text = report
-//            }
-//            else {
-//                self.textView.text = "Could not find any items! Error says \(error?.localizedDescription ?? missing)"
-//            }
-//        })
-        
-        API.requestCollection(Router.DemoGETRequest(param: tag)) { (result: Result<CollectionEntity<DemoItem>>) -> () in
-            
+                
+        API.requestCollection(Router.GetCollection) { (result: Result<CollectionEntity<DemoItem>>) -> () in
             let missing = "<missing>"
-                                    
+            
             if let collection = result.value {
                 var report = ""
                 
@@ -79,8 +56,16 @@ class ViewController: UIViewController {
                 self.textView.text = "Could not find any items!"
             }
             
+            API.request(Router.GetEntity(id: "123"), complete: { (result: Result<DemoEntity>) -> () in
+                
+                if let entity = result.value {
+                    self.textView.text = "\(self.textView.text)\n\nEntity has name \(entity.firstName) \(entity.lastName)"
+                }
+                else {
+                    self.textView.text = "\(self.textView.text)\n\nCould not retrieve entity from endpoint"
+                }
+            })
         }
-        
         
     }
 

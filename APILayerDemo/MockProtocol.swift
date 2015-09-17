@@ -1,5 +1,5 @@
 //
-//  MockingProtocol.swift
+//  MockProtocol.swift
 //  APILayerDemo
 //
 //  Created by Olee on 30.04.15.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol MockingProtocol {
+public protocol MockProtocol {
     func path(forRouter router: RouterProtocol) -> String?
 }
 
