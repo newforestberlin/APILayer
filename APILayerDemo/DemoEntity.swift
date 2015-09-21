@@ -23,29 +23,22 @@
 
 import Foundation
 
-// Type for items returned by demo "API" response
-public class DemoItems: ResponseObjectSerializable {
+class DemoEntity: ResponseObjectSerializable {
     
-    // Keys for extracting from the parsed JSON
-    public class var keys: (items: String, misc: String) {
-        return ("items", "tuple needs at least two elements")
-    }
+    let keys = (firstName: "firstname", lastName: "lastname", age: "age")
     
-    // Properties of the entity. We make these optional so that parsing never fails
-    public let items: [DemoItem]
+    let firstName: String
+    let lastName: String
+    let age: Int
     
-    // Get property values from parsed JSON
-    @objc public required init(response: NSHTTPURLResponse, representation: AnyObject, error: UnsafeMutablePointer<NSError?>) {
+    required init(representation: AnyObject, inout error: ErrorType?) {
         
-        // Get all the items
-        var itemList = [DemoItem]()
-        for item in representation.valueForKeyPath(DemoItems.keys.items) as! [AnyObject] {
-            let demoItem = DemoItem(response: response, representation: item, error: error)
-            itemList.append(demoItem)
-        }
+        let mapper = API.parameterMapper
         
-        // Keep the list
-        items = itemList
+        firstName = mapper.value(fromRepresentation: representation, key: keys.firstName, error: &error)
+        lastName = mapper.value(fromRepresentation: representation, key: keys.lastName, error: &error)
+        age = mapper.value(fromRepresentation: representation, key: keys.age, error: &error)
     }
     
 }
+

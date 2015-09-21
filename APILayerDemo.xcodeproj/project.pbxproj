@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7D02B4391AF2213E00712B71 /* MockingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D02B4381AF2213E00712B71 /* MockingProtocol.swift */; };
-		7D02B43A1AF2213E00712B71 /* MockingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D02B4381AF2213E00712B71 /* MockingProtocol.swift */; };
-		7D02B43B1AF2213E00712B71 /* MockingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D02B4381AF2213E00712B71 /* MockingProtocol.swift */; };
+		7D02B4391AF2213E00712B71 /* MockProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D02B4381AF2213E00712B71 /* MockProtocol.swift */; };
+		7D02B43A1AF2213E00712B71 /* MockProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D02B4381AF2213E00712B71 /* MockProtocol.swift */; };
+		7D02B43B1AF2213E00712B71 /* MockProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D02B4381AF2213E00712B71 /* MockProtocol.swift */; };
 		7D56AB5A1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB531AC3117F00B9B90C /* AlamofireExtension.swift */; };
 		7D56AB5B1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB531AC3117F00B9B90C /* AlamofireExtension.swift */; };
 		7D56AB5C1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB531AC3117F00B9B90C /* AlamofireExtension.swift */; };
@@ -18,10 +18,6 @@
 		7D56AB5F1AC3117F00B9B90C /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB541AC3117F00B9B90C /* API.swift */; };
 		7D56AB601AC3117F00B9B90C /* DemoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB551AC3117F00B9B90C /* DemoItem.swift */; };
 		7D56AB611AC3117F00B9B90C /* DemoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB551AC3117F00B9B90C /* DemoItem.swift */; };
-		7D56AB621AC3117F00B9B90C /* DemoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB551AC3117F00B9B90C /* DemoItem.swift */; };
-		7D56AB631AC3117F00B9B90C /* DemoItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB561AC3117F00B9B90C /* DemoItems.swift */; };
-		7D56AB641AC3117F00B9B90C /* DemoItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB561AC3117F00B9B90C /* DemoItems.swift */; };
-		7D56AB651AC3117F00B9B90C /* DemoItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB561AC3117F00B9B90C /* DemoItems.swift */; };
 		7D56AB661AC3117F00B9B90C /* ParameterMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB571AC3117F00B9B90C /* ParameterMapper.swift */; };
 		7D56AB671AC3117F00B9B90C /* ParameterMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB571AC3117F00B9B90C /* ParameterMapper.swift */; };
 		7D56AB681AC3117F00B9B90C /* ParameterMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB571AC3117F00B9B90C /* ParameterMapper.swift */; };
@@ -41,6 +37,8 @@
 		7DB07EF71B3C46AF002B98AD /* TokenRefreshOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB07EF61B3C46AF002B98AD /* TokenRefreshOperation.swift */; };
 		7DB07EF81B3C540B002B98AD /* TokenRefreshOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB07EF61B3C46AF002B98AD /* TokenRefreshOperation.swift */; };
 		7DB07EF91B3C545B002B98AD /* TokenRefreshOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB07EF61B3C46AF002B98AD /* TokenRefreshOperation.swift */; };
+		7DEFDA601BAAEDAE007A340B /* DemoEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DEFDA5F1BAAEDAE007A340B /* DemoEntity.swift */; settings = {ASSET_TAGS = (); }; };
+		7DEFDA611BAAEDAE007A340B /* DemoEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DEFDA5F1BAAEDAE007A340B /* DemoEntity.swift */; settings = {ASSET_TAGS = (); }; };
 		7F117F201A8B518F0060A32D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F117F1F1A8B518F0060A32D /* AppDelegate.swift */; };
 		7F117F221A8B518F0060A32D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F117F211A8B518F0060A32D /* ViewController.swift */; };
 		7F117F251A8B518F0060A32D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F117F231A8B518F0060A32D /* Main.storyboard */; };
@@ -94,11 +92,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		7D02B4381AF2213E00712B71 /* MockingProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockingProtocol.swift; sourceTree = "<group>"; };
+		7D02B4381AF2213E00712B71 /* MockProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockProtocol.swift; sourceTree = "<group>"; };
 		7D56AB531AC3117F00B9B90C /* AlamofireExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlamofireExtension.swift; path = Core/AlamofireExtension.swift; sourceTree = SOURCE_ROOT; };
 		7D56AB541AC3117F00B9B90C /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = API.swift; path = Core/API.swift; sourceTree = SOURCE_ROOT; };
 		7D56AB551AC3117F00B9B90C /* DemoItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DemoItem.swift; path = Core/DemoItem.swift; sourceTree = SOURCE_ROOT; };
-		7D56AB561AC3117F00B9B90C /* DemoItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DemoItems.swift; path = Core/DemoItems.swift; sourceTree = SOURCE_ROOT; };
 		7D56AB571AC3117F00B9B90C /* ParameterMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ParameterMapper.swift; path = Core/ParameterMapper.swift; sourceTree = SOURCE_ROOT; };
 		7D56AB581AC3117F00B9B90C /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Router.swift; path = Core/Router.swift; sourceTree = SOURCE_ROOT; };
 		7D56AB591AC3117F00B9B90C /* RouterProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RouterProtocol.swift; path = Core/RouterProtocol.swift; sourceTree = SOURCE_ROOT; };
@@ -106,6 +103,7 @@
 		7D5761B41AE52E9600BE78B8 /* CollectionEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionEntity.swift; sourceTree = "<group>"; };
 		7D74B40C1AF11B7E0060DB32 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		7DB07EF61B3C46AF002B98AD /* TokenRefreshOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenRefreshOperation.swift; sourceTree = "<group>"; };
+		7DEFDA5F1BAAEDAE007A340B /* DemoEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoEntity.swift; sourceTree = "<group>"; };
 		7F117F1A1A8B518F0060A32D /* APILayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APILayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F117F1E1A8B518F0060A32D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7F117F1F1A8B518F0060A32D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -254,7 +252,7 @@
 				7D56AB591AC3117F00B9B90C /* RouterProtocol.swift */,
 				7D5761B01AE52E5400BE78B8 /* CollectionResponse.swift */,
 				7D5761B41AE52E9600BE78B8 /* CollectionEntity.swift */,
-				7D02B4381AF2213E00712B71 /* MockingProtocol.swift */,
+				7D02B4381AF2213E00712B71 /* MockProtocol.swift */,
 				7DB07EF61B3C46AF002B98AD /* TokenRefreshOperation.swift */,
 			);
 			name = Core;
@@ -274,7 +272,7 @@
 			isa = PBXGroup;
 			children = (
 				7D56AB551AC3117F00B9B90C /* DemoItem.swift */,
-				7D56AB561AC3117F00B9B90C /* DemoItems.swift */,
+				7DEFDA5F1BAAEDAE007A340B /* DemoEntity.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -356,6 +354,8 @@
 		7F117F121A8B518F0060A32D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "you & the gang";
 				TargetAttributes = {
@@ -447,8 +447,8 @@
 				7F117F221A8B518F0060A32D /* ViewController.swift in Sources */,
 				7D56AB6C1AC3117F00B9B90C /* RouterProtocol.swift in Sources */,
 				9DF63E971AB4804100B527B9 /* Mapper.swift in Sources */,
-				7D02B4391AF2213E00712B71 /* MockingProtocol.swift in Sources */,
-				7D56AB631AC3117F00B9B90C /* DemoItems.swift in Sources */,
+				7DEFDA601BAAEDAE007A340B /* DemoEntity.swift in Sources */,
+				7D02B4391AF2213E00712B71 /* MockProtocol.swift in Sources */,
 				7D56AB691AC3117F00B9B90C /* Router.swift in Sources */,
 				7F117F201A8B518F0060A32D /* AppDelegate.swift in Sources */,
 				7D56AB5D1AC3117F00B9B90C /* API.swift in Sources */,
@@ -466,13 +466,13 @@
 				7D56AB6A1AC3117F00B9B90C /* Router.swift in Sources */,
 				7D5761B61AE52E9600BE78B8 /* CollectionEntity.swift in Sources */,
 				9DD010A61AB4AB17003AD961 /* Mapper.swift in Sources */,
-				7D56AB641AC3117F00B9B90C /* DemoItems.swift in Sources */,
+				7DEFDA611BAAEDAE007A340B /* DemoEntity.swift in Sources */,
 				7D56AB611AC3117F00B9B90C /* DemoItem.swift in Sources */,
 				7D56AB5B1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */,
 				7D5761B21AE52E5400BE78B8 /* CollectionResponse.swift in Sources */,
 				7D56AB671AC3117F00B9B90C /* ParameterMapper.swift in Sources */,
 				7D56AB5E1AC3117F00B9B90C /* API.swift in Sources */,
-				7D02B43A1AF2213E00712B71 /* MockingProtocol.swift in Sources */,
+				7D02B43A1AF2213E00712B71 /* MockProtocol.swift in Sources */,
 				7F117F361A8B518F0060A32D /* APILayerDemoTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -483,12 +483,10 @@
 			files = (
 				7D56AB5F1AC3117F00B9B90C /* API.swift in Sources */,
 				7D56AB6E1AC3117F00B9B90C /* RouterProtocol.swift in Sources */,
-				7D02B43B1AF2213E00712B71 /* MockingProtocol.swift in Sources */,
+				7D02B43B1AF2213E00712B71 /* MockProtocol.swift in Sources */,
 				7D5761B71AE52E9600BE78B8 /* CollectionEntity.swift in Sources */,
-				7D56AB651AC3117F00B9B90C /* DemoItems.swift in Sources */,
 				7DB07EF81B3C540B002B98AD /* TokenRefreshOperation.swift in Sources */,
 				7D56AB5C1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */,
-				7D56AB621AC3117F00B9B90C /* DemoItem.swift in Sources */,
 				7D5761B31AE52E5400BE78B8 /* CollectionResponse.swift in Sources */,
 				7D56AB681AC3117F00B9B90C /* ParameterMapper.swift in Sources */,
 			);

@@ -30,19 +30,16 @@ public class CollectionEntity<T: ResponseObjectSerializable> {
     
     public var items: [T]
     
-    init(response: NSHTTPURLResponse, collection: CollectionResponse, error: UnsafeMutablePointer<NSError?>) {
+    init(collection: CollectionResponse) {
         
         items = []
         
         for item in collection.items {
-            let object = T(response: response, representation: item, error: error)
-            
-            if let validError = error.memory {
-                // If one instance could not get constructed, return because we failed
-                return
+            var error: ErrorType?
+            let object = T(representation: item, error: &error)
+            if error == nil {
+                items.append(object)
             }
-            
-            items.append(object)
         }
     }
     

@@ -34,10 +34,8 @@ public enum Router: RouterProtocol {
     public var urlEncode: Bool { return true }
 
     // Cases for all the different API calls
-    case DemoGETRequest(param: String)
-    case DemoPOSTRequest(param: String)
-    case DemoPUTRequest(param: String)
-    case DemoDELETERequest(param: String)
+    case GetCollection
+    case GetEntity(id: String)
     
     // Base URL of the API
     public var baseURLString: String {
@@ -47,41 +45,22 @@ public enum Router: RouterProtocol {
     // Methods for all the different calls
     public var method: Alamofire.Method {
         switch self {
-        case .DemoGETRequest:
+        case .GetCollection, .GetEntity:
             return .GET
-        case .DemoPOSTRequest:
-            return .POST
-        case .DemoPUTRequest:
-            return .PUT
-        case .DemoDELETERequest:
-            return .DELETE
         }
     }
     
     // Relative paths for all the different calls
     public var path: String {
         switch self {
-        case .DemoGETRequest:
-            return "static/apilayer-test.json"
-        case .DemoPOSTRequest:
-            return "not/implemented"
-        case .DemoPUTRequest:
-            return "not/implemented"
-        case .DemoDELETERequest:
-            return "not/implemented"
+        case .GetCollection:
+            return "static/apilayer-demo-collection.json"
+        case .GetEntity:
+            return "static/apilayer-demo-entity.json"
         }
     }
     
     public var encoding: ParameterEncoding {
-        switch self {
-        case .DemoGETRequest:
-            return ParameterEncoding.URL
-        case .DemoPOSTRequest:
-            return ParameterEncoding.JSON
-        case .DemoPUTRequest:
-            return ParameterEncoding.JSON
-        case .DemoDELETERequest:
-            return ParameterEncoding.JSON
-        }
+        return ParameterEncoding.URL
     }
 }

@@ -42,19 +42,19 @@ public protocol TokenRefreshDelegate {
 
 // Wrapper to make NSURLRequest conform to URLRequestConvertible
 class RequestWrapper: URLRequestConvertible {
-    let request: NSURLRequest
-    init(request: NSURLRequest) {
+    let request: NSMutableURLRequest
+    init(request: NSMutableURLRequest) {
         self.request = request
     }
     
-    var URLRequest: NSURLRequest { return request }
+    var URLRequest: NSMutableURLRequest { return request }
 }
 
 // Temp solutions until Class variables are supperted in Swift
 private var API_mapper = ParameterMapper()
 
 // If this one is set it might return mock paths for router cases, in which case the API does use mock data from local filesystem
-private var API_mocker: MockingProtocol?
+private var API_mocker: MockProtocol?
 
 // This queue is used to delay requests when a token refresh is needed. The requests are then performed after the refresh is done.
 private var API_operations = NSOperationQueue()
@@ -79,7 +79,7 @@ public class API {
     }
     
     // A user of the API is mean to implement a subclass of ParameterWrapper and set it to this property
-    public class var mocker: MockingProtocol? {
+    public class var mocker: MockProtocol? {
         get {
             return API_mocker
         }
@@ -134,12 +134,12 @@ public class API {
     
     // MARK: Request performing 
     
-    private class func performRouter<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSHTTPURLResponse?, NSError?) -> ()) {
+    private class func performRouter<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T>) -> ()) {
 
         // Do the actual request
-        var request = API.createRequest(forRouter: router)
+        let request = API.createRequest(forRouter: router)
         
-        request.responseObject { (_, response: NSHTTPURLResponse?, result: T?, error) in
+        request.responseObject { (request: NSURLRequest?, response: NSHTTPURLResponse?, result: Result<T>) in
             
             if let response = response, let tokenRefreshDelegate = self.tokenRefreshDelegate {
                 
@@ -171,16 +171,16 @@ public class API {
             }
             
             // No refresh needed, call completion block
-            complete(result, response, error)
+            complete(request, response, result)
         }
         
     }
     
     // MARK: Request enqueueing
     
-    private class func enqueueRouter<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSHTTPURLResponse?, NSError?) -> ()) {
+    private class func enqueueRouter<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T>) -> ()) {
 
-        var blockOperation = NSBlockOperation(block: {
+        let blockOperation = NSBlockOperation(block: {
             self.performRouter(router, complete: complete)
         })
         
@@ -193,12 +193,13 @@ public class API {
     
     // MARK: Private request method
     
-    private class func completeRequest<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSHTTPURLResponse?, NSError?) -> ()) {
+    private class func completeRequest<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T>) -> ()) {
         
         if let mocker = API_mocker, let path = mocker.path(forRouter: router) {
             let request = API.createRequest(forRouter: router)
-            request.mockObject(forPath: path, withRouter: router, completionHandler: { (_, response: NSHTTPURLResponse?, result: T?, error) -> Void in
-                complete(result, response, error)
+            
+            request.mockObject(forPath: path, withRouter: router, completionHandler: { (result) -> Void in
+                complete(nil, nil, result)
             })
         }
         else {
@@ -208,85 +209,85 @@ public class API {
     
     // MARK: Public request methods
     
-    public class func tokenRefresh<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSHTTPURLResponse?, NSError?) -> ()) {
+    public class func tokenRefresh<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (Result<T>) -> ()) {
 
-        var request = API.createRequest(forRouter: router)
+        // This method must be used by the actual token refresh logic in the app. 
+        // It does not use the operation queue used for other requests.
         
-        request.responseObject { (_, response: NSHTTPURLResponse?, result: T?, error) in
-            // No refresh needed, call completion block
-            
-            complete(result, response, error)
+        let request = API.createRequest(forRouter: router)
+        
+        request.responseObject { (request, response, result: Result<T>) -> Void in
+            complete(result)
         }
         
     }
     
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
-    public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSError?) -> ()) {
-
-        API.completeRequest(router, complete: { (result, response, error) -> () in
-            complete(result, error)
-        })
+    public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (Result<T>) -> ()) {
+        
+        API.completeRequest(router) { (urlRequest, urlResponse, result: Result<T>) -> () in
+            complete(result)
+        }
     }
-    
+
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
     // This version also gives the http response to the completion block
-    public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (T?, NSHTTPURLResponse?, NSError?) -> ()) {
+    public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (Result<T>, NSHTTPURLResponse?) -> ()) {
 
-        API.completeRequest(router, complete: { (result, response, error) -> () in
-            complete(result, response, error)
-        })
+        API.completeRequest(router) { (urlRequest, urlResponse, result: Result<T>) -> () in
+            complete(result, urlResponse)
+        }
+
     }
     
     // MARK: Helper method for requesting collections
 
-    // We unfortunately have to use this extra call for collection parsing because Swift has problems with
-    // generic types being used as generic types (A<T> as <T> in another class / method).
-    public class func requestCollection<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (CollectionEntity<T>?, NSError?) -> ()) {
+    public class func requestCollection<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (Result<CollectionEntity<T>>) -> ()) {
         
-
-        API.request(router, complete: { (collectionResponse: CollectionResponse?, error) -> () in
+        API.request(router) { (result: Result<CollectionResponse>) -> () in
             
-            if let validCollection = collectionResponse {
+            switch result {
+            case .Success(let value):
                 
-                var localError: NSError?
-                
-                let result = CollectionEntity<T>(response: NSHTTPURLResponse(), collection: validCollection, error: &localError)
-                
-                if let existingError = localError {
-                    complete(nil, localError)
+                do {
+                    
+                    let result = try CollectionEntity<T>(collection: value)
+                    complete(Result<CollectionEntity<T>>.Success(result))
+                    
+                } catch let thrownError {
+                    
+                    complete(Result<CollectionEntity<T>>.Failure(nil, thrownError))
                 }
-                else {
-                    complete(result, nil)
-                }
                 
+            case .Failure(_, let errorType):
+                
+                complete(Result<CollectionEntity<T>>.Failure(nil, errorType))
             }
-            else {
-                complete(nil, error)
-            }
-        })
+            
+        }
     }
     
     // MARK: Methods to help with debugging
     
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
-    public class func requestString(router: RouterProtocol, complete: (String?, NSHTTPURLResponse?, NSError?) -> ()) {
+    public class func requestString(router: RouterProtocol, complete: (Result<String>) -> ()) {
         
-        var request = API.createRequest(forRouter: router)
+        let request = API.createRequest(forRouter: router)
         
-        request.responseString(encoding: NSStringEncoding(NSUTF8StringEncoding)) { (internalRequest, response, responseString: String?, error) -> Void in
-            complete(responseString, response, error)
+        request.responseString(encoding: NSStringEncoding(NSUTF8StringEncoding)) { (internalRequest, response, result) -> Void in
+            complete(result)
         }
         
     }
     
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
-    public class func requestStatus(router: RouterProtocol, complete: (Int, NSError?) -> ()) {
+    public class func requestStatus(router: RouterProtocol, complete: (Int?, ErrorType?) -> ()) {
         
-        var request = API.createRequest(forRouter: router)
+        let request = API.createRequest(forRouter: router)
         
-        request.response { (internalRequest, response, resultObject, error) -> Void in
-            let statusCode = response?.statusCode ?? 0
-            complete(statusCode, error)
+        request.response { (urlRequest, urlResponse, data, errorType) -> Void in
+            let statusCode = urlResponse?.statusCode
+            complete(statusCode, errorType)
         }
         
     }

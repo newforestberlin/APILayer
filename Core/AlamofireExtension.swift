@@ -27,104 +27,92 @@
 import Foundation
 import Alamofire
 
-@objc public protocol ResponseObjectSerializable {
-    init(response: NSHTTPURLResponse, representation: AnyObject, error: UnsafeMutablePointer<NSError?>)
+// Thrown by the parameter mapper if keys can't be found or values are invalid
+enum ResponseObjectDeserializationError: ErrorType {
+    case MissingKey(description: String)
+    case InvalidValue(description: String)
+}
+
+// Protocol for objects that can be constructed from parsed JSON. 
+public protocol ResponseObjectSerializable {
+    init(representation: AnyObject, inout error: ErrorType?)
 }
 
 extension Alamofire.Request {
     
     // MARK: Parsing method
     
-    public func responseObject<T: ResponseObjectSerializable>(completionHandler: (NSURLRequest, NSHTTPURLResponse?, T?, NSError?) -> Void) -> Self {
-        let serializer: Serializer = { (request, response, data) in
-            
-            if response?.statusCode < 200 && response?.statusCode >= 300 {
-                return (nil, NSError(domain: "APILayer.httpStatus", code: 0, userInfo: nil))
-            }
-            
-            let JSONSerializer = Request.JSONResponseSerializer(options: .AllowFragments)
-            let (JSON: AnyObject?, serializationError) = JSONSerializer(request, response, data)
-            
-            if response != nil && JSON != nil {
-                
-                var error: NSError?
-                
-                let result = T(response: response!, representation: JSON!, error: &error)
-                
-                if let validError = error {
-                    // Construct a new error, based on the internal errors userInfo dictionary and add the URL of the request
-                    var newUserInfo = validError.userInfo ?? [NSObject : AnyObject]()
-                    
-                    if let urlString = request.URL?.absoluteString {
-                        newUserInfo[NSURLErrorKey] = urlString
-                    }                    
-                    
-                    return (nil, NSError(domain: validError.domain, code: validError.code, userInfo: newUserInfo))
-                }
-                else {
-                    // No error, return result
-                    return (result, nil)
-                }
-                
-            } else {
-                
-                return (nil, serializationError)
-            }
-        }
+    public func responseObject<T: ResponseObjectSerializable>(completionHandler: (request: NSURLRequest?, response: NSHTTPURLResponse?, result: Result<T>) -> Void) -> Self {
         
-        return response(serializer: serializer, completionHandler: { (request, response, object, error) in
-            completionHandler(request, response, object as? T, error)
-        })
-    }    
+        return responseJSON(completionHandler: { (urlRequest, urlResponse, result) -> Void in
+            
+            switch result {
+            case .Success(let value):
+                
+                // Try to construct object from JSON structure
+                var error: ErrorType?
+                let object = T(representation: value, error: &error)
+                
+                if let error = error {
+                    // Call completion handler with error result
+                    completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Failure(nil, error))
+                    
+                } else {
+                    
+                    // Call completion handler wiht result
+                    completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Success(object))
+                }
+                
+                
+                
+//                do {
+//                    
+//                    // Try to construct object from JSON structure
+//                    var error: ErrorType?
+//                    let object = try T(representation: value, error: &error)
+//                    completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Success(object))
+//                    
+//                } catch let thrownError {
+//                    
+//                    // Call completion handler with error result
+//                    completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Failure(nil, thrownError))
+//                    
+//                }
+            
+            case .Failure(let data, let error):
+                
+                completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Failure(data, error))
+                
+            }
+        })        
+    }
     
-    public func mockObject<T: ResponseObjectSerializable>(forPath path: String, withRouter router: RouterProtocol, completionHandler: (NSURLRequest, NSHTTPURLResponse?, T?, NSError?) -> Void) -> Self {
-        
-        let mockRequest = NSURLRequest()
-        let mockURL = NSURL(string: router.path)
-        var mockResponse: NSHTTPURLResponse?
+    public func mockObject<T: ResponseObjectSerializable>(forPath path: String, withRouter router: RouterProtocol, completionHandler: (Result<T>) -> Void) -> Self {
         
         if let mockData = NSData(contentsOfFile: path) {
             
-            var jsonError: NSError?
-            if let jsonObject: AnyObject = NSJSONSerialization.JSONObjectWithData(mockData, options: NSJSONReadingOptions.AllowFragments, error: &jsonError) {
+            // Load JSON from mock response file
+            do {
                 
-                var parsingError: NSError?
-                let result = T(response: response!, representation: jsonObject, error: &parsingError)
-
-                if let validError = parsingError {
-                    if let mockURL = mockURL {
-                        mockResponse = NSHTTPURLResponse(URL: mockURL, statusCode: 401, HTTPVersion: nil, headerFields: nil)
-                    }
-
-                    // Construct a new error, based on the internal errors userInfo dictionary and add the URL of the request
-                    var newUserInfo = validError.userInfo ?? [NSObject : AnyObject]()
-                    
-                    if let urlString = request.URL?.absoluteString {
-                        newUserInfo[NSURLErrorKey] = urlString
-                    }
-                    
-                    completionHandler(mockRequest, mockResponse, nil, NSError(domain: validError.domain, code: validError.code, userInfo: newUserInfo))
-                }
-                else {
-                    // No error, return result
-                    if let mockURL = mockURL {
-                        mockResponse = NSHTTPURLResponse(URL: mockURL, statusCode: 200, HTTPVersion: nil, headerFields: nil)
-                    }
-                    
-                    completionHandler(mockRequest, mockResponse, result, nil)
-                }
+                let jsonObject: AnyObject = try NSJSONSerialization.JSONObjectWithData(mockData, options: NSJSONReadingOptions.AllowFragments)
                 
+                // Try to construct the object from the JSON structure
+                var error: ErrorType?
+                let object = T(representation: jsonObject, error: &error)
+                
+                if let error = error {
+                    
+                    completionHandler(Result<T>.Failure(nil, error))
+                    
+                } else {
+                    
+                    completionHandler(Result<T>.Success(object))
+                }
             }
-            else {
-                // JSON deserialization failed
-                var newUserInfo = [NSObject : AnyObject]()
+            catch let error {
                 
-                if let urlString = request.URL?.absoluteString {
-                    newUserInfo[NSURLErrorKey] = urlString
-                }
-                
-                completionHandler(mockRequest, nil, nil, NSError(domain: "APILayer", code: 0, userInfo: newUserInfo))
-            }
+                completionHandler(Result<T>.Failure(nil, error))
+            }            
         }
         
         return self
