@@ -95,25 +95,27 @@ public class ParameterMapper {
     }
 
     public func value<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String) -> [T]? {
-        
-        if let validArray = representation as? [AnyObject] {
-            
-            var result = [T]()
-            
-            for candidateItem in validArray {
-                if let validDict = candidateItem as? [String: AnyObject] {
-                    
-                    var localError: ErrorType?
-                    let entity = T(representation: validDict, error: &localError)
-                    
-                    // If deserialization of the entity failed, we ignore it
-                    if localError == nil {
-                        result.append(entity)
+     
+        if let candidateObject: AnyObject = representation.valueForKey(key) {
+            if let validArray = candidateObject as? [AnyObject] {
+                
+                var result = [T]()
+                
+                for candidateItem in validArray {
+                    if let validDict = candidateItem as? [String: AnyObject] {
+                        
+                        var localError: ErrorType?
+                        let entity = T(representation: validDict, error: &localError)
+                        
+                        // If deserialization of the entity failed, we ignore it
+                        if localError == nil {
+                            result.append(entity)
+                        }
                     }
                 }
+                
+                return result
             }
-            
-            return result
         }
         
         return nil
