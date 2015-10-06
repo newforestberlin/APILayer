@@ -27,11 +27,10 @@ import Foundation
 public protocol Defaultable {init()}
 extension Int: Defaultable {}
 extension String: Defaultable {}
-extension NSDate: Defaultable {}
 extension Float: Defaultable {}
 extension Double: Defaultable {}
 extension Bool: Defaultable {}
-extension Optional: Defaultable {}
+//extension Optional: Defaultable {}
 
 public class ParameterMapper {        
     
@@ -153,6 +152,153 @@ public class ParameterMapper {
         return []
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    public func magic<T: Defaultable>(fromRepresentation representation: AnyObject, key: String) -> T? {
+        if let value = representation.valueForKeyPath(key) as? T {
+            return value
+        }
+        
+        return nil
+    }
+    
+    public func magic<T: Defaultable>(fromRepresentation representation: AnyObject, key: String) -> [T]? {
+        
+        if let value = representation.valueForKeyPath(key) as? [T] {
+            return value
+        }
+        
+        return nil
+    }
+
+    public func magic<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String) -> T? {
+        if let candidateObject: AnyObject = representation.valueForKey(key) {
+            if let validDict = candidateObject as? [String: AnyObject] {
+                
+                var error: ErrorType?
+                let entity = T(representation: validDict, error: &error)
+                return error == nil ? entity : nil
+            }
+        }
+        
+        return nil
+    }
+
+    public func magic<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String) -> [T]? {
+        
+        if let validArray = representation as? [AnyObject] {
+            
+            var result = [T]()
+            
+            for candidateItem in validArray {
+                if let validDict = candidateItem as? [String: AnyObject] {
+                    
+                    var localError: ErrorType?
+                    let entity = T(representation: validDict, error: &localError)
+                    
+                    // If deserialization of the entity failed, we ignore it
+                    if localError == nil {
+                        result.append(entity)
+                    }
+                }
+            }
+            
+            return result
+        }
+        
+        return nil
+    }
+    
+    public func magic(fromRepresentation representation: AnyObject, key: String) -> NSDate? {
+        if let value = representation.valueForKeyPath(key) as? String {
+            if let date = dateFormatter.dateFromString(value) {
+                return date
+            }
+        }
+        
+        return nil
+    }
+    
+    
+    public func magic<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> T {
+        if let value = representation.valueForKeyPath(key) as? T {
+            return value
+        }
+        
+        error = ResponseObjectDeserializationError.MissingKey(description: "Could not extract value for key \(key). Key is missing.")
+        
+        return T()
+    }
+    
+    public func magic<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> [T] {
+        if let value = representation.valueForKeyPath(key) as? [T] {
+            return value
+        }
+        
+        error = ResponseObjectDeserializationError.MissingKey(description: "Could not extract array for key \(key). Key is missing or type is wrong.")
+
+        return []
+    }
+    
+    public func magic<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> T {
+        if let candidateObject: AnyObject = representation.valueForKey(key) {
+            if let validDict = candidateObject as? [String: AnyObject] {
+                
+                var localError: ErrorType?
+                let entity = T(representation: validDict, error: &localError)
+                
+                if let localError = localError {
+                    error = localError
+                }
+                
+                return entity
+                
+            } else {
+                error = ResponseObjectDeserializationError.InvalidValue(description: "Could not parse entity for key '\(key)'. Value is not a dictionary.")
+            }
+        }
+        else {
+            error = ResponseObjectDeserializationError.MissingKey(description: "Could not parse entity for key '\(key)'. Key is missing.")
+        }
+        
+        // Return some object (we do not want to throw, otherwise "let" properties would be a problem in response entities)
+        var dummyError: ErrorType?
+        return T(representation: [:], error: &dummyError)
+    }
+    
+    public func magic<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> [T] {
+        
+        if let validObject: AnyObject = representation.valueForKey(key) {
+            
+            let validArray: [T]? = entityArray(fromRepresentation: validObject)
+            if let validArray = validArray{
+                return validArray
+            }
+            else {
+                error = ResponseObjectDeserializationError.InvalidValue(description: "Could not parse entity array for key '\(key)'. Value is invalid.")
+            }
+            
+        }
+        
+        error = ResponseObjectDeserializationError.MissingKey(description: "Could not parse entity array for key '\(key)'. Key is missing.")
+        
+        return []
+    }
+    
+    public func magic(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> NSDate {
+        if let value = representation.valueForKeyPath(key) as? String {
+            if let date = dateFormatter.dateFromString(value) {
+                return date
+            }
+        }
+        
+        error = ResponseObjectDeserializationError.MissingKey(description: "Could not parse date for key '\(key)'. Key is missing or format is wrong.")
+        
+        return NSDate()
+    }
+    
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     // MARK: Entity parsing
     

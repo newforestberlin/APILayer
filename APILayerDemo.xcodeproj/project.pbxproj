@@ -10,6 +10,8 @@
 		7D02B4391AF2213E00712B71 /* MockProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D02B4381AF2213E00712B71 /* MockProtocol.swift */; };
 		7D02B43A1AF2213E00712B71 /* MockProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D02B4381AF2213E00712B71 /* MockProtocol.swift */; };
 		7D02B43B1AF2213E00712B71 /* MockProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D02B4381AF2213E00712B71 /* MockProtocol.swift */; };
+		7D2FFC1E1BC3C10700998E30 /* SubItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FFC1D1BC3C10700998E30 /* SubItem.swift */; };
+		7D2FFC1F1BC3C13800998E30 /* SubItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FFC1D1BC3C10700998E30 /* SubItem.swift */; };
 		7D56AB5A1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB531AC3117F00B9B90C /* AlamofireExtension.swift */; };
 		7D56AB5B1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB531AC3117F00B9B90C /* AlamofireExtension.swift */; };
 		7D56AB5C1AC3117F00B9B90C /* AlamofireExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D56AB531AC3117F00B9B90C /* AlamofireExtension.swift */; };
@@ -37,8 +39,8 @@
 		7DB07EF71B3C46AF002B98AD /* TokenRefreshOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB07EF61B3C46AF002B98AD /* TokenRefreshOperation.swift */; };
 		7DB07EF81B3C540B002B98AD /* TokenRefreshOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB07EF61B3C46AF002B98AD /* TokenRefreshOperation.swift */; };
 		7DB07EF91B3C545B002B98AD /* TokenRefreshOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB07EF61B3C46AF002B98AD /* TokenRefreshOperation.swift */; };
-		7DEFDA601BAAEDAE007A340B /* DemoEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DEFDA5F1BAAEDAE007A340B /* DemoEntity.swift */; settings = {ASSET_TAGS = (); }; };
-		7DEFDA611BAAEDAE007A340B /* DemoEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DEFDA5F1BAAEDAE007A340B /* DemoEntity.swift */; settings = {ASSET_TAGS = (); }; };
+		7DEFDA601BAAEDAE007A340B /* DemoEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DEFDA5F1BAAEDAE007A340B /* DemoEntity.swift */; };
+		7DEFDA611BAAEDAE007A340B /* DemoEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DEFDA5F1BAAEDAE007A340B /* DemoEntity.swift */; };
 		7F117F201A8B518F0060A32D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F117F1F1A8B518F0060A32D /* AppDelegate.swift */; };
 		7F117F221A8B518F0060A32D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F117F211A8B518F0060A32D /* ViewController.swift */; };
 		7F117F251A8B518F0060A32D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F117F231A8B518F0060A32D /* Main.storyboard */; };
@@ -93,6 +95,7 @@
 
 /* Begin PBXFileReference section */
 		7D02B4381AF2213E00712B71 /* MockProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockProtocol.swift; sourceTree = "<group>"; };
+		7D2FFC1D1BC3C10700998E30 /* SubItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubItem.swift; sourceTree = "<group>"; };
 		7D56AB531AC3117F00B9B90C /* AlamofireExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlamofireExtension.swift; path = Core/AlamofireExtension.swift; sourceTree = SOURCE_ROOT; };
 		7D56AB541AC3117F00B9B90C /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = API.swift; path = Core/API.swift; sourceTree = SOURCE_ROOT; };
 		7D56AB551AC3117F00B9B90C /* DemoItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DemoItem.swift; path = Core/DemoItem.swift; sourceTree = SOURCE_ROOT; };
@@ -273,6 +276,7 @@
 			children = (
 				7D56AB551AC3117F00B9B90C /* DemoItem.swift */,
 				7DEFDA5F1BAAEDAE007A340B /* DemoEntity.swift */,
+				7D2FFC1D1BC3C10700998E30 /* SubItem.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -447,6 +451,7 @@
 				7F117F221A8B518F0060A32D /* ViewController.swift in Sources */,
 				7D56AB6C1AC3117F00B9B90C /* RouterProtocol.swift in Sources */,
 				9DF63E971AB4804100B527B9 /* Mapper.swift in Sources */,
+				7D2FFC1E1BC3C10700998E30 /* SubItem.swift in Sources */,
 				7DEFDA601BAAEDAE007A340B /* DemoEntity.swift in Sources */,
 				7D02B4391AF2213E00712B71 /* MockProtocol.swift in Sources */,
 				7D56AB691AC3117F00B9B90C /* Router.swift in Sources */,
@@ -472,6 +477,7 @@
 				7D5761B21AE52E5400BE78B8 /* CollectionResponse.swift in Sources */,
 				7D56AB671AC3117F00B9B90C /* ParameterMapper.swift in Sources */,
 				7D56AB5E1AC3117F00B9B90C /* API.swift in Sources */,
+				7D2FFC1F1BC3C13800998E30 /* SubItem.swift in Sources */,
 				7D02B43A1AF2213E00712B71 /* MockProtocol.swift in Sources */,
 				7F117F361A8B518F0060A32D /* APILayerDemoTests.swift in Sources */,
 			);

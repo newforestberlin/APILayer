@@ -48,6 +48,9 @@ class ViewController: UIViewController {
                 
                 for item in collection.items {
                     report = report + "itemId=\(item.itemId ?? missing), title=\(item.title ?? missing) ac=\(item.awesomeCount ?? 0)\n"
+                    if let subItem = item.subItem {
+                        print("SUBITEM!")
+                    }
                 }
                 
                 self.textView.text = report
@@ -57,12 +60,12 @@ class ViewController: UIViewController {
             }
             
             API.request(Router.GetEntity(id: "123")) { (result: Result<DemoEntity>) -> () in
-                
-                if let entity = result.value {
-                    self.textView.text = "\(self.textView.text)\n\nEntity has name \(entity.firstName) \(entity.lastName)"
-                }
-                else {
-                    self.textView.text = "\(self.textView.text)\n\nCould not retrieve entity from endpoint"
+
+                switch result {
+                case .Success(let demoEntity):
+                    print(demoEntity.firstName)
+                case .Failure(let data, let error):
+                    print("Failed")
                 }
             }
         }

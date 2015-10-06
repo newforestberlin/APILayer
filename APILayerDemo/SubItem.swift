@@ -23,21 +23,17 @@
 
 import Foundation
 
-class DemoEntity: ResponseObjectSerializable {
+class SubItem: ResponseObjectSerializable {
     
-    let keys = (firstName: "firstname", lastName: "lastname", age: "age")
+    let keys = (name: "name", dummy: "dummy")
     
-    let firstName: String
-    let lastName: String
-    let age: Int
+    let name: String
     
     required init(representation: AnyObject, inout error: ErrorType?) {
         
         let mapper = API.parameterMapper
         
-        firstName = mapper.magic(fromRepresentation: representation, key: keys.firstName, error: &error)
-        lastName = mapper.magic(fromRepresentation: representation, key: keys.lastName, error: &error)
-        age = mapper.magic(fromRepresentation: representation, key: keys.age, error: &error)
+        name = mapper.magic(fromRepresentation: representation, key: keys.name, error: &error)
     }
     
 }

@@ -25,19 +25,22 @@ import Foundation
 
 class DemoItem: ResponseObjectSerializable {
 
-    let keys = (itemId: "id", title: "title", awesomeCount: "awesome_count")
+    let keys = (itemId: "id", title: "title", awesomeCount: "awesome_count", subItem: "subitem")
     
     let itemId: String
     let title: String
     let awesomeCount: Int?
+    let subItem: SubItem?
 
     required init(representation: AnyObject, inout error: ErrorType?) {
         
         let mapper = API.parameterMapper
         
-        itemId = mapper.value(fromRepresentation: representation, key: keys.itemId, error: &error)
-        title = mapper.value(fromRepresentation: representation, key: keys.title, error: &error)
-        awesomeCount = mapper.value(fromRepresentation: representation, key: keys.awesomeCount)
+        itemId = mapper.magic(fromRepresentation: representation, key: keys.itemId, error: &error)
+        title = mapper.magic(fromRepresentation: representation, key: keys.title, error: &error)
+        awesomeCount = mapper.magic(fromRepresentation: representation, key: keys.awesomeCount)
+        
+        subItem = mapper.magic(fromRepresentation: representation, key: keys.subItem)
     }
     
 }
