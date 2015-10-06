@@ -35,9 +35,9 @@ class DemoEntity: ResponseObjectSerializable {
         
         let mapper = API.parameterMapper
         
-        firstName = mapper.magic(fromRepresentation: representation, key: keys.firstName, error: &error)
-        lastName = mapper.magic(fromRepresentation: representation, key: keys.lastName, error: &error)
-        age = mapper.magic(fromRepresentation: representation, key: keys.age, error: &error)
+        firstName = mapper.value(fromRepresentation: representation, key: keys.firstName, error: &error)
+        lastName = mapper.value(fromRepresentation: representation, key: keys.lastName, error: &error)
+        age = mapper.value(fromRepresentation: representation, key: keys.age, error: &error)
     }
     
 }

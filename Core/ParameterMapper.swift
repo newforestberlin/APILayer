@@ -62,99 +62,9 @@ public class ParameterMapper {
         return [:]
     }
     
-    // MARK: General purpose value parsing
-    
+    // MARK: Value extraction
+  
     public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String) -> T? {
-        
-        if let value = representation.valueForKeyPath(key) as? T {
-            return value
-        }
-        
-        return nil
-    }
-
-    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> T {
-        
-        if let value = representation.valueForKeyPath(key) as? T {
-            return value
-        }
-        
-        error = ResponseObjectDeserializationError.MissingKey(description: "Could not extract value for key \(key). Key is missing.")
-                
-        return T()
-    }
-    
-    // MARK: Date parsing
-    
-    public func date(fromRepresentation representation: AnyObject, key: String) -> NSDate? {
-        
-        if let value = representation.valueForKeyPath(key) as? String {
-            if let date = dateFormatter.dateFromString(value) {
-                return date
-            }
-        }
-        
-        return nil
-    }
-    
-    public func date(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> NSDate {
-        
-        if let value = representation.valueForKeyPath(key) as? String {
-            if let date = dateFormatter.dateFromString(value) {
-                return date
-            }
-        }
-        
-        error = ResponseObjectDeserializationError.MissingKey(description: "Could not parse date for key '\(key)'. Date formatter might not recognize format.")
-        
-        return NSDate()
-    }
-    
-    // MARK: Array parsing
-
-    public func array(fromRepresentation representation: AnyObject, key: String) -> [String]? {
-        
-        if let value = representation.valueForKeyPath(key) as? [String] {
-            return value
-        }
-        
-        return nil
-    }
-    
-    public func array(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> [String] {
-        
-        if let value = representation.valueForKeyPath(key) as? [String] {
-            return value
-        }
-        
-        error = ResponseObjectDeserializationError.MissingKey(description: "Could not extract value for key \(key). Key is missing.")
-        
-        return []
-    }
-    
-    public func array(fromRepresentation representation: AnyObject, key: String) -> [Int]? {
-        
-        if let value = representation.valueForKeyPath(key) as? [Int] {
-            return value
-        }
-        
-        return nil
-    }
-    
-    public func array(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> [Int] {
-        
-        if let value = representation.valueForKeyPath(key) as? [Int] {
-            return value
-        }
-        
-        error = ResponseObjectDeserializationError.MissingKey(description: "Could not extract value for key \(key). Key is missing.")
-        
-        return []
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    public func magic<T: Defaultable>(fromRepresentation representation: AnyObject, key: String) -> T? {
         if let value = representation.valueForKeyPath(key) as? T {
             return value
         }
@@ -162,7 +72,7 @@ public class ParameterMapper {
         return nil
     }
     
-    public func magic<T: Defaultable>(fromRepresentation representation: AnyObject, key: String) -> [T]? {
+    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String) -> [T]? {
         
         if let value = representation.valueForKeyPath(key) as? [T] {
             return value
@@ -171,7 +81,7 @@ public class ParameterMapper {
         return nil
     }
 
-    public func magic<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String) -> T? {
+    public func value<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String) -> T? {
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
@@ -184,7 +94,7 @@ public class ParameterMapper {
         return nil
     }
 
-    public func magic<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String) -> [T]? {
+    public func value<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String) -> [T]? {
         
         if let validArray = representation as? [AnyObject] {
             
@@ -209,7 +119,7 @@ public class ParameterMapper {
         return nil
     }
     
-    public func magic(fromRepresentation representation: AnyObject, key: String) -> NSDate? {
+    public func value(fromRepresentation representation: AnyObject, key: String) -> NSDate? {
         if let value = representation.valueForKeyPath(key) as? String {
             if let date = dateFormatter.dateFromString(value) {
                 return date
@@ -220,7 +130,7 @@ public class ParameterMapper {
     }
     
     
-    public func magic<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> T {
+    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> T {
         if let value = representation.valueForKeyPath(key) as? T {
             return value
         }
@@ -230,7 +140,7 @@ public class ParameterMapper {
         return T()
     }
     
-    public func magic<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> [T] {
+    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> [T] {
         if let value = representation.valueForKeyPath(key) as? [T] {
             return value
         }
@@ -240,7 +150,7 @@ public class ParameterMapper {
         return []
     }
     
-    public func magic<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> T {
+    public func value<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> T {
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
@@ -266,7 +176,7 @@ public class ParameterMapper {
         return T(representation: [:], error: &dummyError)
     }
     
-    public func magic<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> [T] {
+    public func value<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> [T] {
         
         if let validObject: AnyObject = representation.valueForKey(key) {
             
@@ -285,7 +195,7 @@ public class ParameterMapper {
         return []
     }
     
-    public func magic(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> NSDate {
+    public func value(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> NSDate {
         if let value = representation.valueForKeyPath(key) as? String {
             if let date = dateFormatter.dateFromString(value) {
                 return date
@@ -296,7 +206,6 @@ public class ParameterMapper {
         
         return NSDate()
     }
-    
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
@@ -345,7 +254,7 @@ public class ParameterMapper {
 
     // MARK: Entity array parsing
     
-    public func entityArray<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject) -> [T]? {
+    private func entityArray<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject) -> [T]? {
         
         if let validArray = representation as? [AnyObject] {
             
@@ -371,7 +280,7 @@ public class ParameterMapper {
     }
     
     
-    public func entityArray<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> [T] {
+    private func entityArray<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> [T] {
         
         if let validObject: AnyObject = representation.valueForKey(key) {
             

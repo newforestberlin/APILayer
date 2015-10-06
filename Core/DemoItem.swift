@@ -36,11 +36,11 @@ class DemoItem: ResponseObjectSerializable {
         
         let mapper = API.parameterMapper
         
-        itemId = mapper.magic(fromRepresentation: representation, key: keys.itemId, error: &error)
-        title = mapper.magic(fromRepresentation: representation, key: keys.title, error: &error)
-        awesomeCount = mapper.magic(fromRepresentation: representation, key: keys.awesomeCount)
+        itemId = mapper.value(fromRepresentation: representation, key: keys.itemId, error: &error)
+        title = mapper.value(fromRepresentation: representation, key: keys.title, error: &error)
+        awesomeCount = mapper.value(fromRepresentation: representation, key: keys.awesomeCount)
         
-        subItem = mapper.magic(fromRepresentation: representation, key: keys.subItem)
+        subItem = mapper.value(fromRepresentation: representation, key: keys.subItem)
     }
     
 }

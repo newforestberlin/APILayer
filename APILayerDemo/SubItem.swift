@@ -33,7 +33,7 @@ class SubItem: ResponseObjectSerializable {
         
         let mapper = API.parameterMapper
         
-        name = mapper.magic(fromRepresentation: representation, key: keys.name, error: &error)
+        name = mapper.value(fromRepresentation: representation, key: keys.name, error: &error)
     }
     
 }
