@@ -10,9 +10,8 @@ APILayer has changed a lot in the last months. An updated explanation comes soon
 
 Most elegant way to get the framework is with Carthage (https://github.com/Carthage/Carthage): 
 
-1. Add a Cartfile to your projects root folder with these two lines:
+1. Add a Cartfile to your projects root folder with this one line:
 
-        github "Alamofire/Alamofire" >= 2.0
         github "youandthegang/APILayer" >= 2.0
 
 2. Call 'carthage update' on the console on that folder. This fetches the newest tagged versions of the two frameworks and builds them, placing the resulting frameworks in Carthage/Build/iOS
