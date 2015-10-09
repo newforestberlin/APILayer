@@ -49,6 +49,16 @@ extension Alamofire.Request {
             switch result {
             case .Success(let value):
                 
+                // Valid JSON! Does not mean that the JSON contains valid content.
+                
+                // Check status for success
+                if let urlResponse = urlResponse where urlResponse.statusCode < 200 || urlResponse.statusCode >= 300 {
+                    // Request failed (we do not care about redirects, just do not do that on your API. Return error but also the JSON object, might be useful for debugging.                    
+                    let error = APILayerError.RequestFailedWithJSONValue(statusCode: urlResponse.statusCode, jsonValue: value)
+                    completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Failure(nil, error))
+                    return
+                }
+                
                 // Try to construct object from JSON structure
                 var error: ErrorType?
                 let object = T(representation: value, error: &error)

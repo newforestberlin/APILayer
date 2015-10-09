@@ -24,6 +24,10 @@
 import Foundation
 import Alamofire
 
+enum APILayerError: ErrorType {
+    case RequestFailedWithJSONValue(statusCode: Int, jsonValue: AnyObject)
+}
+
 // Setting the delegate is optional. If set, it can control how the API handles auth token refreshing
 public protocol TokenRefreshDelegate {
     
@@ -170,7 +174,15 @@ public class API {
                 }
             }
             
-            // No refresh needed, call completion block
+//            // No refresh needed, let us check the status. If the status is NOT in the success area.
+//            if let response = response where response.statusCode < 200 || response.statusCode >= 300 {
+//                
+//                complete(request, response, Result<T>.Failure(, APILayerError.RequestFailed(statusCode: response.statusCode)))
+//             
+//                return
+//            }
+            
+            // No refresh needed, status is in the success area.
             complete(request, response, result)
         }
         
