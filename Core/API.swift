@@ -173,7 +173,7 @@ public class API {
                     return
                 }
             }
-                        
+            
             // No refresh needed, status is in the success area.
             complete(request, response, result)
         }
