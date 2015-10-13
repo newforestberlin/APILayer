@@ -110,13 +110,7 @@ public class API {
         API_operations.maxConcurrentOperationCount = 1
         
         // Get base URL
-        var URL: NSURL?
-        if router.urlEncode {
-            URL = NSURL(string: router.baseURLString)?.URLByAppendingPathComponent(router.path)
-        }
-        else {
-            URL = NSURL(string: router.path, relativeToURL: NSURL(string: router.baseURLString))
-        }
+        let URL = NSURL(string: router.path, relativeToURL: NSURL(string: router.baseURLString))
         
         // Add relative path for specific case
         let mutableURLRequest = NSMutableURLRequest(URL: URL!)

@@ -30,9 +30,6 @@ import Alamofire
 // Implement all API specific endpoints, with parameters, URLs and all that is needed
 public enum Router: RouterProtocol {
 
-    // We do want url encoding on urls
-    public var urlEncode: Bool { return true }
-
     // Cases for all the different API calls
     case GetCollection
     case GetEntity(id: String)
