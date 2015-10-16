@@ -112,7 +112,7 @@ public class API {
         // Get base URL
         let URL = NSURL(string: router.path, relativeToURL: NSURL(string: router.baseURLString))
         
-        // Add relative path for specific case
+        // Create request
         let mutableURLRequest = NSMutableURLRequest(URL: URL!)
 
         // Get method for this case
@@ -133,45 +133,83 @@ public class API {
     // MARK: Request performing 
     
     private class func performRouter<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T>) -> ()) {
-
-        // Do the actual request
-        let request = API.createRequest(forRouter: router)
         
-        request.responseObject { (request: NSURLRequest?, response: NSHTTPURLResponse?, result: Result<T>) in
+        if let uploadData = router.uploadData {
+            // Data uploads are handled differently
             
-            if let response = response, let tokenRefreshDelegate = self.tokenRefreshDelegate {
+            let URL = NSURL(string: router.path, relativeToURL: NSURL(string: router.baseURLString))!
+            let headers = parameterMapper.headersForRouter(router)
+            
+            Alamofire.upload(router.method, URL, headers: headers,
                 
-                if tokenRefreshDelegate.tokenRefreshIsIndicated(byResponse: response) {
-
-                    // Create the token refresh operation
-                    API_tokenRefreshOperation = TokenRefreshOperation(tokenRefreshDelegate: tokenRefreshDelegate, completion: { (refreshWasSuccessful) -> () in
+                multipartFormData: { (formData: MultipartFormData) -> Void in
+                    formData.appendBodyPart(data: uploadData.data, name: uploadData.name, fileName: uploadData.fileName, mimeType: uploadData.mimeType)
+                },
+                
+                encodingMemoryThreshold: Manager.MultipartFormDataEncodingMemoryThreshold,
+                
+                encodingCompletion: { (encodingResult) -> Void in
+                    
+                    switch encodingResult {
+                    case .Success(let uploadRequest, _, _):
                         
-                        if refreshWasSuccessful == false {
-                            // Refreshing failed, let the delegate now
-                            tokenRefreshDelegate.tokenRefreshHasFailed()
-                            // And cancel all
-                            API_operations.cancelAllOperations()
-                        }
+                        print("Encoding was a success...")
                         
-                        // Reset refresh operation
-                        API_tokenRefreshOperation = nil
-                    })
+                        uploadRequest.responseJSON(completionHandler: { (urlRequest, urlResponse, result) -> Void in
+                            print("Response arrived...")
+                            
+                            uploadRequest.handleJSONCompletion(urlRequest, urlResponse: urlResponse, result: result, completionHandler: complete)
+                        })
+                        
+                    case .Failure(let encodingError):
+                        print("Encoding failed...")
+                        print(encodingError)
+                    }
                     
-                    // Enqueue the token refresh operation
-                    API_operations.addOperation(API_tokenRefreshOperation!)
-                    
-                    // Enqueue the router, so that after the token refresh it is redone
-                    self.enqueueRouter(router, complete: complete)
-                    
-                    // Do not call the complete block yet
-                    return
                 }
-            }
+            )
             
-            // No refresh needed, status is in the success area.
-            complete(request, response, result)
+        } else {
+            
+            // Do the actual request
+            let request = API.createRequest(forRouter: router)
+            
+            // Get the response object
+            request.responseObject { (request: NSURLRequest?, response: NSHTTPURLResponse?, result: Result<T>) in
+                
+                if let response = response, let tokenRefreshDelegate = self.tokenRefreshDelegate {
+                    
+                    if tokenRefreshDelegate.tokenRefreshIsIndicated(byResponse: response) {
+                        
+                        // Create the token refresh operation
+                        API_tokenRefreshOperation = TokenRefreshOperation(tokenRefreshDelegate: tokenRefreshDelegate, completion: { (refreshWasSuccessful) -> () in
+                            
+                            if refreshWasSuccessful == false {
+                                // Refreshing failed, let the delegate now
+                                tokenRefreshDelegate.tokenRefreshHasFailed()
+                                // And cancel all
+                                API_operations.cancelAllOperations()
+                            }
+                            
+                            // Reset refresh operation
+                            API_tokenRefreshOperation = nil
+                        })
+                        
+                        // Enqueue the token refresh operation
+                        API_operations.addOperation(API_tokenRefreshOperation!)
+                        
+                        // Enqueue the router, so that after the token refresh it is redone
+                        self.enqueueRouter(router, complete: complete)
+                        
+                        // Do not call the complete block yet
+                        return
+                    }
+                }
+                
+                // No refresh needed, status is in the success area.
+                complete(request, response, result)
+            }
         }
-        
     }
     
     // MARK: Request enqueueing

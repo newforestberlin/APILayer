@@ -31,6 +31,8 @@ class Mapper: ParameterMapper {
             switch router {
             case .GetEntity(let id):
                 return ["id": id]
+            case .UploadImage:
+                return ["Content-Type" : "application/octet-stream"]
             default:
                 ()
             }

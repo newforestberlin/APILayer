@@ -22,14 +22,19 @@
 //
 
 import Foundation
-import Alamofire
 
-// Protocol for API routers (this makes sure we use the same pattern always)
-public protocol RouterProtocol {
-    var method: Alamofire.Method { get }
-    var path: String { get }
-    var encoding: ParameterEncoding { get }
-    var baseURLString: String { get }
-    var uploadData: (data: NSData, name: String, fileName: String, mimeType: String)? { get }
+class ImageUpload: ResponseObjectSerializable {
+    
+    let keys = (imageId: "imageId", dummy: "dummy")
+    
+    let imageId: String
+    
+    required init(representation: AnyObject, inout error: ErrorType?) {
+        
+        let mapper = API.parameterMapper
+        
+        imageId = mapper.value(fromRepresentation: representation, key: keys.imageId, error: &error)
+    }
+    
 }
 

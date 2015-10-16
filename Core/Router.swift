@@ -26,38 +26,62 @@
 
 import Foundation
 import Alamofire
+import UIKit
 
 // Implement all API specific endpoints, with parameters, URLs and all that is needed
-public enum Router: RouterProtocol {
+enum Router: RouterProtocol {
 
     // Cases for all the different API calls
     case GetCollection
     case GetEntity(id: String)
     
+    // This case does not work with the pixelogik.de endpoints. It is just here to show how image uploading works.
+    case UploadImage(image: UIImage)
+    
     // Base URL of the API
-    public var baseURLString: String {
+    var baseURLString: String {
         return "http://pixelogik.de/"
+    }
+    
+    // I use this to test image uploading with a local backend
+    // var baseURLString: String { return "http://0.0.0.0:5000/" }
+
+    var uploadData: (data: NSData, name: String, fileName: String, mimeType: String)? {
+        switch self {
+        case .UploadImage(let image):
+            if let imageData = UIImageJPEGRepresentation(image, 0.8) {
+                return (data: imageData, name: "profileImage", fileName: "profileImage.jpg", mimeType: "image/jpeg")
+            }
+        default:
+            ()
+        }
+        
+        return nil
     }
 
     // Methods for all the different calls
-    public var method: Alamofire.Method {
+    var method: Alamofire.Method {
         switch self {
         case .GetCollection, .GetEntity:
             return .GET
+        case .UploadImage:
+            return .POST
         }
     }
     
     // Relative paths for all the different calls
-    public var path: String {
+    var path: String {
         switch self {
         case .GetCollection:
             return "static/apilayer-demo-collection.json"
         case .GetEntity:
             return "static/apilayer-demo-entity.json"
+        case .UploadImage:
+            return "testImageUpload"
         }
     }
     
-    public var encoding: ParameterEncoding {
+    var encoding: ParameterEncoding {
         return ParameterEncoding.URL
     }
 }

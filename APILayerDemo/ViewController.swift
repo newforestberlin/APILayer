@@ -24,6 +24,45 @@
 import UIKit
 import Alamofire
 
+extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        
+        let image: UIImage? = info[UIImagePickerControllerEditedImage] as? UIImage ?? info[UIImagePickerControllerOriginalImage] as? UIImage
+        
+        if let image = image {
+            picker.dismissViewControllerAnimated(true) { () -> Void in
+                self.upload(profileImage: image)
+            }
+        } else {
+            picker.dismissViewControllerAnimated(true) { () -> Void in
+            }
+        }
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        picker.dismissViewControllerAnimated(true) { () -> Void in
+        }
+    }
+    
+    func upload(profileImage image: UIImage) {
+        
+        print("Uploading...")
+        API.request(Router.UploadImage(image: image)) { (result: Result<ImageUpload>) -> () in
+            switch result {
+            case .Success(let imageUpload):
+                print("Uploaded image has now the id \(imageUpload.imageId)")
+            case .Failure(_, let error):
+                print("Uploading the image failed!")
+                print(error)
+            }
+        }
+      
+    }
+    
+}
+
+
 class ViewController: UIViewController {
 
     @IBOutlet weak var textView: UITextView!
@@ -39,37 +78,49 @@ class ViewController: UIViewController {
     }
 
     @IBAction func doRequestAction(sender: AnyObject) {
-                
-        API.requestCollection(Router.GetCollection) { (result: Result<CollectionEntity<DemoItem>>) -> () in
-            let missing = "<missing>"
+        
+        // Set this to true to test image upload. You will also have to point your router to your backend.
+        let testImageUpload = false
+        
+        if testImageUpload {
+            let picker = UIImagePickerController()
+            picker.delegate = self
+            picker.allowsEditing = false
+            picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
             
-            if let collection = result.value {
-                var report = ""
+            presentViewController(picker, animated: true, completion: nil)
+        } else {
+            
+            API.requestCollection(Router.GetCollection) { (result: Result<CollectionEntity<DemoItem>>) -> () in
+                let missing = "<missing>"
                 
-                for item in collection.items {
-                    report = report + "itemId=\(item.itemId ?? missing), title=\(item.title ?? missing) ac=\(item.awesomeCount ?? 0)\n"
-                    if let subItem = item.subItem {
-                        print("SUBITEM!")
+                if let collection = result.value {
+                    var report = ""
+                    
+                    for item in collection.items {
+                        report = report + "itemId=\(item.itemId ?? missing), title=\(item.title ?? missing) ac=\(item.awesomeCount ?? 0)\n"
+                        if let subItem = item.subItem {
+                            print("SUBITEM!")
+                        }
                     }
+                    
+                    self.textView.text = report
+                }
+                else {
+                    self.textView.text = "Could not find any items!"
                 }
                 
-                self.textView.text = report
-            }
-            else {
-                self.textView.text = "Could not find any items!"
-            }
-            
-            API.request(Router.GetEntity(id: "123")) { (result: Result<DemoEntity>) -> () in
-
-                switch result {
-                case .Success(let demoEntity):
-                    print(demoEntity.firstName)
-                case .Failure(let data, let error):
-                    print("Failed")
+                API.request(Router.GetEntity(id: "123")) { (result: Result<DemoEntity>) -> () in
+                    
+                    switch result {
+                    case .Success(let demoEntity):
+                        print(demoEntity.firstName)
+                    case .Failure(let data, let error):
+                        print("Failed")
+                    }
                 }
             }
         }
-        
     }
 
 }

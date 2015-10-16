@@ -42,58 +42,45 @@ extension Alamofire.Request {
     
     // MARK: Parsing method
     
+    public func handleJSONCompletion<T: ResponseObjectSerializable>(urlRequest: NSURLRequest?, urlResponse: NSHTTPURLResponse?, result: Alamofire.Result<AnyObject>, completionHandler: (request: NSURLRequest?, response: NSHTTPURLResponse?, result: Result<T>) -> Void) {
+        
+        switch result {
+        case .Success(let value):
+            
+            // Valid JSON! Does not mean that the JSON contains valid content.
+            
+            // Check status for success
+            if let urlResponse = urlResponse where urlResponse.statusCode < 200 || urlResponse.statusCode >= 300 {
+                // Request failed (we do not care about redirects, just do not do that on your API. Return error but also the JSON object, might be useful for debugging.
+                let error = APILayerError.RequestFailedWithJSONValue(statusCode: urlResponse.statusCode, jsonValue: value)
+                completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Failure(nil, error))
+                return
+            }
+            
+            // Try to construct object from JSON structure
+            var error: ErrorType?
+            let object = T(representation: value, error: &error)
+            
+            if let error = error {
+                // Call completion handler with error result
+                completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Failure(nil, error))
+                
+            } else {
+                
+                // Call completion handler wiht result
+                completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Success(object))
+            }
+            
+        case .Failure(let data, let error):
+            
+            completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Failure(data, error))
+        }
+    }
+    
     public func responseObject<T: ResponseObjectSerializable>(completionHandler: (request: NSURLRequest?, response: NSHTTPURLResponse?, result: Result<T>) -> Void) -> Self {
         
         return responseJSON(completionHandler: { (urlRequest, urlResponse, result) -> Void in
-            
-            switch result {
-            case .Success(let value):
-                
-                // Valid JSON! Does not mean that the JSON contains valid content.
-                
-                // Check status for success
-                if let urlResponse = urlResponse where urlResponse.statusCode < 200 || urlResponse.statusCode >= 300 {
-                    // Request failed (we do not care about redirects, just do not do that on your API. Return error but also the JSON object, might be useful for debugging.                    
-                    let error = APILayerError.RequestFailedWithJSONValue(statusCode: urlResponse.statusCode, jsonValue: value)
-                    completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Failure(nil, error))
-                    return
-                }
-                
-                // Try to construct object from JSON structure
-                var error: ErrorType?
-                let object = T(representation: value, error: &error)
-                
-                if let error = error {
-                    // Call completion handler with error result
-                    completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Failure(nil, error))
-                    
-                } else {
-                    
-                    // Call completion handler wiht result
-                    completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Success(object))
-                }
-                
-                
-                
-//                do {
-//                    
-//                    // Try to construct object from JSON structure
-//                    var error: ErrorType?
-//                    let object = try T(representation: value, error: &error)
-//                    completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Success(object))
-//                    
-//                } catch let thrownError {
-//                    
-//                    // Call completion handler with error result
-//                    completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Failure(nil, thrownError))
-//                    
-//                }
-            
-            case .Failure(let data, let error):
-                
-                completionHandler(request: urlRequest, response: urlResponse, result: Result<T>.Failure(data, error))
-                
-            }
+            self.handleJSONCompletion(urlRequest, urlResponse: urlResponse, result: result, completionHandler: completionHandler)
         })        
     }
     
