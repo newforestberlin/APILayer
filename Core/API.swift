@@ -140,6 +140,8 @@ public class API {
             let URL = NSURL(string: router.path, relativeToURL: NSURL(string: router.baseURLString))!
             let headers = parameterMapper.headersForRouter(router)
             
+            // TODO: Needs token refresh logic!
+            
             Alamofire.upload(router.method, URL, headers: headers,
                 
                 multipartFormData: { (formData: MultipartFormData) -> Void in
@@ -153,17 +155,12 @@ public class API {
                     switch encodingResult {
                     case .Success(let uploadRequest, _, _):
                         
-                        print("Encoding was a success...")
-                        
                         uploadRequest.responseJSON(completionHandler: { (urlRequest, urlResponse, result) -> Void in
-                            print("Response arrived...")
-                            
                             uploadRequest.handleJSONCompletion(urlRequest, urlResponse: urlResponse, result: result, completionHandler: complete)
                         })
                         
                     case .Failure(let encodingError):
-                        print("Encoding failed...")
-                        print(encodingError)
+                        complete(nil, nil, Result.Failure(nil, encodingError))
                     }
                     
                 }
