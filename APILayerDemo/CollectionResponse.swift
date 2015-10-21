@@ -35,9 +35,15 @@ public class CollectionResponse: ResponseObjectSerializable {
         let itemsKey = API.parameterMapper.collectionResponseItemsKey
         
         if let itemsArray = representation.valueForKeyPath(itemsKey) as? [AnyObject] {
+            // JSON is a dictionary at top level and contains the default items key
+            items = itemsArray
+        }
+        else if let itemsArray = representation as? [AnyObject] {
+            // JSON is an array at top level
             items = itemsArray
         }
         else {
+            // None of the two cases, so that failed.
             items = []
             error = ResponseObjectDeserializationError.MissingKey(description: "The '\(itemsKey)' key is missing in this collection response" )
         }
