@@ -134,42 +134,40 @@ public class API {
     
     private class func performRouter<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T>) -> ()) {
         
+        // Do the actual request
+        let request = API.createRequest(forRouter: router)
+
         if let uploadData = router.uploadData {
-            // Data uploads are handled differently
-            
-            let URL = NSURL(string: router.path, relativeToURL: NSURL(string: router.baseURLString))!
-            let headers = parameterMapper.headersForRouter(router)
+            // Data uploads are using a multipart request
             
             // TODO: Needs token refresh logic!
             
-            Alamofire.upload(router.method, URL, headers: headers,
-                
-                multipartFormData: { (formData: MultipartFormData) -> Void in
-                    formData.appendBodyPart(data: uploadData.data, name: uploadData.name, fileName: uploadData.fileName, mimeType: uploadData.mimeType)
-                },
-                
-                encodingMemoryThreshold: Manager.MultipartFormDataEncodingMemoryThreshold,
-                
-                encodingCompletion: { (encodingResult) -> Void in
+            if let urlRequest = request.request {
+                Alamofire.upload(urlRequest,
                     
-                    switch encodingResult {
-                    case .Success(let uploadRequest, _, _):
+                    multipartFormData: { (formData: MultipartFormData) -> Void in
+                        formData.appendBodyPart(data: uploadData.data, name: uploadData.name, fileName: uploadData.fileName, mimeType: uploadData.mimeType)
+                    },
+                    
+                    encodingMemoryThreshold: Manager.MultipartFormDataEncodingMemoryThreshold,
+                    
+                    encodingCompletion: { (encodingResult) -> Void in
                         
-                        uploadRequest.responseJSON(completionHandler: { (urlRequest, urlResponse, result) -> Void in
-                            uploadRequest.handleJSONCompletion(urlRequest, urlResponse: urlResponse, result: result, completionHandler: complete)
-                        })
-                        
-                    case .Failure(let encodingError):
-                        complete(nil, nil, Result.Failure(nil, encodingError))
+                        switch encodingResult {
+                        case .Success(let uploadRequest, _, _):
+                            
+                            uploadRequest.responseJSON(completionHandler: { (urlRequest, urlResponse, result) -> Void in
+                                uploadRequest.handleJSONCompletion(urlRequest, urlResponse: urlResponse, result: result, completionHandler: complete)
+                            })
+                            
+                        case .Failure(let encodingError):
+                            complete(nil, nil, Result.Failure(nil, encodingError))
+                        }
                     }
-                    
-                }
-            )
+                )
+            }
             
         } else {
-            
-            // Do the actual request
-            let request = API.createRequest(forRouter: router)
             
             // Get the response object
             request.responseObject { (request: NSURLRequest?, response: NSHTTPURLResponse?, result: Result<T>) in
