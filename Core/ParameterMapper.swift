@@ -30,7 +30,6 @@ extension String: Defaultable {}
 extension Float: Defaultable {}
 extension Double: Defaultable {}
 extension Bool: Defaultable {}
-//extension Optional: Defaultable {}
 
 public class ParameterMapper {        
     
@@ -300,36 +299,5 @@ public class ParameterMapper {
         
         return []
     }
-    
-//    public func entityArray<T: ResponseObjectSerializable>(representation: AnyObject, error: UnsafeMutablePointer<NSError?>) -> [T] throws {
-//        let result: [T]? = entityArray(representation)
-//        
-//        if result == nil {
-//            error.memory = NSError(domain: "ParameterMapper", code: 1, userInfo: [NSLocalizedDescriptionKey: "Key for entity array was missing"])
-//        }
-//        
-//        return result ?? [T]()
-//    }
-    
-//    public func entityArray<T: ResponseObjectSerializable>(response: NSHTTPURLResponse, representation: AnyObject, key: String, error: UnsafeMutablePointer<NSError?>) -> [T] {
-//        
-//        let result: [T]? = entityArray(response, representation: representation, key: key)
-//        
-//        if result == nil {
-//            error.memory = NSError(domain: "Mapper", code: 1, userInfo: [NSLocalizedDescriptionKey: "Key for entity array was missing"])
-//        }
-//        
-//        return result ?? [T]()
-//    }
-    
-    // Swift compiler sometimes picks the wrong overload of the method, so this helps with that
-    
-//    public func optionalEntityArray<T: ResponseObjectSerializable>(response: NSHTTPURLResponse, representation: AnyObject) -> [T]? {
-//        return entityArray(response, representation: representation)
-//    }
-//    
-//    public func optionalEntityArray<T: ResponseObjectSerializable>(response: NSHTTPURLResponse, representation: AnyObject, key: String) -> [T]? {
-//        return entityArray(response, representation: representation, key: key)
-//    }
     
 }
