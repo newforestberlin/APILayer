@@ -2,8 +2,8 @@
 //  APILayer.h
 //  APILayer
 //
-//  Created by Ole on 15.03.15.
-//  Copyright (c) 2015 you & the gang. All rights reserved.
+//  Created by Olee on 09.11.15.
+//  Copyright © 2015 you & the gang. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
