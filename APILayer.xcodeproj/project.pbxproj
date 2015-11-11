@@ -29,7 +29,7 @@
 		7D1E85BC1BF0FCEC0016502E /* TokenRefreshOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenRefreshOperation.swift; sourceTree = "<group>"; };
 		7DDB7F1D1BF0FB1800F307F6 /* APILayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = APILayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DDB7F201BF0FB1800F307F6 /* APILayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APILayer.h; sourceTree = "<group>"; };
-		7DDB7F221BF0FB1800F307F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7DDB7F221BF0FB1800F307F6 /* APILayer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "APILayer-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,7 +87,7 @@
 				7D1E85C81BF0FD290016502E /* Collections */,
 				7D1E85C71BF0FD130016502E /* Core */,
 				7DDB7F201BF0FB1800F307F6 /* APILayer.h */,
-				7DDB7F221BF0FB1800F307F6 /* Info.plist */,
+				7DDB7F221BF0FB1800F307F6 /* APILayer-Info.plist */,
 			);
 			path = APILayer;
 			sourceTree = "<group>";
@@ -283,7 +283,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/**";
-				INFOPLIST_FILE = APILayer/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/APILayer/APILayer-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.youandthegang.APILayer;
@@ -302,7 +302,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/**";
-				INFOPLIST_FILE = APILayer/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/APILayer/APILayer-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.youandthegang.APILayer;
