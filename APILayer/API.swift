@@ -132,7 +132,7 @@ public class API {
     
     // MARK: Request performing 
     
-    private class func performRouter<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T>) -> ()) {
+    internal class func performRouter<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T>) -> ()) {
         
         // Do the actual request
         let request = API.createRequest(forRouter: router)
@@ -210,16 +210,24 @@ public class API {
     // MARK: Request enqueueing
     
     private class func enqueueRouter<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T>) -> ()) {
-
-        let blockOperation = NSBlockOperation(block: {
-            self.performRouter(router, complete: complete)
-        })
         
-        if let tokenRefreshOperation = API_tokenRefreshOperation {
-            blockOperation.addDependency(tokenRefreshOperation)
+        var routerOperation: NSOperation?
+        
+        if router.blockedOperation {
+            routerOperation = BlockedRouterOperation(router: router, completion: complete)
+        } else {
+            routerOperation = NSBlockOperation(block: {
+                self.performRouter(router, complete: complete)
+            })
         }
         
-        API_operations.addOperation(blockOperation)
+        if let tokenRefreshOperation = API_tokenRefreshOperation {
+            routerOperation?.addDependency(tokenRefreshOperation)
+        }
+
+        if let routerOperation = routerOperation {
+            API_operations.addOperation(routerOperation)
+        }
     }
     
     // MARK: Private request method

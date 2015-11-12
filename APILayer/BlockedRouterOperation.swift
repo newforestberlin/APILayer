@@ -21,16 +21,26 @@
 // THE SOFTWARE.
 //
 
-import Foundation
+import UIKit
 import Alamofire
 
-// Protocol for API routers (this makes sure we use the same pattern always)
-public protocol RouterProtocol {
-    var method: Alamofire.Method { get }
-    var path: String { get }
-    var encoding: ParameterEncoding { get }
-    var baseURLString: String { get }
-    var uploadData: (data: NSData, name: String, fileName: String, mimeType: String)? { get }
-    var blockedOperation: Bool { get }
-}
+public class BlockedRouterOperation<T: ResponseObjectSerializable>: SwiftOperation {
+    
+    let router: RouterProtocol
+    var completion: (NSURLRequest?, NSHTTPURLResponse?, Result<T>) -> ()
+    
+    init(router: RouterProtocol, completion: (NSURLRequest?, NSHTTPURLResponse?, Result<T>) -> ()) {
+        self.completion = completion
+        self.router = router
+        super.init()
+    }
+    
+    override func execute() {
 
+        API.performRouter(router, complete: { (req: NSURLRequest?, resp: NSHTTPURLResponse?, result: Result<T>) in
+            self.completion(req, resp, result)
+            self.completeOperation()
+        })
+    }
+    
+}

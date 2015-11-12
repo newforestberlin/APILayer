@@ -15,6 +15,7 @@
 		7D1E85C31BF0FCEC0016502E /* RouterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1E85B91BF0FCEC0016502E /* RouterProtocol.swift */; };
 		7D1E85C51BF0FCEC0016502E /* CollectionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1E85BB1BF0FCEC0016502E /* CollectionEntity.swift */; };
 		7D1E85C61BF0FCEC0016502E /* TokenRefreshOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1E85BC1BF0FCEC0016502E /* TokenRefreshOperation.swift */; };
+		7D1F37451BF4B0850086B976 /* BlockedRouterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1F37441BF4B0850086B976 /* BlockedRouterOperation.swift */; };
 		7DDB7F211BF0FB1800F307F6 /* APILayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7DDB7F201BF0FB1800F307F6 /* APILayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
@@ -27,6 +28,7 @@
 		7D1E85B91BF0FCEC0016502E /* RouterProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterProtocol.swift; sourceTree = "<group>"; };
 		7D1E85BB1BF0FCEC0016502E /* CollectionEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionEntity.swift; sourceTree = "<group>"; };
 		7D1E85BC1BF0FCEC0016502E /* TokenRefreshOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenRefreshOperation.swift; sourceTree = "<group>"; };
+		7D1F37441BF4B0850086B976 /* BlockedRouterOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedRouterOperation.swift; sourceTree = "<group>"; };
 		7DDB7F1D1BF0FB1800F307F6 /* APILayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = APILayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DDB7F201BF0FB1800F307F6 /* APILayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APILayer.h; sourceTree = "<group>"; };
 		7DDB7F221BF0FB1800F307F6 /* APILayer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "APILayer-Info.plist"; sourceTree = "<group>"; };
@@ -46,6 +48,7 @@
 		7D1E85C71BF0FD130016502E /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				7D1F37441BF4B0850086B976 /* BlockedRouterOperation.swift */,
 				7D1E85BC1BF0FCEC0016502E /* TokenRefreshOperation.swift */,
 				7D1E85B31BF0FCEC0016502E /* ParameterMapper.swift */,
 				7D1E85B41BF0FCEC0016502E /* API.swift */,
@@ -179,6 +182,7 @@
 				7D1E85C61BF0FCEC0016502E /* TokenRefreshOperation.swift in Sources */,
 				7D1E85C21BF0FCEC0016502E /* AlamofireExtension.swift in Sources */,
 				7D1E85BD1BF0FCEC0016502E /* ParameterMapper.swift in Sources */,
+				7D1F37451BF4B0850086B976 /* BlockedRouterOperation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
