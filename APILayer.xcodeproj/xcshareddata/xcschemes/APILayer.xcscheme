@@ -28,7 +28,26 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7D767C571C902D6600D1533D"
+               BuildableName = "APILayerTests.xctest"
+               BlueprintName = "APILayerTests"
+               ReferencedContainer = "container:APILayer.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "7DDB7F1C1BF0FB1800F307F6"
+            BuildableName = "APILayer.framework"
+            BlueprintName = "APILayer"
+            ReferencedContainer = "container:APILayer.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
