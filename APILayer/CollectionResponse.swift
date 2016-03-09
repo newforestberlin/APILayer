@@ -30,7 +30,7 @@ public class CollectionResponse: ResponseObjectSerializable {
     
     public let items: [AnyObject]
     
-    required public init(representation: AnyObject, inout error: ErrorType?) {
+    required public init(representation: AnyObject, inout error: APIError?) {
         
         let itemsKey = API.parameterMapper.collectionResponseItemsKey
         

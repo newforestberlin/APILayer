@@ -84,7 +84,7 @@ public class ParameterMapper {
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
-                var error: ErrorType?
+                var error: APIError?
                 let entity = T(representation: validDict, error: &error)
                 return error == nil ? entity : nil
             }
@@ -103,7 +103,7 @@ public class ParameterMapper {
                 for candidateItem in validArray {
                     if let validDict = candidateItem as? [String: AnyObject] {
                         
-                        var localError: ErrorType?
+                        var localError: APIError?
                         let entity = T(representation: validDict, error: &localError)
                         
                         // If deserialization of the entity failed, we ignore it
@@ -155,7 +155,7 @@ public class ParameterMapper {
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
-                var localError: ErrorType?
+                var localError: APIError?
                 let entity = T(representation: validDict, error: &localError)
                 
                 if let localError = localError {
@@ -173,7 +173,7 @@ public class ParameterMapper {
         }
         
         // Return some object (we do not want to throw, otherwise "let" properties would be a problem in response entities)
-        var dummyError: ErrorType?
+        var dummyError: APIError?
         return T(representation: [:], error: &dummyError)
     }
     
@@ -217,7 +217,7 @@ public class ParameterMapper {
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
-                var error: ErrorType?
+                var error: APIError?
                 let entity = T(representation: validDict, error: &error)
                 return error == nil ? entity : nil
             }
@@ -231,7 +231,7 @@ public class ParameterMapper {
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
-                var localError: ErrorType?
+                var localError: APIError?
                 let entity = T(representation: validDict, error: &localError)
                 
                 if let localError = localError {
@@ -249,7 +249,7 @@ public class ParameterMapper {
         }
         
         // Return some object (we do not want to throw, otherwise "let" properties would be a problem in response entities)
-        var dummyError: ErrorType?
+        var dummyError: APIError?
         return T(representation: [:], error: &dummyError)
     }
 
@@ -264,7 +264,7 @@ public class ParameterMapper {
             for candidateItem in validArray {
                 if let validDict = candidateItem as? [String: AnyObject] {
                     
-                    var localError: ErrorType?
+                    var localError: APIError?
                     let entity = T(representation: validDict, error: &localError)
                     
                     // If deserialization of the entity failed, we ignore it

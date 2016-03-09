@@ -35,7 +35,7 @@ public class CollectionEntity<T: ResponseObjectSerializable> {
         items = []
         
         for item in collection.items {
-            var error: ErrorType?
+            var error: APIError?
             let object = T(representation: item, error: &error)
             if error == nil {
                 items.append(object)

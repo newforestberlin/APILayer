@@ -27,9 +27,9 @@ import Alamofire
 public class BlockedRouterOperation<T: ResponseObjectSerializable>: SwiftOperation {
     
     let router: RouterProtocol
-    var completion: (NSURLRequest?, NSHTTPURLResponse?, Result<T>) -> ()
+    var completion: (NSURLRequest?, NSHTTPURLResponse?, Result<T, APIError>) -> ()
     
-    init(router: RouterProtocol, completion: (NSURLRequest?, NSHTTPURLResponse?, Result<T>) -> ()) {
+    init(router: RouterProtocol, completion: (NSURLRequest?, NSHTTPURLResponse?, Result<T, APIError>) -> ()) {
         self.completion = completion
         self.router = router
         super.init()
@@ -37,7 +37,7 @@ public class BlockedRouterOperation<T: ResponseObjectSerializable>: SwiftOperati
     
     override func execute() {
 
-        API.performRouter(router, complete: { (req: NSURLRequest?, resp: NSHTTPURLResponse?, result: Result<T>) in
+        API.performRouter(router, complete: { (req: NSURLRequest?, resp: NSHTTPURLResponse?, result: Result<T, APIError>) in
             self.completion(req, resp, result)
             self.completeOperation()
         })

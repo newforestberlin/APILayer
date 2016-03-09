@@ -32,6 +32,7 @@ public enum ResponseObjectDeserializationError: ErrorType {
     case MissingKey(description: String)
     case InvalidValue(description: String)
     case InvalidMockResponse(path: String)
+    case EncodingError(description: String)
     case RequestFailedWithResponse(statusCode: Int, response: NSURLResponse)
 }
 
