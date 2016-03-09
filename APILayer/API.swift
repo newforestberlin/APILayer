@@ -151,7 +151,7 @@ public class API {
                         API.tokenRefreshOperation = TokenRefreshOperation(tokenRefreshDelegate: tokenRefreshDelegate, completion: { (refreshWasSuccessful) -> () in
                             
                             if refreshWasSuccessful == false {
-                                // Refreshing failed, let the delegate now
+                                // Refreshing failed, let the delegate know
                                 tokenRefreshDelegate.tokenRefreshHasFailed()
                                 // And cancel all
                                 API.operations.cancelAllOperations()
@@ -201,7 +201,7 @@ public class API {
         }
     }
     
-    // MARK: Private request method
+    // MARK: Private request method. If there is a mocker, looks there. If not existing, enqueues the router.
     
     private class func completeRequest<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T, APIError>) -> ()) {
         
@@ -223,6 +223,9 @@ public class API {
 
         // This method must be used by the actual token refresh logic in the app. 
         // It does not use the operation queue used for other requests.
+        // Very important, because this method does NOT enqueue the request. While token 
+        // refresh is working all enqueued requests are waiting for the token refresh to finish
+        // by calling the completion(refreshWasSuccessful: Bool).
         
         let request = API.createRequest(forRouter: router)
         
