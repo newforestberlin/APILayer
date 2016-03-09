@@ -131,7 +131,7 @@ public class ParameterMapper {
     }
     
     
-    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> T {
+    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> T {
         if let value = representation.valueForKeyPath(key) as? T {
             return value
         }
@@ -141,7 +141,7 @@ public class ParameterMapper {
         return T()
     }
     
-    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> [T] {
+    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> [T] {
         if let value = representation.valueForKeyPath(key) as? [T] {
             return value
         }
@@ -151,7 +151,7 @@ public class ParameterMapper {
         return []
     }
     
-    public func value<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> T {
+    public func value<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> T {
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
@@ -177,7 +177,7 @@ public class ParameterMapper {
         return T(representation: [:], error: &dummyError)
     }
     
-    public func value<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> [T] {
+    public func value<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> [T] {
         
         if let validObject: AnyObject = representation.valueForKey(key) {
             
@@ -196,7 +196,7 @@ public class ParameterMapper {
         return []
     }
     
-    public func value(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> NSDate {
+    public func value(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> NSDate {
         if let value = representation.valueForKeyPath(key) as? String {
             if let date = dateFormatter.dateFromString(value) {
                 return date
@@ -226,7 +226,7 @@ public class ParameterMapper {
         return nil
     }
 
-    public func entity<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> T {
+    public func entity<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> T {
         
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
@@ -281,7 +281,7 @@ public class ParameterMapper {
     }
     
     
-    private func entityArray<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: ErrorType?) -> [T] {
+    private func entityArray<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> [T] {
         
         if let validObject: AnyObject = representation.valueForKey(key) {
             
