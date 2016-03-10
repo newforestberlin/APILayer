@@ -26,7 +26,7 @@ import Alamofire
 
 // We unfortunately have to use this extra class for collection parsing because Swift has problems with
 // generic types being used as generic types (A<T> as <T> in another class / method).
-public class CollectionResponse: ResponseObjectSerializable {
+public class CollectionResponse: MappableObject {
     
     public let items: [AnyObject]
     
@@ -45,7 +45,7 @@ public class CollectionResponse: ResponseObjectSerializable {
         else {
             // None of the two cases, so that failed.
             items = []
-            map.error = ResponseObjectDeserializationError.MissingKey(description: "The '\(itemsKey)' key is missing in this collection response" )
+            map.error = APIError.MissingKey(description: "The '\(itemsKey)' key is missing in this collection response" )
         }
     }
     

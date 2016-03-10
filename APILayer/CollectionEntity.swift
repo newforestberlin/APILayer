@@ -26,7 +26,7 @@ import Alamofire
 
 // We unfortunately have to use CollectionResponse for collection parsing because Swift has problems with
 // generic types being used as generic types (A<T> as <T> in another class / method).
-public class CollectionEntity<T: ResponseObjectSerializable> {
+public class CollectionEntity<T: MappableObject> {
     
     public var items: [T]
     

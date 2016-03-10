@@ -27,8 +27,8 @@
 import Foundation
 import Alamofire
 
-// Thrown by the parameter mapper if keys can't be found or values are invalid
-public enum ResponseObjectDeserializationError: ErrorType {
+// Errors for this API 
+public enum APIError: ErrorType {
     case MissingKey(description: String)
     case InvalidValue(description: String)
     case InvalidMockResponse(path: String)
@@ -36,10 +36,8 @@ public enum ResponseObjectDeserializationError: ErrorType {
     case RequestFailedWithResponse(statusCode: Int, response: NSURLResponse)
 }
 
-public typealias APIError = ResponseObjectDeserializationError
-
 // Protocol for objects that can be constructed from parsed JSON. 
-public protocol ResponseObjectSerializable {
+public protocol MappableObject {
     init(map: Map)
 }
 
@@ -47,7 +45,7 @@ extension Alamofire.Request {
     
     // MARK: Parsing method
     
-    public func handleJSONCompletion<T: ResponseObjectSerializable>(response: Response<AnyObject, NSError>, completionHandler: (request: NSURLRequest?, response: NSHTTPURLResponse?, result: Result<T, APIError>) -> Void) {
+    public func handleJSONCompletion<T: MappableObject>(response: Response<AnyObject, NSError>, completionHandler: (request: NSURLRequest?, response: NSHTTPURLResponse?, result: Result<T, APIError>) -> Void) {
         
         switch response.result {
         case .Success(let value):
@@ -86,14 +84,14 @@ extension Alamofire.Request {
         }
     }
     
-    public func responseObject<T: ResponseObjectSerializable>(completionHandler: (request: NSURLRequest?, response: NSHTTPURLResponse?, result: Result<T, APIError>) -> Void) -> Self {
+    public func responseObject<T: MappableObject>(completionHandler: (request: NSURLRequest?, response: NSHTTPURLResponse?, result: Result<T, APIError>) -> Void) -> Self {
         
         return responseJSON(completionHandler: { response in
             self.handleJSONCompletion(response, completionHandler: completionHandler)
         })        
     }
     
-    public func mockObject<T: ResponseObjectSerializable>(forPath path: String, withRouter router: RouterProtocol, completionHandler: (Result<T, APIError>) -> Void) -> Self {
+    public func mockObject<T: MappableObject>(forPath path: String, withRouter router: RouterProtocol, completionHandler: (Result<T, APIError>) -> Void) -> Self {
         
         if let mockData = NSData(contentsOfFile: path) {
             

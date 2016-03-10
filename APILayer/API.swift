@@ -102,7 +102,7 @@ public class API {
     
     // MARK: Request performing 
     
-    internal class func performRouter<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T, APIError>) -> ()) {
+    internal class func performRouter<T: MappableObject>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T, APIError>) -> ()) {
         
         // Do the actual request
         let request = API.createRequest(forRouter: router)
@@ -180,7 +180,7 @@ public class API {
     
     // MARK: Request enqueueing
     
-    private class func enqueueRouter<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T, APIError>) -> ()) {
+    private class func enqueueRouter<T: MappableObject>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T, APIError>) -> ()) {
         
         var routerOperation: NSOperation?
         
@@ -203,7 +203,7 @@ public class API {
     
     // MARK: Private request method. If there is a mocker, looks there. If not existing, enqueues the router.
     
-    private class func completeRequest<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T, APIError>) -> ()) {
+    private class func completeRequest<T: MappableObject>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T, APIError>) -> ()) {
         
         if let mocker = API.mocker, let path = mocker.path(forRouter: router) {
             let request = API.createRequest(forRouter: router)
@@ -219,7 +219,7 @@ public class API {
     
     // MARK: Public request methods
     
-    public class func tokenRefresh<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (Result<T, APIError>) -> ()) {
+    public class func tokenRefresh<T: MappableObject>(router: RouterProtocol, complete: (Result<T, APIError>) -> ()) {
 
         // This method must be used by the actual token refresh logic in the app. 
         // It does not use the operation queue used for other requests.
@@ -236,7 +236,7 @@ public class API {
     }
     
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
-    public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (Result<T, APIError>) -> ()) {
+    public class func request<T: MappableObject>(router: RouterProtocol, complete: (Result<T, APIError>) -> ()) {
         
         API.completeRequest(router) { (urlRequest, urlResponse, result: Result<T, APIError>) -> () in
             complete(result)
@@ -245,7 +245,7 @@ public class API {
 
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
     // This version also gives the http response to the completion block
-    public class func request<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (Result<T, APIError>, NSHTTPURLResponse?) -> ()) {
+    public class func request<T: MappableObject>(router: RouterProtocol, complete: (Result<T, APIError>, NSHTTPURLResponse?) -> ()) {
 
         API.completeRequest(router) { (urlRequest, urlResponse, result: Result<T, APIError>) -> () in
             complete(result, urlResponse)
@@ -255,7 +255,7 @@ public class API {
     
     // MARK: Helper method for requesting collections
 
-    public class func requestCollection<T: ResponseObjectSerializable>(router: RouterProtocol, complete: (Result<CollectionEntity<T>, APIError>) -> ()) {
+    public class func requestCollection<T: MappableObject>(router: RouterProtocol, complete: (Result<CollectionEntity<T>, APIError>) -> ()) {
         
         API.request(router) { (result: Result<CollectionResponse, APIError>) -> () in
             

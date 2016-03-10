@@ -60,19 +60,19 @@ public class Map {
         return API.mapper.value(fromRepresentation: representation, key: key, error: &error)
     }
     
-    public func value<T: ResponseObjectSerializable>(key: String) -> T {
+    public func value<T: MappableObject>(key: String) -> T {
         return API.mapper.value(fromRepresentation: representation, key: key, error: &error)
     }
     
-    public func value<T: ResponseObjectSerializable>(key: String) -> T? {
+    public func value<T: MappableObject>(key: String) -> T? {
         return API.mapper.value(fromRepresentation: representation, key: key)
     }
 
-    public func value<T: ResponseObjectSerializable>(key: String) -> [T]? {
+    public func value<T: MappableObject>(key: String) -> [T]? {
         return API.mapper.value(fromRepresentation: representation, key: key)
     }
     
-    public func value<T: ResponseObjectSerializable>(key: String) -> [T] {
+    public func value<T: MappableObject>(key: String) -> [T] {
         return API.mapper.value(fromRepresentation: representation, key: key, error: &error)
     }
     
@@ -136,7 +136,7 @@ public class Mapper {
         return nil
     }
 
-    public func value<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String) -> T? {
+    public func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String) -> T? {
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
@@ -153,7 +153,7 @@ public class Mapper {
         return nil
     }
 
-    public func value<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String) -> [T]? {
+    public func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String) -> [T]? {
      
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validArray = candidateObject as? [AnyObject] {
@@ -198,7 +198,7 @@ public class Mapper {
             return value
         }
         
-        error = ResponseObjectDeserializationError.MissingKey(description: "Could not extract value for key \(key). Key is missing.")
+        error = APIError.MissingKey(description: "Could not extract value for key \(key). Key is missing.")
         
         return T()
     }
@@ -208,12 +208,12 @@ public class Mapper {
             return value
         }
         
-        error = ResponseObjectDeserializationError.MissingKey(description: "Could not extract array for key \(key). Key is missing or type is wrong.")
+        error = APIError.MissingKey(description: "Could not extract array for key \(key). Key is missing or type is wrong.")
 
         return []
     }
     
-    public func value<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> T {
+    public func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> T {
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
@@ -230,11 +230,11 @@ public class Mapper {
                 return entity
                 
             } else {
-                error = ResponseObjectDeserializationError.InvalidValue(description: "Could not parse entity for key '\(key)'. Value is not a dictionary.")
+                error = APIError.InvalidValue(description: "Could not parse entity for key '\(key)'. Value is not a dictionary.")
             }
         }
         else {
-            error = ResponseObjectDeserializationError.MissingKey(description: "Could not parse entity for key '\(key)'. Key is missing.")
+            error = APIError.MissingKey(description: "Could not parse entity for key '\(key)'. Key is missing.")
         }
         
         // Return some object (we do not want to throw, otherwise "let" properties would be a problem in response entities)
@@ -245,7 +245,7 @@ public class Mapper {
 //        return T(representation: [:], error: &dummyError)
     }
     
-    public func value<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> [T] {
+    public func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> [T] {
         
         if let validObject: AnyObject = representation.valueForKey(key) {
             
@@ -254,12 +254,12 @@ public class Mapper {
                 return validArray
             }
             else {
-                error = ResponseObjectDeserializationError.InvalidValue(description: "Could not parse entity array for key '\(key)'. Value is invalid.")
+                error = APIError.InvalidValue(description: "Could not parse entity array for key '\(key)'. Value is invalid.")
             }
             
         }
         
-        error = ResponseObjectDeserializationError.MissingKey(description: "Could not parse entity array for key '\(key)'. Key is missing.")
+        error = APIError.MissingKey(description: "Could not parse entity array for key '\(key)'. Key is missing.")
         
         return []
     }
@@ -271,7 +271,7 @@ public class Mapper {
             }
         }
         
-        error = ResponseObjectDeserializationError.MissingKey(description: "Could not parse date for key '\(key)'. Key is missing or format is wrong.")
+        error = APIError.MissingKey(description: "Could not parse date for key '\(key)'. Key is missing or format is wrong.")
         
         return NSDate()
     }
@@ -280,7 +280,7 @@ public class Mapper {
     
     // MARK: Entity parsing
     
-    public func entity<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String) -> T? {
+    public func entity<T: MappableObject>(fromRepresentation representation: AnyObject, key: String) -> T? {
         
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
@@ -296,7 +296,7 @@ public class Mapper {
         return nil
     }
 
-    public func entity<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> T {
+    public func entity<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> T {
         
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
@@ -314,11 +314,11 @@ public class Mapper {
                 return entity
                 
             } else {
-                error = ResponseObjectDeserializationError.InvalidValue(description: "Could not parse entity for key '\(key)'. Value is not a dictionary.")
+                error = APIError.InvalidValue(description: "Could not parse entity for key '\(key)'. Value is not a dictionary.")
             }
         }
         else {
-            error = ResponseObjectDeserializationError.MissingKey(description: "Could not parse entity for key '\(key)'. Key is missing.")
+            error = APIError.MissingKey(description: "Could not parse entity for key '\(key)'. Key is missing.")
         }
         
         let map = Map(representation: [:])
@@ -331,7 +331,7 @@ public class Mapper {
 
     // MARK: Entity array parsing
     
-    private func entityArray<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject) -> [T]? {
+    private func entityArray<T: MappableObject>(fromRepresentation representation: AnyObject) -> [T]? {
         
         if let validArray = representation as? [AnyObject] {
             
@@ -360,7 +360,7 @@ public class Mapper {
     }
     
     
-    private func entityArray<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> [T] {
+    private func entityArray<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> [T] {
         
         if let validObject: AnyObject = representation.valueForKey(key) {
             
@@ -369,12 +369,12 @@ public class Mapper {
                 return validArray
             }
             else {
-                error = ResponseObjectDeserializationError.InvalidValue(description: "Could not parse entity array for key '\(key)'. Value is invalid.")
+                error = APIError.InvalidValue(description: "Could not parse entity array for key '\(key)'. Value is invalid.")
             }
             
         }
         
-        error = ResponseObjectDeserializationError.MissingKey(description: "Could not parse entity array for key '\(key)'. Key is missing.")
+        error = APIError.MissingKey(description: "Could not parse entity array for key '\(key)'. Key is missing.")
         
         return []
     }

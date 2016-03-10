@@ -24,7 +24,7 @@
 import UIKit
 import Alamofire
 
-public class BlockedRouterOperation<T: ResponseObjectSerializable>: SwiftOperation {
+public class BlockedRouterOperation<T: MappableObject>: SwiftOperation {
     
     let router: RouterProtocol
     var completion: (NSURLRequest?, NSHTTPURLResponse?, Result<T, APIError>) -> ()
