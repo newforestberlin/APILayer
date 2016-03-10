@@ -25,13 +25,69 @@ import Foundation
 
 // MARK : required protocols and extensions for generic to implement T() as an initializer
 public protocol Defaultable {init()}
+
 extension Int: Defaultable {}
 extension String: Defaultable {}
 extension Float: Defaultable {}
 extension Double: Defaultable {}
 extension Bool: Defaultable {}
 
-public class ParameterMapper {        
+infix operator <- {}
+
+public class Map {
+    
+    public var error: APIError?
+
+    var representation: AnyObject
+    
+    public init(representation: AnyObject) {
+        self.representation = representation
+    }
+    
+    public func value<T: Defaultable>(key: String) -> T {
+        return API.mapper.value(fromRepresentation: representation, key: key, error: &error)
+    }
+    
+    public func value<T: Defaultable>(key: String) -> T? {
+        return API.mapper.value(fromRepresentation: representation, key: key)
+    }
+
+    public func value<T: Defaultable>(key: String) -> [T]? {
+        return API.mapper.value(fromRepresentation: representation, key: key)
+    }
+
+    public func value<T: Defaultable>(key: String) -> [T] {
+        return API.mapper.value(fromRepresentation: representation, key: key, error: &error)
+    }
+    
+    public func value<T: ResponseObjectSerializable>(key: String) -> T {
+        return API.mapper.value(fromRepresentation: representation, key: key, error: &error)
+    }
+    
+    public func value<T: ResponseObjectSerializable>(key: String) -> T? {
+        return API.mapper.value(fromRepresentation: representation, key: key)
+    }
+
+    public func value<T: ResponseObjectSerializable>(key: String) -> [T]? {
+        return API.mapper.value(fromRepresentation: representation, key: key)
+    }
+    
+    public func value<T: ResponseObjectSerializable>(key: String) -> [T] {
+        return API.mapper.value(fromRepresentation: representation, key: key, error: &error)
+    }
+    
+    public func value(key: String) -> NSDate {
+        return API.mapper.value(fromRepresentation: representation, key: key, error: &error)
+    }
+
+    public func value(key: String) -> NSDate? {
+        return API.mapper.value(fromRepresentation: representation, key: key)
+    }
+    
+}
+
+
+public class Mapper {
     
     public var dateFormatter: NSDateFormatter = NSDateFormatter()
     
@@ -51,7 +107,7 @@ public class ParameterMapper {
     // MARK: Parameters for routers
     
     public func parametersForRouter(router: RouterProtocol) -> [String : AnyObject] {
-        print("You need to implement the method parametersForRouter() in your ParameterMapper subclass in order to have parameters in your requests")
+        print("You need to implement the method parametersForRouter() in your Mapper subclass in order to have parameters in your requests")
         return [:]
     }
     
@@ -84,9 +140,13 @@ public class ParameterMapper {
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
-                var error: APIError?
-                let entity = T(representation: validDict, error: &error)
-                return error == nil ? entity : nil
+                let map = Map(representation: validDict)
+                let entity = T(map: map)
+
+//                var error: APIError?
+//                let entity = T(representation: validDict, error: &error)
+                
+                return map.error == nil ? entity : nil
             }
         }
         
@@ -103,11 +163,13 @@ public class ParameterMapper {
                 for candidateItem in validArray {
                     if let validDict = candidateItem as? [String: AnyObject] {
                         
-                        var localError: APIError?
-                        let entity = T(representation: validDict, error: &localError)
+                        let map = Map(representation: validDict)
+                        let entity = T(map: map)
+//                        var localError: APIError?
+//                        let entity = T(representation: validDict, error: &localError)
                         
                         // If deserialization of the entity failed, we ignore it
-                        if localError == nil {
+                        if map.error == nil {
                             result.append(entity)
                         }
                     }
@@ -155,10 +217,13 @@ public class ParameterMapper {
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
-                var localError: APIError?
-                let entity = T(representation: validDict, error: &localError)
+                let map = Map(representation: validDict)
+                let entity = T(map: map)
+
+//                var localError: APIError?
+//                let entity = T(representation: validDict, error: &localError)
                 
-                if let localError = localError {
+                if let localError = map.error {
                     error = localError
                 }
                 
@@ -173,8 +238,11 @@ public class ParameterMapper {
         }
         
         // Return some object (we do not want to throw, otherwise "let" properties would be a problem in response entities)
-        var dummyError: APIError?
-        return T(representation: [:], error: &dummyError)
+        let map = Map(representation: [:])
+        return T(map: map)
+
+//        var dummyError: APIError?
+//        return T(representation: [:], error: &dummyError)
     }
     
     public func value<T: ResponseObjectSerializable>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> [T] {
@@ -217,9 +285,11 @@ public class ParameterMapper {
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
-                var error: APIError?
-                let entity = T(representation: validDict, error: &error)
-                return error == nil ? entity : nil
+                let map = Map(representation: validDict)
+                let entity = T(map: map)
+//                var error: APIError?
+//                let entity = T(representation: validDict, error: &error)
+                return map.error == nil ? entity : nil
             }
         }
         
@@ -231,10 +301,13 @@ public class ParameterMapper {
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
-                var localError: APIError?
-                let entity = T(representation: validDict, error: &localError)
+                let map = Map(representation: validDict)
+                let entity = T(map: map)
+
+                //var localError: APIError?
+                //let entity = T(representation: validDict, error: &localError)
                 
-                if let localError = localError {
+                if let localError = map.error {
                     error = localError
                 }
                 
@@ -248,9 +321,12 @@ public class ParameterMapper {
             error = ResponseObjectDeserializationError.MissingKey(description: "Could not parse entity for key '\(key)'. Key is missing.")
         }
         
+        let map = Map(representation: [:])
+        return T(map: map)
+
         // Return some object (we do not want to throw, otherwise "let" properties would be a problem in response entities)
-        var dummyError: APIError?
-        return T(representation: [:], error: &dummyError)
+//        var dummyError: APIError?
+//        return T(representation: [:], error: &dummyError)
     }
 
     // MARK: Entity array parsing
@@ -264,11 +340,14 @@ public class ParameterMapper {
             for candidateItem in validArray {
                 if let validDict = candidateItem as? [String: AnyObject] {
                     
-                    var localError: APIError?
-                    let entity = T(representation: validDict, error: &localError)
+                    let map = Map(representation: validDict)
+                    let entity = T(map: map)
+
+//                    var localError: APIError?
+//                    let entity = T(representation: validDict, error: &localError)
                     
                     // If deserialization of the entity failed, we ignore it
-                    if localError == nil {
+                    if map.error == nil {
                         result.append(entity)
                     }           
                 }

@@ -40,7 +40,7 @@ public typealias APIError = ResponseObjectDeserializationError
 
 // Protocol for objects that can be constructed from parsed JSON. 
 public protocol ResponseObjectSerializable {
-    init(representation: AnyObject, inout error: APIError?)
+    init(map: Map)
 }
 
 extension Alamofire.Request {
@@ -63,10 +63,13 @@ extension Alamofire.Request {
             }
             
             // Try to construct object from JSON structure
-            var error: APIError?
-            let object = T(representation: value, error: &error)
+            let map = Map(representation: value)
+            let object = T(map: map)
             
-            if let error = error {
+//            var error: APIError?
+//            let object = T(representation: value, error: &error)
+            
+            if let error = map.error {
                 // Call completion handler with error result
                 completionHandler(request: response.request, response: response.response, result: Result<T, APIError>.Failure(error))
                 
@@ -100,10 +103,13 @@ extension Alamofire.Request {
                 let jsonObject: AnyObject = try NSJSONSerialization.JSONObjectWithData(mockData, options: NSJSONReadingOptions.AllowFragments)
                 
                 // Try to construct the object from the JSON structure
-                var error: APIError?
-                let object = T(representation: jsonObject, error: &error)
+                let map = Map(representation: jsonObject)
+                let object = T(map: map)
+//
+//                var error: APIError?
+//                let object = T(representation: jsonObject, error: &error)
                 
-                if let error = error {
+                if let error = map.error {
                     
                     completionHandler(Result<T, APIError>.Failure(error))
                     

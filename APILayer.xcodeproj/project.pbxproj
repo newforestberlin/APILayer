@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7D1E85BD1BF0FCEC0016502E /* ParameterMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1E85B31BF0FCEC0016502E /* ParameterMapper.swift */; };
+		7D1E85BD1BF0FCEC0016502E /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1E85B31BF0FCEC0016502E /* Mapper.swift */; };
 		7D1E85BE1BF0FCEC0016502E /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1E85B41BF0FCEC0016502E /* API.swift */; };
 		7D1E85BF1BF0FCEC0016502E /* MockProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1E85B51BF0FCEC0016502E /* MockProtocol.swift */; };
 		7D1E85C01BF0FCEC0016502E /* CollectionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1E85B61BF0FCEC0016502E /* CollectionResponse.swift */; };
@@ -19,7 +19,7 @@
 		7D767C5B1C902D6600D1533D /* APILayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D767C5A1C902D6600D1533D /* APILayerTests.swift */; };
 		7D767C631C902D7700D1533D /* BlockedRouterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1F37441BF4B0850086B976 /* BlockedRouterOperation.swift */; };
 		7D767C641C902D7A00D1533D /* TokenRefreshOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1E85BC1BF0FCEC0016502E /* TokenRefreshOperation.swift */; };
-		7D767C651C902D7A00D1533D /* ParameterMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1E85B31BF0FCEC0016502E /* ParameterMapper.swift */; };
+		7D767C651C902D7A00D1533D /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1E85B31BF0FCEC0016502E /* Mapper.swift */; };
 		7D767C661C902D7A00D1533D /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1E85B41BF0FCEC0016502E /* API.swift */; };
 		7D767C671C902D7A00D1533D /* MockProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1E85B51BF0FCEC0016502E /* MockProtocol.swift */; };
 		7D767C681C902D7A00D1533D /* AlamofireExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1E85B81BF0FCEC0016502E /* AlamofireExtension.swift */; };
@@ -40,7 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		7D1E85B31BF0FCEC0016502E /* ParameterMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParameterMapper.swift; sourceTree = "<group>"; };
+		7D1E85B31BF0FCEC0016502E /* Mapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mapper.swift; sourceTree = "<group>"; };
 		7D1E85B41BF0FCEC0016502E /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		7D1E85B51BF0FCEC0016502E /* MockProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockProtocol.swift; sourceTree = "<group>"; };
 		7D1E85B61BF0FCEC0016502E /* CollectionResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionResponse.swift; sourceTree = "<group>"; };
@@ -80,7 +80,7 @@
 			children = (
 				7D1F37441BF4B0850086B976 /* BlockedRouterOperation.swift */,
 				7D1E85BC1BF0FCEC0016502E /* TokenRefreshOperation.swift */,
-				7D1E85B31BF0FCEC0016502E /* ParameterMapper.swift */,
+				7D1E85B31BF0FCEC0016502E /* Mapper.swift */,
 				7D1E85B41BF0FCEC0016502E /* API.swift */,
 				7D1E85B51BF0FCEC0016502E /* MockProtocol.swift */,
 				7D1E85B81BF0FCEC0016502E /* AlamofireExtension.swift */,
@@ -248,7 +248,7 @@
 				7D767C641C902D7A00D1533D /* TokenRefreshOperation.swift in Sources */,
 				7D767C5B1C902D6600D1533D /* APILayerTests.swift in Sources */,
 				7D767C691C902D7A00D1533D /* RouterProtocol.swift in Sources */,
-				7D767C651C902D7A00D1533D /* ParameterMapper.swift in Sources */,
+				7D767C651C902D7A00D1533D /* Mapper.swift in Sources */,
 				7D767C681C902D7A00D1533D /* AlamofireExtension.swift in Sources */,
 				7D767C671C902D7A00D1533D /* MockProtocol.swift in Sources */,
 				7D767C6A1C902D7E00D1533D /* CollectionResponse.swift in Sources */,
@@ -268,7 +268,7 @@
 				7D1E85C01BF0FCEC0016502E /* CollectionResponse.swift in Sources */,
 				7D1E85C61BF0FCEC0016502E /* TokenRefreshOperation.swift in Sources */,
 				7D1E85C21BF0FCEC0016502E /* AlamofireExtension.swift in Sources */,
-				7D1E85BD1BF0FCEC0016502E /* ParameterMapper.swift in Sources */,
+				7D1E85BD1BF0FCEC0016502E /* Mapper.swift in Sources */,
 				7D1F37451BF4B0850086B976 /* BlockedRouterOperation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

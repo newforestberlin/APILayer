@@ -57,8 +57,8 @@ class RequestWrapper: URLRequestConvertible {
 // This class functions as the main interface to the API layer.
 public class API {
     
-    // Parameter mapper
-    public static var parameterMapper = ParameterMapper()
+    // Mapper
+    public static var mapper = Mapper()
     
     // If this one is set it might return mock paths for router cases, in which case the API does use mock data from local filesystem
     public static var mocker: MockProtocol?
@@ -89,11 +89,11 @@ public class API {
         mutableURLRequest.HTTPMethod = router.method.rawValue
         
         // Add optional header values
-        for (headerKey, headerValue) in API.parameterMapper.headersForRouter(router) {
+        for (headerKey, headerValue) in API.mapper.headersForRouter(router) {
             mutableURLRequest.addValue(headerValue, forHTTPHeaderField: headerKey)
         }
         
-        let parameters = API.parameterMapper.parametersForRouter(router)
+        let parameters = API.mapper.parametersForRouter(router)
         let encoding = router.encoding
         let requestTuple = encoding.encode(mutableURLRequest, parameters: parameters)
                 
