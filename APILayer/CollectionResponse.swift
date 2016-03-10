@@ -45,7 +45,7 @@ public class CollectionResponse: MappableObject {
         else {
             // None of the two cases, so that failed.
             items = []
-            map.error = APIError.MissingKey(description: "The '\(itemsKey)' key is missing in this collection response" )
+            map.error = APIResponseStatus.MissingKey(description: "The '\(itemsKey)' key is missing in this collection response" )
         }
     }
     

@@ -102,7 +102,7 @@ public class API {
     
     // MARK: Request performing 
     
-    internal class func performRouter<T: MappableObject>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T, APIError>) -> ()) {
+    internal class func performRouter(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, MappableObject?, APIResponseStatus) -> ()) {
         
         // Do the actual request
         let request = API.createRequest(forRouter: router)
@@ -127,12 +127,12 @@ public class API {
                         case .Success(let uploadRequest, _, _):
                             
                             uploadRequest.responseJSON(completionHandler: { response in
-                                uploadRequest.handleJSONCompletion(response, completionHandler: complete)
+                                uploadRequest.handleJSONCompletion(router, response: response, completionHandler: complete)
                             })
                             
                         case .Failure(let encodingError):
                             // TODO: Need better description here
-                            complete(nil, nil, Result.Failure(APIError.EncodingError(description: "Failed")))
+                            complete(nil, nil, nil, APIResponseStatus.EncodingError(description: "Failed"))
                         }
                     }
                 )
@@ -141,7 +141,7 @@ public class API {
         } else {
             
             // Get the response object
-            request.responseObject { (request: NSURLRequest?, response: NSHTTPURLResponse?, result: Result<T, APIError>) in
+            request.responseObject(router) { (request: NSURLRequest?, response: NSHTTPURLResponse?, result: MappableObject?, status: APIResponseStatus) in
                 
                 if let response = response, let tokenRefreshDelegate = self.tokenRefreshDelegate {
                     
@@ -173,14 +173,14 @@ public class API {
                 }
                 
                 // No refresh needed, status is in the success area.
-                complete(request, response, result)
+                complete(request, response, result, status)
             }
         }
     }
     
     // MARK: Request enqueueing
     
-    private class func enqueueRouter<T: MappableObject>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T, APIError>) -> ()) {
+    private class func enqueueRouter(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, result: MappableObject?, status: APIResponseStatus) -> ()) {
         
         var routerOperation: NSOperation?
         
@@ -203,13 +203,13 @@ public class API {
     
     // MARK: Private request method. If there is a mocker, looks there. If not existing, enqueues the router.
     
-    private class func completeRequest<T: MappableObject>(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, Result<T, APIError>) -> ()) {
+    private class func completeRequest(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, MappableObject?, APIResponseStatus) -> ()) {
         
         if let mocker = API.mocker, let path = mocker.path(forRouter: router) {
             let request = API.createRequest(forRouter: router)
             
-            request.mockObject(forPath: path, withRouter: router, completionHandler: { (result) -> Void in
-                complete(nil, nil, result)
+            request.mockObject(forPath: path, withRouter: router, completionHandler: { (result, status) -> Void in
+                complete(nil, nil, result, status)
             })
         }
         else {
@@ -219,7 +219,7 @@ public class API {
     
     // MARK: Public request methods
     
-    public class func tokenRefresh<T: MappableObject>(router: RouterProtocol, complete: (Result<T, APIError>) -> ()) {
+    public class func tokenRefresh(router: RouterProtocol, complete: (result: MappableObject?, status: APIResponseStatus) -> ()) {
 
         // This method must be used by the actual token refresh logic in the app. 
         // It does not use the operation queue used for other requests.
@@ -229,61 +229,63 @@ public class API {
         
         let request = API.createRequest(forRouter: router)
         
-        request.responseObject { (request, response, result: Result<T, APIError>) -> Void in
-            complete(result)
+        request.responseObject(router) { (request, response, result, status) -> Void in
+            complete(result: result, status: status)
         }
         
     }
     
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
-    public class func request<T: MappableObject>(router: RouterProtocol, complete: (Result<T, APIError>) -> ()) {
+    public class func request(router: RouterProtocol, complete: (result: MappableObject?, status: APIResponseStatus) -> ()) {
         
-        API.completeRequest(router) { (urlRequest, urlResponse, result: Result<T, APIError>) -> () in
-            complete(result)
+        API.completeRequest(router) { (urlRequest, urlResponse, result: MappableObject?, status: APIResponseStatus) -> () in
+            complete(result: result, status: status)
         }
     }
 
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
     // This version also gives the http response to the completion block
-    public class func request<T: MappableObject>(router: RouterProtocol, complete: (Result<T, APIError>, NSHTTPURLResponse?) -> ()) {
+    public class func request(router: RouterProtocol, complete: (result: MappableObject?, status: APIResponseStatus, urlResponse: NSHTTPURLResponse?) -> ()) {
 
-        API.completeRequest(router) { (urlRequest, urlResponse, result: Result<T, APIError>) -> () in
-            complete(result, urlResponse)
+        API.completeRequest(router) { (urlRequest, urlResponse, result, status) -> () in
+            complete(result: result, status: status, urlResponse: urlResponse)
         }
 
     }
     
     // MARK: Helper method for requesting collections
 
-    public class func requestCollection<T: MappableObject>(router: RouterProtocol, complete: (Result<CollectionEntity<T>, APIError>) -> ()) {
+    public class func requestCollection(router: RouterProtocol, complete: (CollectionEntity?, APIResponseStatus) -> ()) {
         
-        API.request(router) { (result: Result<CollectionResponse, APIError>) -> () in
-            
-            switch result {
-            case .Success(let value):
-                
-                do {
-                    
-                    let result = try CollectionEntity<T>(collection: value)
-                    complete(Result<CollectionEntity<T>, APIError>.Success(result))
-                    
-                } catch let thrownError {
-                    // TODO: Do better error here
-                    complete(Result<CollectionEntity<T>, APIError>.Failure(APIError.MissingKey(description: "dsdd")))
-                }
-                
-            case .Failure(let errorType):
-                
-                complete(Result<CollectionEntity<T>, APIError>.Failure(APIError.MissingKey(description: "dsdd")))
-            }
-            
-        }
+        // TODO: Adapt this to the new router protocol where everything returns MappableObject
+        
+//        API.request(router) { (result: Result<CollectionResponse, APIResponseStatus>) -> () in
+//            
+//            switch result {
+//            case .Success(let value):
+//                
+//                do {
+//                    
+//                    let result = try CollectionEntity<T>(collection: value)
+//                    complete(Result<CollectionEntity<T>, APIResponseStatus>.Success(result))
+//                    
+//                } catch let thrownError {
+//                    // TODO: Do better error here
+//                    complete(Result<CollectionEntity<T>, APIResponseStatus>.Failure(APIResponseStatus.MissingKey(description: "dsdd")))
+//                }
+//                
+//            case .Failure(let errorType):
+//                
+//                complete(Result<CollectionEntity<T>, APIResponseStatus>.Failure(APIResponseStatus.MissingKey(description: "dsdd")))
+//            }
+//            
+//        }
     }
     
     // MARK: Methods to help with debugging
     
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
-//    public class func requestString(router: RouterProtocol, complete: (Result<String, APIError>) -> ()) {
+//    public class func requestString(router: RouterProtocol, complete: (Result<String, APIResponseStatus>) -> ()) {
 //        
 //        let request = API.createRequest(forRouter: router)
 //        

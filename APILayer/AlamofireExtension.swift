@@ -28,7 +28,10 @@ import Foundation
 import Alamofire
 
 // Errors for this API 
-public enum APIError: ErrorType {
+public enum APIResponseStatus: ErrorType {
+    case Success
+    case FailedRequest(statusCode: Int)
+    case UnknownProblem
     case MissingKey(description: String)
     case InvalidValue(description: String)
     case InvalidMockResponse(path: String)
@@ -45,7 +48,7 @@ extension Alamofire.Request {
     
     // MARK: Parsing method
     
-    public func handleJSONCompletion<T: MappableObject>(response: Response<AnyObject, NSError>, completionHandler: (request: NSURLRequest?, response: NSHTTPURLResponse?, result: Result<T, APIError>) -> Void) {
+    public func handleJSONCompletion(router: RouterProtocol, response: Response<AnyObject, NSError>, completionHandler: (request: NSURLRequest?, response: NSHTTPURLResponse?, result: MappableObject?, status: APIResponseStatus) -> Void) {
         
         switch response.result {
         case .Success(let value):
@@ -55,43 +58,50 @@ extension Alamofire.Request {
             // Check status for success
             if let urlResponse = response.response where urlResponse.statusCode < 200 || urlResponse.statusCode >= 300 {
                 // Request failed (we do not care about redirects, just do not do that on your API. Return error but also the JSON object, might be useful for debugging.
-                let error = APIError.RequestFailedWithResponse(statusCode: urlResponse.statusCode, response: urlResponse)
-                completionHandler(request: response.request, response: urlResponse, result: Result<T, APIError>.Failure(error))
+                let error = APIResponseStatus.RequestFailedWithResponse(statusCode: urlResponse.statusCode, response: urlResponse)
+                completionHandler(request: response.request, response: urlResponse, result: nil, status: APIResponseStatus.FailedRequest(statusCode: urlResponse.statusCode))
                 return
             }
             
+            
             // Try to construct object from JSON structure
             let map = Map(representation: value)
-            let object = T(map: map)
+            let object = router.result(forMap: map)
             
-//            var error: APIError?
+//            let object = T(map: map)
+            
+//            var error: APIResponseStatus?
 //            let object = T(representation: value, error: &error)
             
-            if let error = map.error {
-                // Call completion handler with error result
-                completionHandler(request: response.request, response: response.response, result: Result<T, APIError>.Failure(error))
-                
-            } else {
-                
+            if let object = object where map.error == nil {
                 // Call completion handler wiht result
-                completionHandler(request: response.request, response: response.response, result: Result<T, APIError>.Success(object))
+                completionHandler(request: response.request, response: response.response, result: object, status: .Success)
+            } else {
+                if let error = map.error {
+                    // Call completion handler with error result
+                    completionHandler(request: response.request, response: response.response, result: nil, status: error)
+                }
+                else {
+                    // Call completion handler with error result
+                    completionHandler(request: response.request, response: response.response, result: nil, status: APIResponseStatus.UnknownProblem)
+                }
             }
-            
+                        
         case .Failure(let error):
             
-            let apiError = APIError.InvalidValue(description: error.localizedDescription)
-            completionHandler(request: response.request, response: response.response, result: Result<T, APIError>.Failure(apiError))
+            let apiError = APIResponseStatus.InvalidValue(description: error.localizedDescription)
+            completionHandler(request: response.request, response: response.response, result: nil, status: apiError)
         }
     }
     
-    public func responseObject<T: MappableObject>(completionHandler: (request: NSURLRequest?, response: NSHTTPURLResponse?, result: Result<T, APIError>) -> Void) -> Self {
+    public func responseObject(router: RouterProtocol, completionHandler: (request: NSURLRequest?, response: NSHTTPURLResponse?, result: MappableObject?, status: APIResponseStatus) -> Void) -> Self {
         
         return responseJSON(completionHandler: { response in
-            self.handleJSONCompletion(response, completionHandler: completionHandler)
+            self.handleJSONCompletion(router, response: response, completionHandler: completionHandler)
         })        
     }
     
-    public func mockObject<T: MappableObject>(forPath path: String, withRouter router: RouterProtocol, completionHandler: (Result<T, APIError>) -> Void) -> Self {
+    public func mockObject(forPath path: String, withRouter router: RouterProtocol, completionHandler: (MappableObject?, APIResponseStatus) -> Void) -> Self {
         
         if let mockData = NSData(contentsOfFile: path) {
             
@@ -102,24 +112,25 @@ extension Alamofire.Request {
                 
                 // Try to construct the object from the JSON structure
                 let map = Map(representation: jsonObject)
-                let object = T(map: map)
+                let object = router.result(forMap: map)
+//                let object = T(map: map)
 //
-//                var error: APIError?
+//                var error: APIResponseStatus?
 //                let object = T(representation: jsonObject, error: &error)
                 
                 if let error = map.error {
                     
-                    completionHandler(Result<T, APIError>.Failure(error))
+                    completionHandler(nil, error)
                     
                 } else {
                     
-                    completionHandler(Result<T, APIError>.Success(object))
+                    completionHandler(object, .Success)
                 }
             }
             catch {
                 
-                let apiError = APIError.InvalidMockResponse(path: path)
-                completionHandler(Result<T, APIError>.Failure(apiError))
+                let apiError = APIResponseStatus.InvalidMockResponse(path: path)
+                completionHandler(nil, apiError)
             }            
         }
         

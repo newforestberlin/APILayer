@@ -26,22 +26,22 @@ import Alamofire
 
 // We unfortunately have to use CollectionResponse for collection parsing because Swift has problems with
 // generic types being used as generic types (A<T> as <T> in another class / method).
-public class CollectionEntity<T: MappableObject> {
+public class CollectionEntity {
     
-    public var items: [T]
-    
-    init(collection: CollectionResponse) {
-        
-        items = []
-        
-        for item in collection.items {
-            var error: APIError?
-            let map = Map(representation: item)
-            let object = T(map: map)
-            if map.error == nil {
-                items.append(object)
-            }
-        }
-    }
+//    public var items: [T]
+//    
+//    init(collection: CollectionResponse) {
+//        
+//        items = []
+//        
+//        for item in collection.items {
+//            var error: APIResponseStatus?
+//            let map = Map(representation: item)
+//            let object = T(map: map)
+//            if map.error == nil {
+//                items.append(object)
+//            }
+//        }
+//    }
     
 }

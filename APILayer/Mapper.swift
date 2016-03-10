@@ -36,7 +36,7 @@ infix operator <- {}
 
 public class Map {
     
-    public var error: APIError?
+    public var error: APIResponseStatus?
 
     var representation: AnyObject
     
@@ -82,6 +82,12 @@ public class Map {
 
     public func value(key: String) -> NSDate? {
         return API.mapper.value(fromRepresentation: representation, key: key)
+    }
+    
+    static func map<T: MappableObject>(fromRepresentation representation: AnyObject) -> T? {
+        let map = Map(representation: representation)
+        let entity = T(map: map)
+        return map.error == nil ? nil : entity
     }
     
 }
@@ -143,7 +149,7 @@ public class Mapper {
                 let map = Map(representation: validDict)
                 let entity = T(map: map)
 
-//                var error: APIError?
+//                var error: APIResponseStatus?
 //                let entity = T(representation: validDict, error: &error)
                 
                 return map.error == nil ? entity : nil
@@ -165,7 +171,7 @@ public class Mapper {
                         
                         let map = Map(representation: validDict)
                         let entity = T(map: map)
-//                        var localError: APIError?
+//                        var localError: APIResponseStatus?
 //                        let entity = T(representation: validDict, error: &localError)
                         
                         // If deserialization of the entity failed, we ignore it
@@ -193,34 +199,34 @@ public class Mapper {
     }
     
     
-    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> T {
+    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> T {
         if let value = representation.valueForKeyPath(key) as? T {
             return value
         }
         
-        error = APIError.MissingKey(description: "Could not extract value for key \(key). Key is missing.")
+        error = APIResponseStatus.MissingKey(description: "Could not extract value for key \(key). Key is missing.")
         
         return T()
     }
     
-    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> [T] {
+    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> [T] {
         if let value = representation.valueForKeyPath(key) as? [T] {
             return value
         }
         
-        error = APIError.MissingKey(description: "Could not extract array for key \(key). Key is missing or type is wrong.")
+        error = APIResponseStatus.MissingKey(description: "Could not extract array for key \(key). Key is missing or type is wrong.")
 
         return []
     }
     
-    public func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> T {
+    public func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> T {
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
                 let map = Map(representation: validDict)
                 let entity = T(map: map)
 
-//                var localError: APIError?
+//                var localError: APIResponseStatus?
 //                let entity = T(representation: validDict, error: &localError)
                 
                 if let localError = map.error {
@@ -230,22 +236,22 @@ public class Mapper {
                 return entity
                 
             } else {
-                error = APIError.InvalidValue(description: "Could not parse entity for key '\(key)'. Value is not a dictionary.")
+                error = APIResponseStatus.InvalidValue(description: "Could not parse entity for key '\(key)'. Value is not a dictionary.")
             }
         }
         else {
-            error = APIError.MissingKey(description: "Could not parse entity for key '\(key)'. Key is missing.")
+            error = APIResponseStatus.MissingKey(description: "Could not parse entity for key '\(key)'. Key is missing.")
         }
         
         // Return some object (we do not want to throw, otherwise "let" properties would be a problem in response entities)
         let map = Map(representation: [:])
         return T(map: map)
 
-//        var dummyError: APIError?
+//        var dummyError: APIResponseStatus?
 //        return T(representation: [:], error: &dummyError)
     }
     
-    public func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> [T] {
+    public func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> [T] {
         
         if let validObject: AnyObject = representation.valueForKey(key) {
             
@@ -254,24 +260,24 @@ public class Mapper {
                 return validArray
             }
             else {
-                error = APIError.InvalidValue(description: "Could not parse entity array for key '\(key)'. Value is invalid.")
+                error = APIResponseStatus.InvalidValue(description: "Could not parse entity array for key '\(key)'. Value is invalid.")
             }
             
         }
         
-        error = APIError.MissingKey(description: "Could not parse entity array for key '\(key)'. Key is missing.")
+        error = APIResponseStatus.MissingKey(description: "Could not parse entity array for key '\(key)'. Key is missing.")
         
         return []
     }
     
-    public func value(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> NSDate {
+    public func value(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> NSDate {
         if let value = representation.valueForKeyPath(key) as? String {
             if let date = dateFormatter.dateFromString(value) {
                 return date
             }
         }
         
-        error = APIError.MissingKey(description: "Could not parse date for key '\(key)'. Key is missing or format is wrong.")
+        error = APIResponseStatus.MissingKey(description: "Could not parse date for key '\(key)'. Key is missing or format is wrong.")
         
         return NSDate()
     }
@@ -287,7 +293,7 @@ public class Mapper {
                 
                 let map = Map(representation: validDict)
                 let entity = T(map: map)
-//                var error: APIError?
+//                var error: APIResponseStatus?
 //                let entity = T(representation: validDict, error: &error)
                 return map.error == nil ? entity : nil
             }
@@ -296,7 +302,7 @@ public class Mapper {
         return nil
     }
 
-    public func entity<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> T {
+    public func entity<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> T {
         
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
@@ -304,7 +310,7 @@ public class Mapper {
                 let map = Map(representation: validDict)
                 let entity = T(map: map)
 
-                //var localError: APIError?
+                //var localError: APIResponseStatus?
                 //let entity = T(representation: validDict, error: &localError)
                 
                 if let localError = map.error {
@@ -314,18 +320,18 @@ public class Mapper {
                 return entity
                 
             } else {
-                error = APIError.InvalidValue(description: "Could not parse entity for key '\(key)'. Value is not a dictionary.")
+                error = APIResponseStatus.InvalidValue(description: "Could not parse entity for key '\(key)'. Value is not a dictionary.")
             }
         }
         else {
-            error = APIError.MissingKey(description: "Could not parse entity for key '\(key)'. Key is missing.")
+            error = APIResponseStatus.MissingKey(description: "Could not parse entity for key '\(key)'. Key is missing.")
         }
         
         let map = Map(representation: [:])
         return T(map: map)
 
         // Return some object (we do not want to throw, otherwise "let" properties would be a problem in response entities)
-//        var dummyError: APIError?
+//        var dummyError: APIResponseStatus?
 //        return T(representation: [:], error: &dummyError)
     }
 
@@ -343,7 +349,7 @@ public class Mapper {
                     let map = Map(representation: validDict)
                     let entity = T(map: map)
 
-//                    var localError: APIError?
+//                    var localError: APIResponseStatus?
 //                    let entity = T(representation: validDict, error: &localError)
                     
                     // If deserialization of the entity failed, we ignore it
@@ -360,7 +366,7 @@ public class Mapper {
     }
     
     
-    private func entityArray<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, inout error: APIError?) -> [T] {
+    private func entityArray<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> [T] {
         
         if let validObject: AnyObject = representation.valueForKey(key) {
             
@@ -369,12 +375,12 @@ public class Mapper {
                 return validArray
             }
             else {
-                error = APIError.InvalidValue(description: "Could not parse entity array for key '\(key)'. Value is invalid.")
+                error = APIResponseStatus.InvalidValue(description: "Could not parse entity array for key '\(key)'. Value is invalid.")
             }
             
         }
         
-        error = APIError.MissingKey(description: "Could not parse entity array for key '\(key)'. Key is missing.")
+        error = APIResponseStatus.MissingKey(description: "Could not parse entity array for key '\(key)'. Key is missing.")
         
         return []
     }

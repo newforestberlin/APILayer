@@ -24,12 +24,12 @@
 import UIKit
 import Alamofire
 
-public class BlockedRouterOperation<T: MappableObject>: SwiftOperation {
+public class BlockedRouterOperation: SwiftOperation {
     
     let router: RouterProtocol
-    var completion: (NSURLRequest?, NSHTTPURLResponse?, Result<T, APIError>) -> ()
+    var completion: (NSURLRequest?, NSHTTPURLResponse?, MappableObject?, APIResponseStatus) -> ()
     
-    init(router: RouterProtocol, completion: (NSURLRequest?, NSHTTPURLResponse?, Result<T, APIError>) -> ()) {
+    init(router: RouterProtocol, completion: (NSURLRequest?, NSHTTPURLResponse?, MappableObject?, APIResponseStatus) -> ()) {
         self.completion = completion
         self.router = router
         super.init()
@@ -37,8 +37,8 @@ public class BlockedRouterOperation<T: MappableObject>: SwiftOperation {
     
     override func execute() {
 
-        API.performRouter(router, complete: { (req: NSURLRequest?, resp: NSHTTPURLResponse?, result: Result<T, APIError>) in
-            self.completion(req, resp, result)
+        API.performRouter(router, complete: { (req: NSURLRequest?, resp: NSHTTPURLResponse?, result: MappableObject?, status: APIResponseStatus) in
+            self.completion(req, resp, result, status)
             self.completeOperation()
         })
     }
