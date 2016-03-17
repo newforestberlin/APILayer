@@ -84,6 +84,22 @@ public class Map {
         return API.mapper.value(fromRepresentation: representation, key: key)
     }
     
+    public func value<T: MappableObject>(key: String) -> [String: T] {
+        return API.mapper.value(fromRepresentation: representation, key: key, error: &error)
+    }
+    
+    public func value<T: MappableObject>(key: String) -> [String: T]? {
+        return API.mapper.value(fromRepresentation: representation, key: key)
+    }
+
+    public func value<T: Defaultable>(key: String) -> [String: T] {
+        return API.mapper.value(fromRepresentation: representation, key: key, error: &error)
+    }
+    
+    public func value<T: Defaultable>(key: String) -> [String: T]? {
+        return API.mapper.value(fromRepresentation: representation, key: key)
+    }
+
     static func map<T: MappableObject>(fromRepresentation representation: AnyObject) -> T? {
         let map = Map(representation: representation)
         let entity = T(map: map)
@@ -123,8 +139,20 @@ public class Mapper {
         return [:]
     }
     
-    // MARK: Value extraction
+    // MARK: Single value extraction
   
+    public func value(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> NSDate {
+        if let value = representation.valueForKeyPath(key) as? String {
+            if let date = dateFormatter.dateFromString(value) {
+                return date
+            }
+        }
+        
+        error = APIResponseStatus.MissingKey(description: "Could not parse date for key '\(key)'. Key is missing or format is wrong.")
+        
+        return NSDate()
+    }
+
     public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String) -> T? {
         if let value = representation.valueForKeyPath(key) as? T {
             return value
@@ -133,55 +161,14 @@ public class Mapper {
         return nil
     }
     
-    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String) -> [T]? {
-        
-        if let value = representation.valueForKeyPath(key) as? [T] {
-            return value
-        }
-        
-        return nil
-    }
-
     public func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String) -> T? {
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
                 let map = Map(representation: validDict)
                 let entity = T(map: map)
-
-//                var error: APIResponseStatus?
-//                let entity = T(representation: validDict, error: &error)
                 
                 return map.error == nil ? entity : nil
-            }
-        }
-        
-        return nil
-    }
-
-    public func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String) -> [T]? {
-     
-        if let candidateObject: AnyObject = representation.valueForKey(key) {
-            if let validArray = candidateObject as? [AnyObject] {
-                
-                var result = [T]()
-                
-                for candidateItem in validArray {
-                    if let validDict = candidateItem as? [String: AnyObject] {
-                        
-                        let map = Map(representation: validDict)
-                        let entity = T(map: map)
-//                        var localError: APIResponseStatus?
-//                        let entity = T(representation: validDict, error: &localError)
-                        
-                        // If deserialization of the entity failed, we ignore it
-                        if map.error == nil {
-                            result.append(entity)
-                        }
-                    }
-                }
-                
-                return result
             }
         }
         
@@ -209,25 +196,15 @@ public class Mapper {
         return T()
     }
     
-    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> [T] {
-        if let value = representation.valueForKeyPath(key) as? [T] {
-            return value
-        }
-        
-        error = APIResponseStatus.MissingKey(description: "Could not extract array for key \(key). Key is missing or type is wrong.")
-
-        return []
-    }
-    
     public func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> T {
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
                 let map = Map(representation: validDict)
                 let entity = T(map: map)
-
-//                var localError: APIResponseStatus?
-//                let entity = T(representation: validDict, error: &localError)
+                
+                //                var localError: APIResponseStatus?
+                //                let entity = T(representation: validDict, error: &localError)
                 
                 if let localError = map.error {
                     error = localError
@@ -246,10 +223,12 @@ public class Mapper {
         // Return some object (we do not want to throw, otherwise "let" properties would be a problem in response entities)
         let map = Map(representation: [:])
         return T(map: map)
-
-//        var dummyError: APIResponseStatus?
-//        return T(representation: [:], error: &dummyError)
+        
+        //        var dummyError: APIResponseStatus?
+        //        return T(representation: [:], error: &dummyError)
     }
+
+    // MARK: Array value extraction
     
     public func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> [T] {
         
@@ -269,73 +248,125 @@ public class Mapper {
         
         return []
     }
-    
-    public func value(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> NSDate {
-        if let value = representation.valueForKeyPath(key) as? String {
-            if let date = dateFormatter.dateFromString(value) {
-                return date
-            }
-        }
-        
-        error = APIResponseStatus.MissingKey(description: "Could not parse date for key '\(key)'. Key is missing or format is wrong.")
-        
-        return NSDate()
-    }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    // MARK: Entity parsing
-    
-    public func entity<T: MappableObject>(fromRepresentation representation: AnyObject, key: String) -> T? {
+    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String) -> [T]? {
         
-        if let candidateObject: AnyObject = representation.valueForKey(key) {
-            if let validDict = candidateObject as? [String: AnyObject] {
-                
-                let map = Map(representation: validDict)
-                let entity = T(map: map)
-//                var error: APIResponseStatus?
-//                let entity = T(representation: validDict, error: &error)
-                return map.error == nil ? entity : nil
-            }
+        if let value = representation.valueForKeyPath(key) as? [T] {
+            return value
         }
         
         return nil
     }
 
-    public func entity<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> T {
+    public func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String) -> [T]? {
+     
+        if let candidateObject: AnyObject = representation.valueForKey(key) {
+            if let validArray = candidateObject as? [AnyObject] {
+                
+                var result = [T]()
+                
+                for candidateItem in validArray {
+                    if let validDict = candidateItem as? [String: AnyObject] {
+                        
+                        let map = Map(representation: validDict)
+                        let entity = T(map: map)
+                        
+                        // If deserialization of the entity failed, we ignore it
+                        if map.error == nil {
+                            result.append(entity)
+                        }
+                    }
+                }
+                
+                return result
+            }
+        }
         
+        return nil
+    }
+    
+    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> [T] {
+        if let value = representation.valueForKeyPath(key) as? [T] {
+            return value
+        }
+        
+        error = APIResponseStatus.MissingKey(description: "Could not extract array for key \(key). Key is missing or type is wrong.")
+        
+        return []
+    }
+
+    // MARK: Dictionary value extraction
+
+    public func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String) -> [String: T]? {
         if let candidateObject: AnyObject = representation.valueForKey(key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
-                let map = Map(representation: validDict)
-                let entity = T(map: map)
-
-                //var localError: APIResponseStatus?
-                //let entity = T(representation: validDict, error: &localError)
+                var result = [String: T]()
                 
-                if let localError = map.error {
-                    error = localError
+                for (key, value) in validDict {
+                    if let entityDict = value as? [String: AnyObject] {
+                        let map = Map(representation: entityDict)
+                        let entity = T(map: map)
+                        
+                        if map.error == nil {
+                            result[key] = entity
+                        }
+                    }
                 }
                 
-                return entity
-                
-            } else {
-                error = APIResponseStatus.InvalidValue(description: "Could not parse entity for key '\(key)'. Value is not a dictionary.")
+                return result
             }
         }
-        else {
-            error = APIResponseStatus.MissingKey(description: "Could not parse entity for key '\(key)'. Key is missing.")
+        
+        return nil
+    }
+    
+    public func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> [String: T] {
+        if let candidateObject: AnyObject = representation.valueForKey(key) {
+            if let validDict = candidateObject as? [String: AnyObject] {
+                
+                var result = [String: T]()
+                
+                for (key, value) in validDict {
+                    if let entityDict = value as? [String: AnyObject] {
+                        let map = Map(representation: entityDict)
+                        let entity = T(map: map)
+                        
+                        if map.error == nil {
+                            result[key] = entity
+                        }
+                    }
+                }
+                
+                return result
+            } else {
+                error = APIResponseStatus.MissingKey(description: "Value for key \(key) is not a dictionary.")
+                return [:]
+            }
         }
         
-        let map = Map(representation: [:])
-        return T(map: map)
-
-        // Return some object (we do not want to throw, otherwise "let" properties would be a problem in response entities)
-//        var dummyError: APIResponseStatus?
-//        return T(representation: [:], error: &dummyError)
+        error = APIResponseStatus.MissingKey(description: "Could not extract value for key \(key). Key is missing.")
+        return [:]
     }
-
-    // MARK: Entity array parsing
+    
+    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> [String: T] {
+        if let value = representation.valueForKeyPath(key) as? [String: T] {
+            return value
+        }
+        
+        error = APIResponseStatus.MissingKey(description: "Could not extract array for key \(key). Key is missing or type is wrong.")
+        return [:]
+    }
+    
+    public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String) -> [String: T]? {
+        if let value = representation.valueForKeyPath(key) as? [String: T] {
+            return value
+        }
+        
+        return nil
+    }
+    
+    // MARK: Internal entity array parsing
     
     private func entityArray<T: MappableObject>(fromRepresentation representation: AnyObject) -> [T]? {
         
@@ -348,9 +379,6 @@ public class Mapper {
                     
                     let map = Map(representation: validDict)
                     let entity = T(map: map)
-
-//                    var localError: APIResponseStatus?
-//                    let entity = T(representation: validDict, error: &localError)
                     
                     // If deserialization of the entity failed, we ignore it
                     if map.error == nil {
