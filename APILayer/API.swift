@@ -253,35 +253,6 @@ public class API {
 
     }
     
-    // MARK: Helper method for requesting collections
-
-    public class func requestCollection(router: RouterProtocol, complete: (CollectionEntity?, APIResponseStatus) -> ()) {
-        
-        // TODO: Adapt this to the new router protocol where everything returns MappableObject
-        
-//        API.request(router) { (result: Result<CollectionResponse, APIResponseStatus>) -> () in
-//            
-//            switch result {
-//            case .Success(let value):
-//                
-//                do {
-//                    
-//                    let result = try CollectionEntity<T>(collection: value)
-//                    complete(Result<CollectionEntity<T>, APIResponseStatus>.Success(result))
-//                    
-//                } catch let thrownError {
-//                    // TODO: Do better error here
-//                    complete(Result<CollectionEntity<T>, APIResponseStatus>.Failure(APIResponseStatus.MissingKey(description: "dsdd")))
-//                }
-//                
-//            case .Failure(let errorType):
-//                
-//                complete(Result<CollectionEntity<T>, APIResponseStatus>.Failure(APIResponseStatus.MissingKey(description: "dsdd")))
-//            }
-//            
-//        }
-    }
-    
     // MARK: Methods to help with debugging
     
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
