@@ -32,6 +32,7 @@ public enum APIResponseStatus: ErrorType {
     case Success
     case FailedRequest(statusCode: Int)
     case UnknownProblem
+    case InvalidTopLevelJSONType
     case MissingKey(description: String)
     case InvalidValue(description: String)
     case InvalidMockResponse(path: String)
@@ -63,30 +64,62 @@ extension Alamofire.Request {
                 return
             }
             
-            
             // Try to construct object from JSON structure
-            let map = Map(representation: value)
-            let object = router.result(forMap: map)
             
-//            let object = T(map: map)
-            
-//            var error: APIResponseStatus?
-//            let object = T(representation: value, error: &error)
-            
-            if let object = object where map.error == nil {
-                // Call completion handler wiht result
-                completionHandler(request: response.request, response: response.response, result: object, status: .Success)
-            } else {
-                if let error = map.error {
-                    // Call completion handler with error result
-                    completionHandler(request: response.request, response: response.response, result: nil, status: error)
+            switch value {
+                case let dict as [String: AnyObject]:
+                    // Top level type is dictionary
+                
+                    let map = Map(representation: dict)
+                    let object = router.result(forMap: map)
+                    
+                    if let object = object where map.error == nil {
+                        // Call completion handler wiht result
+                        completionHandler(request: response.request, response: response.response, result: object, status: .Success)
+                    } else {
+                        if let error = map.error {
+                            // Call completion handler with error result
+                            completionHandler(request: response.request, response: response.response, result: nil, status: error)
+                        }
+                        else {
+                            // Call completion handler with error result
+                            completionHandler(request: response.request, response: response.response, result: nil, status: APIResponseStatus.UnknownProblem)
+                        }
                 }
-                else {
+
+            case let array as [AnyObject]:
+                // Top level type is array
+                
+                var resultArray = [Any]()
+                
+                for itemDict in array {
+                    let itemMap = Map(representation: itemDict)
+                    let object = router.result(forMap: itemMap)
+                    
+                    if let object = object where itemMap.error == nil {
+                        resultArray.append(object)
+                    }
+                }
+                
+                if resultArray.count == array.count {
+                    
+                    // Construct collection entity to wrap the array
+                    let collection = CollectionEntity(map: Map(representation: []))
+                    collection.items.appendContentsOf(resultArray)
+                    
+                    // Call completion handler wiht result
+                    completionHandler(request: response.request, response: response.response, result: collection, status: .Success)
+                } else {
                     // Call completion handler with error result
                     completionHandler(request: response.request, response: response.response, result: nil, status: APIResponseStatus.UnknownProblem)
                 }
+                
+            default:
+                
+                // Call completion handler with error result
+                completionHandler(request: response.request, response: response.response, result: nil, status: APIResponseStatus.InvalidTopLevelJSONType)
             }
-                        
+            
         case .Failure(let error):
             
             let apiError = APIResponseStatus.InvalidValue(description: error.localizedDescription)

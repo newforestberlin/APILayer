@@ -26,9 +26,14 @@ import Alamofire
 
 // We unfortunately have to use CollectionResponse for collection parsing because Swift has problems with
 // generic types being used as generic types (A<T> as <T> in another class / method).
-public class CollectionEntity {
+public class CollectionEntity: MappableObject {
     
-//    public var items: [T]
+    public var items: [Any]
+    
+    public required init(map: Map) {        
+        items = []
+    }
+    
 //    
 //    init(collection: CollectionResponse) {
 //        
