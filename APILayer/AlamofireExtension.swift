@@ -144,21 +144,74 @@ extension Alamofire.Request {
                 let jsonObject: AnyObject = try NSJSONSerialization.JSONObjectWithData(mockData, options: NSJSONReadingOptions.AllowFragments)
                 
                 // Try to construct the object from the JSON structure
-                let map = Map(representation: jsonObject)
-                let object = router.result(forMap: map)
-//                let object = T(map: map)
-//
-//                var error: APIResponseStatus?
-//                let object = T(representation: jsonObject, error: &error)
                 
-                if let error = map.error {
+                
+                switch jsonObject {
+                case let dict as [String: AnyObject]:
+                    // Top level type is dictionary
                     
-                    completionHandler(nil, error)
+                    let map = Map(representation: dict)
+                    let object = router.result(forMap: map)
                     
-                } else {
+                    if let object = object where map.error == nil {
+                        // Call completion handler wiht result
+                        completionHandler(object, .Success)
+                    } else {
+                        if let error = map.error {
+                            // Call completion handler with error result
+                            completionHandler(nil, error)
+                        }
+                        else {
+                            // Call completion handler with error result
+                            completionHandler(nil, APIResponseStatus.UnknownProblem)
+                        }
+                    }
                     
-                    completionHandler(object, .Success)
+                case let array as [AnyObject]:
+                    // Top level type is array
+                    
+                    var resultArray = [Any]()
+                    
+                    for itemDict in array {
+                        let itemMap = Map(representation: itemDict)
+                        let object = router.result(forMap: itemMap)
+                        
+                        if let object = object where itemMap.error == nil {
+                            resultArray.append(object)
+                        }
+                    }
+                    
+                    if resultArray.count == array.count {
+                        
+                        // Construct collection entity to wrap the array
+                        let collection = CollectionEntity(map: Map(representation: []))
+                        collection.items.appendContentsOf(resultArray)
+                        
+                        // Call completion handler wiht result
+                        completionHandler(collection, .Success)
+                    } else {
+                        // Call completion handler with error result
+                        completionHandler(nil, APIResponseStatus.UnknownProblem)
+                    }
+                    
+                default:
+                    
+                    // Call completion handler with error result
+                    completionHandler(nil, APIResponseStatus.InvalidTopLevelJSONType)
                 }
+
+                
+//                let map = Map(representation: jsonObject)
+//                let object = router.result(forMap: map)
+//                
+//                if let error = map.error {
+//                    
+//                    completionHandler(nil, error)
+//                    
+//                } else {
+//                    
+//                    completionHandler(object, .Success)
+//                }
             }
             catch {
                 
