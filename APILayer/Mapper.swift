@@ -38,7 +38,7 @@ public class Map {
     
     public var error: APIResponseStatus?
 
-    var representation: AnyObject
+    public var representation: AnyObject
     
     public init(representation: AnyObject) {
         self.representation = representation
