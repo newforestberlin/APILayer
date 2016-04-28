@@ -84,6 +84,14 @@ public class Map {
         return API.mapper.value(fromRepresentation: representation, key: key)
     }
     
+    public func value(key: String, formatter: NSDateFormatter) -> NSDate {
+        return API.mapper.value(fromRepresentation: representation, key: key, error: &error, customFormatter: formatter)
+    }
+    
+    public func value(key: String, formatter: NSDateFormatter) -> NSDate? {
+        return API.mapper.value(fromRepresentation: representation, key: key, customFormatter: formatter)
+    }
+    
     public func value<T: MappableObject>(key: String) -> [String: T] {
         return API.mapper.value(fromRepresentation: representation, key: key, error: &error)
     }
@@ -152,6 +160,18 @@ public class Mapper {
         
         return NSDate()
     }
+    
+    public func value(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?, customFormatter: NSDateFormatter) -> NSDate {
+        if let value = representation.valueForKeyPath(key) as? String {
+            if let date = customFormatter.dateFromString(value) {
+                return date
+            }
+        }
+        
+        error = APIResponseStatus.MissingKey(description: "Could not parse date for key '\(key)'. Key is missing or format is wrong.")
+        
+        return NSDate()
+    }
 
     public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String) -> T? {
         if let value = representation.valueForKeyPath(key) as? T {
@@ -185,6 +205,15 @@ public class Mapper {
         return nil
     }
     
+    public func value(fromRepresentation representation: AnyObject, key: String, customFormatter: NSDateFormatter) -> NSDate? {
+        if let value = representation.valueForKeyPath(key) as? String {
+            if let date = customFormatter.dateFromString(value) {
+                return date
+            }
+        }
+        
+        return nil
+    }
     
     public func value<T: Defaultable>(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> T {
         if let value = representation.valueForKeyPath(key) as? T {
