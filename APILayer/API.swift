@@ -57,6 +57,9 @@ class RequestWrapper: URLRequestConvertible {
 // This class functions as the main interface to the API layer.
 public class API {
     
+    // Custom manager, for example if you need security policy exceptions when using unsigned SSL certificates on the backend
+    public static var customManager: Alamofire.Manager?
+    
     // Mapper
     public static var mapper = Mapper()
     
@@ -96,8 +99,12 @@ public class API {
         let parameters = API.mapper.parametersForRouter(router)
         let encoding = router.encoding
         let requestTuple = encoding.encode(mutableURLRequest, parameters: parameters)
-                
-        return Alamofire.request(RequestWrapper(request: requestTuple.0))
+
+        if let customManager = API.customManager {
+            return customManager.request(RequestWrapper(request: requestTuple.0))
+        } else {
+            return Alamofire.request(RequestWrapper(request: requestTuple.0))
+        }
     }
     
     // MARK: Request performing 
