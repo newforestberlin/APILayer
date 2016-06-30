@@ -60,6 +60,19 @@ extension Alamofire.Request {
             if let urlResponse = response.response where urlResponse.statusCode < 200 || urlResponse.statusCode >= 300 {
                 // Request failed (we do not care about redirects, just do not do that on your API. Return error but also the JSON object, might be useful for debugging.
                 let error = APIResponseStatus.RequestFailedWithResponse(statusCode: urlResponse.statusCode, response: urlResponse)
+                
+                // If the response is a dictionary we try to parse it
+                if let dict = value as? [String: AnyObject] {
+                    let map = Map(representation: dict)
+                    let object = router.failureResult(forMap: map)
+                    
+                    // If we could parse something, pass that error object
+                    if let object = object where map.error == nil {
+                        completionHandler(request: response.request, response: urlResponse, result: object, status: APIResponseStatus.FailedRequest(statusCode: urlResponse.statusCode))
+                        return
+                    }
+                }
+                
                 completionHandler(request: response.request, response: urlResponse, result: nil, status: APIResponseStatus.FailedRequest(statusCode: urlResponse.statusCode))
                 return
             }

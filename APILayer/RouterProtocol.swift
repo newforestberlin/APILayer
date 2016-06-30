@@ -33,6 +33,7 @@ public protocol RouterProtocol {
     var uploadData: (data: NSData, name: String, fileName: String, mimeType: String)? { get }
     var blockedOperation: Bool { get }
     func result(forMap map: Map) -> MappableObject?
+    func failureResult(forMap map: Map) -> MappableObject?
 }
 
 
