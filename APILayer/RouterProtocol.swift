@@ -34,6 +34,7 @@ public protocol RouterProtocol {
     var blockedOperation: Bool { get }
     func result(forMap map: Map) -> MappableObject?
     func failureResult(forMap map: Map) -> MappableObject?
+    func requestFailed()
 }
 
 

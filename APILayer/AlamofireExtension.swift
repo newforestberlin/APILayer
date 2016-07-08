@@ -135,7 +135,10 @@ extension Alamofire.Request {
             
         case .Failure(let error):
             
-            let apiError = APIResponseStatus.InvalidValue(description: error.localizedDescription)
+            // Let router know that a request failed (in case ui wants to visualize that)
+            router.requestFailed()
+
+            let apiError = APIResponseStatus.InvalidValue(description: error.localizedDescription)            
             completionHandler(request: response.request, response: response.response, result: nil, status: apiError)
         }
     }
