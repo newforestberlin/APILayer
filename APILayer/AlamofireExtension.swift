@@ -63,6 +63,7 @@ extension Alamofire.Request {
                 
                 // If the response is a dictionary we try to parse it
                 if let dict = value as? [String: AnyObject] {
+                    print(dict)
                     let map = Map(representation: dict)
                     let object = router.failureResult(forMap: map)
                     
