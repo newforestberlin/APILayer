@@ -63,7 +63,7 @@ extension Alamofire.Request {
                 
                 // If the response is a dictionary we try to parse it
                 if let dict = value as? [String: AnyObject] {
-                    print(dict)
+
                     let map = Map(representation: dict)
                     let object = router.failureResult(forMap: map)
                     
@@ -83,7 +83,7 @@ extension Alamofire.Request {
             switch value {
                 case let dict as [String: AnyObject]:
                     // Top level type is dictionary
-                
+                    
                     let map = Map(representation: dict)
                     let object = router.result(forMap: map)
                     
@@ -107,6 +107,7 @@ extension Alamofire.Request {
                 var resultArray = [Any]()
                 
                 for itemDict in array {
+                    
                     let itemMap = Map(representation: itemDict)
                     let object = router.result(forMap: itemMap)
                     
