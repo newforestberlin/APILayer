@@ -84,6 +84,14 @@ public class Map {
         return API.mapper.value(fromRepresentation: representation, key: key)
     }
     
+    public func value(key: String) -> [String: AnyObject]? {
+        return API.mapper.value(fromRepresentation: representation, key: key)
+    }
+
+    public func value(key: String) -> [String: AnyObject] {
+        return API.mapper.value(fromRepresentation: representation, key: key, error: &error)
+    }
+
     public func value(key: String, formatter: NSDateFormatter) -> NSDate {
         return API.mapper.value(fromRepresentation: representation, key: key, error: &error, customFormatter: formatter)
     }
@@ -193,6 +201,24 @@ public class Mapper {
         }
         
         return nil
+    }
+    
+    public func value(fromRepresentation representation: AnyObject, key: String) -> [String: AnyObject]? {
+        if let value = representation.valueForKeyPath(key) as? [String: AnyObject] {
+            return value
+        }
+        
+        return nil
+    }
+    
+    public func value(fromRepresentation representation: AnyObject, key: String, inout error: APIResponseStatus?) -> [String: AnyObject] {
+        if let value = representation.valueForKeyPath(key) as? [String: AnyObject] {
+            return value
+        }
+        
+        error = APIResponseStatus.MissingKey(description: "Could not extract value for key \(key). Key is missing.")
+        
+        return [:]
     }
     
     public func value(fromRepresentation representation: AnyObject, key: String) -> NSDate? {

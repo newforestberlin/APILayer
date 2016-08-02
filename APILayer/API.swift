@@ -277,6 +277,11 @@ public class API {
         
         let request = API.createRequest(forRouter: router)
         
+//        request.responseString { response in
+//            print("Response String: \(response.result.value)")
+//        }
+//        
+        
         request.response { (urlRequest, urlResponse, data, errorType) -> Void in
             let statusCode = urlResponse?.statusCode
             complete(statusCode, errorType)

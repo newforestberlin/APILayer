@@ -147,6 +147,15 @@ extension Alamofire.Request {
     
     public func responseObject(router: RouterProtocol, completionHandler: (request: NSURLRequest?, response: NSHTTPURLResponse?, result: MappableObject?, status: APIResponseStatus) -> Void) -> Self {
         
+        
+//        return responseString { response in
+//                print("Success: \(response.result.isSuccess)")
+//                print("Response String: \(response.result.value)")
+//        }
+//
+//        return responseString(completionHandler: { response in
+//            self.handleJSONCompletion(router, response: response, completionHandler: completionHandler)
+//        })
         return responseJSON(completionHandler: { response in
             self.handleJSONCompletion(router, response: response, completionHandler: completionHandler)
         })        
