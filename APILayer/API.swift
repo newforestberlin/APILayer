@@ -262,15 +262,16 @@ public class API {
     
     // MARK: Methods to help with debugging
     
-    // Performs request with the specified Router. Completion block is called in case of success / failure later on.
-//    public class func requestString(router: RouterProtocol, complete: (Result<String, APIResponseStatus>) -> ()) {
-//        
-//        let request = API.createRequest(forRouter: router)
-//        
-//        request.responseString(encoding: NSStringEncoding(NSUTF8StringEncoding)) { response in
-//            complete(result)
-//        }
-//    }
+
+    public class func requestString(router: RouterProtocol, complete: (String?, ErrorType?) -> ()) {
+        
+        let request = API.createRequest(forRouter: router)
+        
+        request.responseString { response in            
+            print("Response String: \(response.result.value)")
+            complete(response.result.value, nil)
+        }
+    }
     
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
     public class func requestStatus(router: RouterProtocol, complete: (Int?, ErrorType?) -> ()) {
