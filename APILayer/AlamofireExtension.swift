@@ -49,6 +49,66 @@ extension Alamofire.Request {
     
     // MARK: Parsing method
     
+    
+    private func callCompletionAfterJSONParsing(value: AnyObject, router: RouterProtocol, response: Response<AnyObject, NSError>,completionHandler: (request: NSURLRequest?, response: NSHTTPURLResponse?, result: MappableObject?, status: APIResponseStatus) -> Void) {
+        
+        switch value {
+        case let dict as [String: AnyObject]:
+            // Top level type is dictionary
+            
+            let map = Map(representation: dict)
+            let object = router.result(forMap: map)
+            
+            if let object = object where map.error == nil {
+                // Call completion handler wiht result
+                completionHandler(request: response.request, response: response.response, result: object, status: .Success)
+            } else {
+                if let error = map.error {
+                    // Call completion handler with error result
+                    completionHandler(request: response.request, response: response.response, result: nil, status: error)
+                }
+                else {
+                    // Call completion handler with error result
+                    completionHandler(request: response.request, response: response.response, result: nil, status: APIResponseStatus.UnknownProblem)
+                }
+            }
+            
+        case let array as [AnyObject]:
+            // Top level type is array
+            
+            var resultArray = [Any]()
+            
+            for itemDict in array {
+                
+                let itemMap = Map(representation: itemDict)
+                let object = router.result(forMap: itemMap)
+                
+                if let object = object where itemMap.error == nil {
+                    resultArray.append(object)
+                }
+            }
+            
+            if resultArray.count == array.count {
+                
+                // Construct collection entity to wrap the array
+                let collection = CollectionEntity(map: Map(representation: []))
+                collection.items.appendContentsOf(resultArray)
+                
+                // Call completion handler wiht result
+                completionHandler(request: response.request, response: response.response, result: collection, status: .Success)
+            } else {
+                // Call completion handler with error result
+                completionHandler(request: response.request, response: response.response, result: nil, status: APIResponseStatus.UnknownProblem)
+            }
+            
+        default:
+            
+            // Call completion handler with error result
+            completionHandler(request: response.request, response: response.response, result: nil, status: APIResponseStatus.InvalidTopLevelJSONType)
+        }
+        
+    }
+    
     public func handleJSONCompletion(router: RouterProtocol, response: Response<AnyObject, NSError>, completionHandler: (request: NSURLRequest?, response: NSHTTPURLResponse?, result: MappableObject?, status: APIResponseStatus) -> Void) {
         
         switch response.result {
@@ -79,69 +139,24 @@ extension Alamofire.Request {
             }
             
             // Try to construct object from JSON structure
-            
-            switch value {
-                case let dict as [String: AnyObject]:
-                    // Top level type is dictionary
-                    
-                    let map = Map(representation: dict)
-                    let object = router.result(forMap: map)
-                    
-                    if let object = object where map.error == nil {
-                        // Call completion handler wiht result
-                        completionHandler(request: response.request, response: response.response, result: object, status: .Success)
-                    } else {
-                        if let error = map.error {
-                            // Call completion handler with error result
-                            completionHandler(request: response.request, response: response.response, result: nil, status: error)
-                        }
-                        else {
-                            // Call completion handler with error result
-                            completionHandler(request: response.request, response: response.response, result: nil, status: APIResponseStatus.UnknownProblem)
-                        }
-                }
-
-            case let array as [AnyObject]:
-                // Top level type is array
-                
-                var resultArray = [Any]()
-                
-                for itemDict in array {
-                    
-                    let itemMap = Map(representation: itemDict)
-                    let object = router.result(forMap: itemMap)
-                    
-                    if let object = object where itemMap.error == nil {
-                        resultArray.append(object)
-                    }
-                }
-                
-                if resultArray.count == array.count {
-                    
-                    // Construct collection entity to wrap the array
-                    let collection = CollectionEntity(map: Map(representation: []))
-                    collection.items.appendContentsOf(resultArray)
-                    
-                    // Call completion handler wiht result
-                    completionHandler(request: response.request, response: response.response, result: collection, status: .Success)
-                } else {
-                    // Call completion handler with error result
-                    completionHandler(request: response.request, response: response.response, result: nil, status: APIResponseStatus.UnknownProblem)
-                }
-                
-            default:
-                
-                // Call completion handler with error result
-                completionHandler(request: response.request, response: response.response, result: nil, status: APIResponseStatus.InvalidTopLevelJSONType)
-            }
+            callCompletionAfterJSONParsing(value, router: router, response: response, completionHandler: completionHandler)
             
         case .Failure(let error):
+            // No valid JSON.
             
-            // Let router know that a request failed (in case ui wants to visualize that)
-            router.requestFailed()
-
-            let apiError = APIResponseStatus.InvalidValue(description: error.localizedDescription)            
-            completionHandler(request: response.request, response: response.response, result: nil, status: apiError)
+            // But maybe the status code is valid, and we got no JSON Body.
+            if let urlResponse = response.response where urlResponse.statusCode >= 200 || urlResponse.statusCode < 300 {
+                // Status code is valid, so try to create response object from empty dict 
+                // because the client might expect that.
+                let emptyDictionary = [String:String]()
+                callCompletionAfterJSONParsing(emptyDictionary, router: router, response: response, completionHandler: completionHandler)
+            } else {
+                // Let router know that a request failed (in case ui wants to visualize that)
+                router.requestFailed()
+                
+                let apiError = APIResponseStatus.InvalidValue(description: error.localizedDescription)
+                completionHandler(request: response.request, response: response.response, result: nil, status: apiError)
+            }
         }
     }
     
