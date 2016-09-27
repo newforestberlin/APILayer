@@ -80,7 +80,7 @@ open class API {
     
     // MARK: Request creation from routers
 
-    fileprivate class func createRequest(forRouter router: RouterProtocol) -> Request {
+    fileprivate class func createRequest(forRouter router: RouterProtocol) -> DataRequest? {
         
         // Make sure the operation queue is sequential
         API.operations.maxConcurrentOperationCount = 1
@@ -115,7 +115,10 @@ open class API {
             }
         }
         catch {
+            return nil
         }
+        
+        return nil
     }
     
     // MARK: Request performing 
@@ -123,7 +126,10 @@ open class API {
     internal class func performRouter(_ router: RouterProtocol, complete: @escaping (URLRequest?, HTTPURLResponse?, MappableObject?, APIResponseStatus) -> ()) {
         
         // Do the actual request
-        let request = API.createRequest(forRouter: router)
+        guard let request = API.createRequest(forRouter: router) else {
+            complete(nil, nil, nil, APIResponseStatus.unknownProblem)
+            return
+        }
 
         if let uploadData = router.uploadData {
             // Data uploads are using a multipart request
@@ -222,7 +228,12 @@ open class API {
     fileprivate class func completeRequest(_ router: RouterProtocol, complete: @escaping (URLRequest?, HTTPURLResponse?, MappableObject?, APIResponseStatus) -> ()) {
         
         if let mocker = API.mocker, let path = mocker.path(forRouter: router) {
-            let request = API.createRequest(forRouter: router)
+            
+            // Do the actual request
+            guard let request = API.createRequest(forRouter: router) else {
+                complete(nil, nil, nil, APIResponseStatus.unknownProblem)
+                return
+            }
             
             request.mockObject(forPath: path, withRouter: router, completionHandler: { (result, status) -> Void in
                 complete(nil, nil, result, status)
@@ -243,12 +254,13 @@ open class API {
         // refresh is working all enqueued requests are waiting for the token refresh to finish
         // by calling the completion(refreshWasSuccessful: Bool).
         
-        let request = API.createRequest(forRouter: router)
-        
-        
+        guard let request = API.createRequest(forRouter: router) else {
+            complete(nil, APIResponseStatus.unknownProblem)
+            return
+        }
         
         request.responseObject(router) { (request, response, result, status) -> Void in
-            complete(result: result, status: status)
+            complete(result, status)
         }
         
     }
@@ -288,7 +300,10 @@ open class API {
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
     open class func requestStatus(_ router: RouterProtocol, complete: @escaping (Int?, Error?) -> ()) {
         
-        let request = API.createRequest(forRouter: router) as! DataRequest
+        guard let request = API.createRequest(forRouter: router) else {
+            complete(nil, APIResponseStatus.unknownProblem)
+            return
+        }
         
 //        request.responseString { response in
 //            print("Response String: \(response.result.value)")

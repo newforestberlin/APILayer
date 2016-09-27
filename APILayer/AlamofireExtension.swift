@@ -50,7 +50,7 @@ extension Alamofire.DataRequest {
     // MARK: Parsing method
     
     
-    fileprivate func callCompletionAfterJSONParsing(_ value: AnyObject, router: RouterProtocol, response: Response<AnyObject, NSError>,completionHandler: (_ request: NSURLRequest?, _ response: HTTPURLResponse?, _ result: MappableObject?, _ status: APIResponseStatus) -> Void) {
+    fileprivate func callCompletionAfterJSONParsing(_ value: Any, router: RouterProtocol, response: DataResponse<Any>,completionHandler: (_ request: URLRequest?, _ response: HTTPURLResponse?, _ result: MappableObject?, _ status: APIResponseStatus) -> Void) {
         
         switch value {
         case let dict as [String: AnyObject]:
@@ -61,15 +61,15 @@ extension Alamofire.DataRequest {
             
             if let object = object , map.error == nil {
                 // Call completion handler wiht result
-                completionHandler(request: response.request, response: response.response, result: object, status: .Success)
+                completionHandler(response.request, response.response, object, .success)
             } else {
                 if let error = map.error {
                     // Call completion handler with error result
-                    completionHandler(request: response.request, response: response.response, result: nil, status: error)
+                    completionHandler(response.request, response.response, nil, error)
                 }
                 else {
                     // Call completion handler with error result
-                    completionHandler(request: response.request, response: response.response, result: nil, status: APIResponseStatus.UnknownProblem)
+                    completionHandler(response.request, response.response, nil, APIResponseStatus.unknownProblem)
                 }
             }
             
@@ -95,16 +95,16 @@ extension Alamofire.DataRequest {
                 collection.items.append(contentsOf: resultArray)
                 
                 // Call completion handler wiht result
-                completionHandler(request: response.request, response: response.response, result: collection, status: .Success)
+                completionHandler(response.request, response.response, collection, .success)
             } else {
                 // Call completion handler with error result
-                completionHandler(request: response.request, response: response.response, result: nil, status: APIResponseStatus.UnknownProblem)
+                completionHandler(response.request, response.response, nil, APIResponseStatus.unknownProblem)
             }
             
         default:
             
             // Call completion handler with error result
-            completionHandler(request: response.request, response: response.response, result: nil, status: APIResponseStatus.InvalidTopLevelJSONType)
+            completionHandler(response.request, response.response, nil, APIResponseStatus.invalidTopLevelJSONType)
         }
         
     }

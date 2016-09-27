@@ -190,7 +190,8 @@ open class Mapper {
     }
     
     open func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String) -> T? {
-        if let candidateObject: AnyObject = representation.value(forKey: key) {
+        
+        if let candidateObject: Any = representation.value(forKey: key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
                 let map = Map(representation: validDict as AnyObject)
@@ -252,7 +253,7 @@ open class Mapper {
     }
     
     open func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, error: inout APIResponseStatus?) -> T {
-        if let candidateObject: AnyObject = representation.value(forKey: key) {
+        if let candidateObject: Any = representation.value(forKey: key) {
             if let validDict = candidateObject as? [String: AnyObject] {
                 
                 let map = Map(representation: validDict as AnyObject)
@@ -276,7 +277,7 @@ open class Mapper {
         }
         
         // Return some object (we do not want to throw, otherwise "let" properties would be a problem in response entities)
-        let map = Map(representation: [:])
+        let map = Map(representation: [:] as AnyObject)
         return T(map: map)
         
         //        var dummyError: APIResponseStatus?
@@ -287,9 +288,9 @@ open class Mapper {
     
     open func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, error: inout APIResponseStatus?) -> [T] {
         
-        if let validObject: AnyObject = representation.value(forKey: key) {
+        if let validObject: Any = representation.value(forKey: key), let validAnyObjectArray = validObject as? AnyObject {
             
-            let validArray: [T]? = entityArray(fromRepresentation: validObject)
+            let validArray: [T]? = entityArray(fromRepresentation: validAnyObjectArray)
             if let validArray = validArray{
                 return validArray
             }
@@ -315,8 +316,8 @@ open class Mapper {
 
     open func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String) -> [T]? {
      
-        if let candidateObject: AnyObject = representation.value(forKey: key) {
-            if let validArray = candidateObject as? [AnyObject] {
+        if let candidateObject: Any = representation.value(forKey: key), let validAnyCandidateObject = candidateObject as? AnyObject {
+            if let validArray = validAnyCandidateObject as? [AnyObject] {
                 
                 var result = [T]()
                 
@@ -353,8 +354,8 @@ open class Mapper {
     // MARK: Dictionary value extraction
 
     open func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String) -> [String: T]? {
-        if let candidateObject: AnyObject = representation.value(forKey: key) {
-            if let validDict = candidateObject as? [String: AnyObject] {
+        if let candidateObject: Any = representation.value(forKey: key), let validAnyCandidateObject = candidateObject as? AnyObject  {
+            if let validDict = validAnyCandidateObject as? [String: AnyObject] {
                 
                 var result = [String: T]()
                 
@@ -377,8 +378,8 @@ open class Mapper {
     }
     
     open func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, error: inout APIResponseStatus?) -> [String: T] {
-        if let candidateObject: AnyObject = representation.value(forKey: key) {
-            if let validDict = candidateObject as? [String: AnyObject] {
+        if let candidateObject: Any = representation.value(forKey: key), let validAnyCandidateObject = candidateObject as? AnyObject {
+            if let validDict = validAnyCandidateObject as? [String: AnyObject] {
                 
                 var result = [String: T]()
                 
@@ -451,9 +452,9 @@ open class Mapper {
     
     fileprivate func entityArray<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, error: inout APIResponseStatus?) -> [T] {
         
-        if let validObject: AnyObject = representation.value(forKey: key) {
+        if let validObject: Any = representation.value(forKey: key), let validAnyObject = validObject as? AnyObject {
             
-            let validArray: [T]? = entityArray(fromRepresentation: validObject)
+            let validArray: [T]? = entityArray(fromRepresentation: validAnyObject)
             if let validArray = validArray{
                 return validArray
             }
