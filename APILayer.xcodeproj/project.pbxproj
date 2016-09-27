@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D0DFFF71D9AEB32004BC608 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D0DFFF61D9AEB32004BC608 /* Alamofire.framework */; };
 		7D1E85BD1BF0FCEC0016502E /* Mapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1E85B31BF0FCEC0016502E /* Mapper.swift */; };
 		7D1E85BE1BF0FCEC0016502E /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1E85B41BF0FCEC0016502E /* API.swift */; };
 		7D1E85BF1BF0FCEC0016502E /* MockProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1E85B51BF0FCEC0016502E /* MockProtocol.swift */; };
@@ -40,6 +41,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7D0DFFF61D9AEB32004BC608 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = SOURCE_ROOT; };
 		7D1E85B31BF0FCEC0016502E /* Mapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mapper.swift; sourceTree = "<group>"; };
 		7D1E85B41BF0FCEC0016502E /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		7D1E85B51BF0FCEC0016502E /* MockProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockProtocol.swift; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D0DFFF71D9AEB32004BC608 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,6 +131,7 @@
 		7DDB7F1F1BF0FB1800F307F6 /* APILayer */ = {
 			isa = PBXGroup;
 			children = (
+				7D0DFFF61D9AEB32004BC608 /* Alamofire.framework */,
 				7D1E85C81BF0FD290016502E /* Collections */,
 				7D1E85C71BF0FD130016502E /* Core */,
 				7DDB7F201BF0FB1800F307F6 /* APILayer.h */,
@@ -201,6 +205,7 @@
 					};
 					7DDB7F1C1BF0FB1800F307F6 = {
 						CreatedOnToolsVersion = 7.1;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -343,7 +348,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -385,7 +390,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -406,14 +411,17 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/Carthage/**",
 					"$(PROJECT_DIR)/APILayer",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/APILayer/APILayer-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.youandthegang.APILayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -428,13 +436,16 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/Carthage/**",
 					"$(PROJECT_DIR)/APILayer",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/APILayer/APILayer-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.youandthegang.APILayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

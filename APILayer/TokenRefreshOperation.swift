@@ -23,53 +23,53 @@
 
 import UIKit
 
-public class SwiftOperation: NSOperation {
+open class SwiftOperation: Operation {
     
-    override public var asynchronous: Bool {
+    override open var isAsynchronous: Bool {
         return true
     }
     
-    private var _executing: Bool = false
-    override public var executing: Bool {
+    fileprivate var _executing: Bool = false
+    override open var isExecuting: Bool {
         get {
             return _executing
         }
         set {
             if _executing != newValue {
-                willChangeValueForKey("isExecuting")
+                willChangeValue(forKey: "isExecuting")
                 _executing = newValue
-                didChangeValueForKey("isExecuting")
+                didChangeValue(forKey: "isExecuting")
             }
         }
     }
     
-    private var _finished: Bool = false;
-    override public var finished: Bool {
+    fileprivate var _finished: Bool = false;
+    override open var isFinished: Bool {
         get {
             return _finished
         }
         set {
             if _finished != newValue {
-                willChangeValueForKey("isFinished")
+                willChangeValue(forKey: "isFinished")
                 _finished = newValue
-                didChangeValueForKey("isFinished")
+                didChangeValue(forKey: "isFinished")
             }
         }
     }
     
     func completeOperation () {
-        executing = true
-        finished = true
+        isExecuting = true
+        isFinished = true
     }
     
-    override public func start()
+    override open func start()
     {
-        if cancelled {
-            finished = true
+        if isCancelled {
+            isFinished = true
             return
         }
         
-        executing = true
+        isExecuting = true
         
         main()
     }
@@ -83,12 +83,12 @@ public class SwiftOperation: NSOperation {
 
 }
 
-public class TokenRefreshOperation: SwiftOperation {
+open class TokenRefreshOperation: SwiftOperation {
 
     let tokenRefreshDelegate: TokenRefreshDelegate
-    var completion: (refreshWasSuccessful: Bool) -> ()
+    var completion: (_ refreshWasSuccessful: Bool) -> ()
     
-    init(tokenRefreshDelegate: TokenRefreshDelegate, completion: (refreshWasSuccessful: Bool) -> ()) {
+    init(tokenRefreshDelegate: TokenRefreshDelegate, completion: @escaping (_ refreshWasSuccessful: Bool) -> ()) {
         self.tokenRefreshDelegate = tokenRefreshDelegate
         self.completion = completion
         super.init()
@@ -97,7 +97,7 @@ public class TokenRefreshOperation: SwiftOperation {
     override func execute() {
         
         tokenRefreshDelegate.tokenRefresh { (refreshWasSuccessful) -> () in
-            self.completion(refreshWasSuccessful: refreshWasSuccessful)
+            self.completion(refreshWasSuccessful)
             self.completeOperation()
         }
     }

@@ -26,11 +26,11 @@ import Alamofire
 
 // Protocol for API routers (this makes sure we use the same pattern always)
 public protocol RouterProtocol {
-    var method: Alamofire.Method { get }
+    var method: Alamofire.HTTPMethod { get }
     var path: String { get }
     var encoding: ParameterEncoding { get }
     var baseURLString: String { get }
-    var uploadData: (data: NSData, name: String, fileName: String, mimeType: String)? { get }
+    var uploadData: (data: Data, name: String, fileName: String, mimeType: String)? { get }
     var blockedOperation: Bool { get }
     func result(forMap map: Map) -> MappableObject?
     func failureResult(forMap map: Map) -> MappableObject?

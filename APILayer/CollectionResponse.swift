@@ -26,15 +26,15 @@ import Alamofire
 
 // We unfortunately have to use this extra class for collection parsing because Swift has problems with
 // generic types being used as generic types (A<T> as <T> in another class / method).
-public class CollectionResponse: MappableObject {
+open class CollectionResponse: MappableObject {
     
-    public let items: [AnyObject]
+    open let items: [AnyObject]
     
     required public init(map: Map) {
         
         let itemsKey = API.mapper.collectionResponseItemsKey
         
-        if let itemsArray = map.representation.valueForKeyPath(itemsKey) as? [AnyObject] {
+        if let itemsArray = map.representation.value(forKeyPath: itemsKey) as? [AnyObject] {
             // JSON is a dictionary at top level and contains the default items key
             items = itemsArray
         }
@@ -45,7 +45,7 @@ public class CollectionResponse: MappableObject {
         else {
             // None of the two cases, so that failed.
             items = []
-            map.error = APIResponseStatus.MissingKey(description: "The '\(itemsKey)' key is missing in this collection response" )
+            map.error = APIResponseStatus.missingKey(description: "The '\(itemsKey)' key is missing in this collection response" )
         }
     }
     

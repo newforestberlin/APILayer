@@ -28,16 +28,16 @@ import Foundation
 import Alamofire
 
 // Errors for this API 
-public enum APIResponseStatus: ErrorType {
-    case Success
-    case FailedRequest(statusCode: Int)
-    case UnknownProblem
-    case InvalidTopLevelJSONType
-    case MissingKey(description: String)
-    case InvalidValue(description: String)
-    case InvalidMockResponse(path: String)
-    case EncodingError(description: String)
-    case RequestFailedWithResponse(statusCode: Int, response: NSURLResponse)
+public enum APIResponseStatus: Error {
+    case success
+    case failedRequest(statusCode: Int)
+    case unknownProblem
+    case invalidTopLevelJSONType
+    case missingKey(description: String)
+    case invalidValue(description: String)
+    case invalidMockResponse(path: String)
+    case encodingError(description: String)
+    case requestFailedWithResponse(statusCode: Int, response: URLResponse)
 }
 
 // Protocol for objects that can be constructed from parsed JSON. 
@@ -50,16 +50,16 @@ extension Alamofire.Request {
     // MARK: Parsing method
     
     
-    private func callCompletionAfterJSONParsing(value: AnyObject, router: RouterProtocol, response: Response<AnyObject, NSError>,completionHandler: (request: NSURLRequest?, response: NSHTTPURLResponse?, result: MappableObject?, status: APIResponseStatus) -> Void) {
+    fileprivate func callCompletionAfterJSONParsing(_ value: AnyObject, router: RouterProtocol, response: Response<AnyObject, NSError>,completionHandler: (_ request: NSURLRequest?, _ response: HTTPURLResponse?, _ result: MappableObject?, _ status: APIResponseStatus) -> Void) {
         
         switch value {
         case let dict as [String: AnyObject]:
             // Top level type is dictionary
             
-            let map = Map(representation: dict)
+            let map = Map(representation: dict as AnyObject)
             let object = router.result(forMap: map)
             
-            if let object = object where map.error == nil {
+            if let object = object , map.error == nil {
                 // Call completion handler wiht result
                 completionHandler(request: response.request, response: response.response, result: object, status: .Success)
             } else {
@@ -83,7 +83,7 @@ extension Alamofire.Request {
                 let itemMap = Map(representation: itemDict)
                 let object = router.result(forMap: itemMap)
                 
-                if let object = object where itemMap.error == nil {
+                if let object = object , itemMap.error == nil {
                     resultArray.append(object)
                 }
             }
@@ -109,7 +109,7 @@ extension Alamofire.Request {
         
     }
     
-    public func handleJSONCompletion(router: RouterProtocol, response: Response<AnyObject, NSError>, completionHandler: (request: NSURLRequest?, response: NSHTTPURLResponse?, result: MappableObject?, status: APIResponseStatus) -> Void) {
+    public func handleJSONCompletion(_ router: RouterProtocol, response: Response<AnyObject, NSError>, completionHandler: (_ request: NSURLRequest?, _ response: HTTPURLResponse?, _ result: MappableObject?, _ status: APIResponseStatus) -> Void) {
         
         switch response.result {
         case .Success(let value):
@@ -117,7 +117,7 @@ extension Alamofire.Request {
             // Valid JSON! Does not mean that the JSON contains valid content.
             
             // Check status for success
-            if let urlResponse = response.response where urlResponse.statusCode < 200 || urlResponse.statusCode >= 300 {
+            if let urlResponse = response.response , urlResponse.statusCode < 200 || urlResponse.statusCode >= 300 {
                 // Request failed (we do not care about redirects, just do not do that on your API. Return error but also the JSON object, might be useful for debugging.
                 let error = APIResponseStatus.RequestFailedWithResponse(statusCode: urlResponse.statusCode, response: urlResponse)
                 
@@ -128,7 +128,7 @@ extension Alamofire.Request {
                     let object = router.failureResult(forMap: map)
                     
                     // If we could parse something, pass that error object
-                    if let object = object where map.error == nil {
+                    if let object = object , map.error == nil {
                         completionHandler(request: response.request, response: urlResponse, result: object, status: APIResponseStatus.FailedRequest(statusCode: urlResponse.statusCode))
                         return
                     }
@@ -145,7 +145,7 @@ extension Alamofire.Request {
             // No valid JSON.
             
             // But maybe the status code is valid, and we got no JSON Body.
-            if let urlResponse = response.response where urlResponse.statusCode >= 200 || urlResponse.statusCode < 300 {
+            if let urlResponse = response.response , urlResponse.statusCode >= 200 || urlResponse.statusCode < 300 {
                 // Status code is valid, so try to create response object from empty dict 
                 // because the client might expect that.
                 let emptyDictionary = [String:String]()
@@ -160,7 +160,7 @@ extension Alamofire.Request {
         }
     }
     
-    public func responseObject(router: RouterProtocol, completionHandler: (request: NSURLRequest?, response: NSHTTPURLResponse?, result: MappableObject?, status: APIResponseStatus) -> Void) -> Self {
+    public func responseObject(_ router: RouterProtocol, completionHandler: (_ request: NSURLRequest?, _ response: NSHTTPURLResponse?, _ result: MappableObject?, _ status: APIResponseStatus) -> Void) -> Self {
         
         
 //        return responseString { response in
@@ -183,7 +183,7 @@ extension Alamofire.Request {
             // Load JSON from mock response file
             do {
                 
-                let jsonObject: AnyObject = try NSJSONSerialization.JSONObjectWithData(mockData, options: NSJSONReadingOptions.AllowFragments)
+                let jsonObject: AnyObject = try JSONSerialization.JSONObjectWithData(mockData, options: NSJSONReadingOptions.AllowFragments)
                 
                 // Try to construct the object from the JSON structure
                 
@@ -192,10 +192,10 @@ extension Alamofire.Request {
                 case let dict as [String: AnyObject]:
                     // Top level type is dictionary
                     
-                    let map = Map(representation: dict)
+                    let map = Map(representation: dict as AnyObject)
                     let object = router.result(forMap: map)
                     
-                    if let object = object where map.error == nil {
+                    if let object = object , map.error == nil {
                         // Call completion handler wiht result
                         completionHandler(object, .Success)
                     } else {
@@ -218,7 +218,7 @@ extension Alamofire.Request {
                         let itemMap = Map(representation: itemDict)
                         let object = router.result(forMap: itemMap)
                         
-                        if let object = object where itemMap.error == nil {
+                        if let object = object , itemMap.error == nil {
                             resultArray.append(object)
                         }
                     }

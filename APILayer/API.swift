@@ -24,72 +24,75 @@
 import Foundation
 import Alamofire
 
-enum APILayerError: ErrorType {
-    case RequestFailedWithJSONValue(statusCode: Int, jsonValue: AnyObject)
+enum APILayerError: Error {
+    case requestFailedWithJSONValue(statusCode: Int, jsonValue: AnyObject)
 }
 
 // Setting the delegate is optional. If set, it can control how the API handles auth token refreshing
 public protocol TokenRefreshDelegate {
     
     // For each response the delegate is asked if it implies that token refresh is neeed. Could check for HTTP status for example.
-    func tokenRefreshIsIndicated(byResponse response: NSHTTPURLResponse) -> Bool
+    func tokenRefreshIsIndicated(byResponse response: HTTPURLResponse) -> Bool
     
     // Must refresh the token and call the completion block on failure or succcess. Should do a refresh request.
     // If refresh was successful, the waiting requests are performed in order and everything goes on. If however
     // refreshing failed, all waiting requests are cancelled and the delegates tokenRefreshHasFailed() method is called,
     // so that the app can react to that (log out for example).
-    func tokenRefresh(completion: (refreshWasSuccessful: Bool) -> ())
+    func tokenRefresh(_ completion: (_ refreshWasSuccessful: Bool) -> ())
     
     // Called if token refresh has failed. In this case all waiting requests are removed and the app should react to that.
     func tokenRefreshHasFailed()
 }
 
-// Wrapper to make NSURLRequest conform to URLRequestConvertible
+// Wrapper to make URLRequest conform to URLRequestConvertible
 class RequestWrapper: URLRequestConvertible {
-    let request: NSMutableURLRequest
-    init(request: NSMutableURLRequest) {
+    let request: URLRequest
+    init(request: URLRequest) {
         self.request = request
     }
     
-    var URLRequest: NSMutableURLRequest { return request }
+    func asURLRequest() throws -> URLRequest {
+        return request
+    }
+    
 }
 
 // This class functions as the main interface to the API layer.
-public class API {
+open class API {
     
     // Custom manager, for example if you need security policy exceptions when using unsigned SSL certificates on the backend
-    public static var customManager: Alamofire.Manager?
+    open static var customManager: Alamofire.SessionManager?
     
     // Mapper
-    public static var mapper = Mapper()
+    open static var mapper = Mapper()
     
     // If this one is set it might return mock paths for router cases, in which case the API does use mock data from local filesystem
-    public static var mocker: MockProtocol?
+    open static var mocker: MockProtocol?
     
     // The optional delegate, that controls token refresh logic
-    public static var tokenRefreshDelegate: TokenRefreshDelegate?
+    open static var tokenRefreshDelegate: TokenRefreshDelegate?
 
     // This queue is used to delay requests when a token refresh is needed. The requests are then performed after the refresh is done.
-    private static var operations = NSOperationQueue()
+    fileprivate static var operations = OperationQueue()
     
     // If this is set, we are currently refreshing the token
-    private static var tokenRefreshOperation: NSOperation?
+    fileprivate static var tokenRefreshOperation: Operation?
     
     // MARK: Request creation from routers
 
-    private class func createRequest(forRouter router: RouterProtocol) -> Request {
+    fileprivate class func createRequest(forRouter router: RouterProtocol) -> Request {
         
         // Make sure the operation queue is sequential
         API.operations.maxConcurrentOperationCount = 1
         
         // Get base URL
-        let URL = NSURL(string: router.path, relativeToURL: NSURL(string: router.baseURLString))
+        let baseURL = URL(string: router.path, relativeTo: URL(string: router.baseURLString))
         
         // Create request
-        let mutableURLRequest = NSMutableURLRequest(URL: URL!)
+        var mutableURLRequest = URLRequest(url: baseURL!)
 
         // Get method for this case
-        mutableURLRequest.HTTPMethod = router.method.rawValue
+        mutableURLRequest.httpMethod = router.method.rawValue
         
         // Add optional header values
         for (headerKey, headerValue) in API.mapper.headersForRouter(router) {
@@ -98,18 +101,26 @@ public class API {
         
         let parameters = API.mapper.parametersForRouter(router)
         let encoding = router.encoding
-        let requestTuple = encoding.encode(mutableURLRequest, parameters: parameters)
+        
+        /// - returns: The encoded request.
+        //public func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest
+        
+        do {
+            let encodedRequest = try encoding.encode(mutableURLRequest, with: parameters)
 
-        if let customManager = API.customManager {
-            return customManager.request(RequestWrapper(request: requestTuple.0))
-        } else {
-            return Alamofire.request(RequestWrapper(request: requestTuple.0))
+            if let customManager = API.customManager {
+                return customManager.request(RequestWrapper(request: encodedRequest))
+            } else {
+                return Alamofire.request(RequestWrapper(request: encodedRequest))
+            }
+        }
+        catch {
         }
     }
     
     // MARK: Request performing 
     
-    internal class func performRouter(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, MappableObject?, APIResponseStatus) -> ()) {
+    internal class func performRouter(_ router: RouterProtocol, complete: @escaping (URLRequest?, HTTPURLResponse?, MappableObject?, APIResponseStatus) -> ()) {
         
         // Do the actual request
         let request = API.createRequest(forRouter: router)
@@ -120,35 +131,33 @@ public class API {
             // TODO: Needs token refresh logic!
             
             if let urlRequest = request.request {
-                Alamofire.upload(urlRequest,
-                    
-                    multipartFormData: { (formData: MultipartFormData) -> Void in
-                        formData.appendBodyPart(data: uploadData.data, name: uploadData.name, fileName: uploadData.fileName, mimeType: uploadData.mimeType)
+                Alamofire.upload(multipartFormData: { (formData: MultipartFormData) -> Void in
+                    formData.append(uploadData.data, withName: uploadData.name, fileName: uploadData.fileName, mimeType: uploadData.mimeType)
                     },
+                                 
+                    usingThreshold: SessionManager.multipartFormDataEncodingMemoryThreshold,
                     
-                    encodingMemoryThreshold: Manager.MultipartFormDataEncodingMemoryThreshold,
-                    
-                    encodingCompletion: { (encodingResult) -> Void in
+                    with: urlRequest, encodingCompletion: { (encodingResult) -> Void in
                         
                         switch encodingResult {
-                        case .Success(let uploadRequest, _, _):
+                        case .success(let uploadRequest, _, _):
                             
                             uploadRequest.responseJSON(completionHandler: { response in
                                 uploadRequest.handleJSONCompletion(router, response: response, completionHandler: complete)
                             })
                             
-                        case .Failure(let encodingError):
+                        case .failure(let encodingError):
                             // TODO: Need better description here
-                            complete(nil, nil, nil, APIResponseStatus.EncodingError(description: "Failed"))
+                            complete(nil, nil, nil, APIResponseStatus.encodingError(description: "Failed"))
                         }
-                    }
-                )
+                })
+                
             }
             
         } else {
             
             // Get the response object
-            request.responseObject(router) { (request: NSURLRequest?, response: NSHTTPURLResponse?, result: MappableObject?, status: APIResponseStatus) in
+            request.responseObject(router) { (request: URLRequest?, response: HTTPURLResponse?, result: MappableObject?, status: APIResponseStatus) in
                 
                 if let response = response, let tokenRefreshDelegate = self.tokenRefreshDelegate {
                     
@@ -187,14 +196,14 @@ public class API {
     
     // MARK: Request enqueueing
     
-    private class func enqueueRouter(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, result: MappableObject?, status: APIResponseStatus) -> ()) {
+    fileprivate class func enqueueRouter(_ router: RouterProtocol, complete: @escaping (URLRequest?, HTTPURLResponse?, _ result: MappableObject?, _ status: APIResponseStatus) -> ()) {
         
-        var routerOperation: NSOperation?
+        var routerOperation: Operation?
         
         if router.blockedOperation {
             routerOperation = BlockedRouterOperation(router: router, completion: complete)
         } else {
-            routerOperation = NSBlockOperation(block: {
+            routerOperation = BlockOperation(block: {
                 self.performRouter(router, complete: complete)
             })
         }
@@ -210,7 +219,7 @@ public class API {
     
     // MARK: Private request method. If there is a mocker, looks there. If not existing, enqueues the router.
     
-    private class func completeRequest(router: RouterProtocol, complete: (NSURLRequest?, NSHTTPURLResponse?, MappableObject?, APIResponseStatus) -> ()) {
+    fileprivate class func completeRequest(_ router: RouterProtocol, complete: @escaping (URLRequest?, HTTPURLResponse?, MappableObject?, APIResponseStatus) -> ()) {
         
         if let mocker = API.mocker, let path = mocker.path(forRouter: router) {
             let request = API.createRequest(forRouter: router)
@@ -226,7 +235,7 @@ public class API {
     
     // MARK: Public request methods
     
-    public class func tokenRefresh(router: RouterProtocol, complete: (result: MappableObject?, status: APIResponseStatus) -> ()) {
+    open class func tokenRefresh(_ router: RouterProtocol, complete: @escaping (_ result: MappableObject?, _ status: APIResponseStatus) -> ()) {
 
         // This method must be used by the actual token refresh logic in the app. 
         // It does not use the operation queue used for other requests.
@@ -243,19 +252,19 @@ public class API {
     }
     
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
-    public class func request(router: RouterProtocol, complete: (result: MappableObject?, status: APIResponseStatus) -> ()) {
+    open class func request(_ router: RouterProtocol, complete: @escaping (_ result: MappableObject?, _ status: APIResponseStatus) -> ()) {
         
         API.completeRequest(router) { (urlRequest, urlResponse, result: MappableObject?, status: APIResponseStatus) -> () in
-            complete(result: result, status: status)
+            complete(result, status)
         }
     }
 
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
     // This version also gives the http response to the completion block
-    public class func request(router: RouterProtocol, complete: (result: MappableObject?, status: APIResponseStatus, urlResponse: NSHTTPURLResponse?) -> ()) {
+    open class func request(_ router: RouterProtocol, complete: @escaping (_ result: MappableObject?, _ status: APIResponseStatus, _ urlResponse: HTTPURLResponse?) -> ()) {
 
         API.completeRequest(router) { (urlRequest, urlResponse, result, status) -> () in
-            complete(result: result, status: status, urlResponse: urlResponse)
+            complete(result, status, urlResponse)
         }
 
     }
@@ -263,7 +272,7 @@ public class API {
     // MARK: Methods to help with debugging
     
 
-    public class func requestString(router: RouterProtocol, complete: (String?, ErrorType?) -> ()) {
+    open class func requestString(_ router: RouterProtocol, complete: @escaping (String?, Error?) -> ()) {
         
         let request = API.createRequest(forRouter: router)
         
@@ -274,7 +283,7 @@ public class API {
     }
     
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
-    public class func requestStatus(router: RouterProtocol, complete: (Int?, ErrorType?) -> ()) {
+    open class func requestStatus(_ router: RouterProtocol, complete: @escaping (Int?, Error?) -> ()) {
         
         let request = API.createRequest(forRouter: router)
         
