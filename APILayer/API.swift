@@ -245,6 +245,8 @@ open class API {
         
         let request = API.createRequest(forRouter: router)
         
+        
+        
         request.responseObject(router) { (request, response, result, status) -> Void in
             complete(result: result, status: status)
         }
@@ -274,29 +276,29 @@ open class API {
 
     open class func requestString(_ router: RouterProtocol, complete: @escaping (String?, Error?) -> ()) {
         
-        let request = API.createRequest(forRouter: router)
-        
-        request.responseString { response in            
-            print("Response String: \(response.result.value)")
-            complete(response.result.value, nil)
-        }
+        complete(nil, nil)
+
+//        let request = API.createRequest(forRouter: router)
+//        request.responseString { response in
+//            print("Response String: \(response.result.value)")
+//            complete(response.result.value, nil)
+//        }
     }
     
     // Performs request with the specified Router. Completion block is called in case of success / failure later on.
     open class func requestStatus(_ router: RouterProtocol, complete: @escaping (Int?, Error?) -> ()) {
         
-        let request = API.createRequest(forRouter: router)
+        let request = API.createRequest(forRouter: router) as! DataRequest
         
 //        request.responseString { response in
 //            print("Response String: \(response.result.value)")
 //        }
-//        
-        
-        request.response { (urlRequest, urlResponse, data, errorType) -> Void in
-            let statusCode = urlResponse?.statusCode
-            complete(statusCode, errorType)
+
+        request.response { (response) in
+            let statusCode = response.response?.statusCode
+            complete(statusCode, response.error)
         }
-        
+//
     }
     
 }

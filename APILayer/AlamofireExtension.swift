@@ -45,7 +45,7 @@ public protocol MappableObject {
     init(map: Map)
 }
 
-extension Alamofire.Request {
+extension Alamofire.DataRequest {
     
     // MARK: Parsing method
     
@@ -91,8 +91,8 @@ extension Alamofire.Request {
             if resultArray.count == array.count {
                 
                 // Construct collection entity to wrap the array
-                let collection = CollectionEntity(map: Map(representation: []))
-                collection.items.appendContentsOf(resultArray)
+                let collection = CollectionEntity(map: Map(representation: [String: AnyObject]() as AnyObject))
+                collection.items.append(contentsOf: resultArray)
                 
                 // Call completion handler wiht result
                 completionHandler(request: response.request, response: response.response, result: collection, status: .Success)
@@ -109,39 +109,39 @@ extension Alamofire.Request {
         
     }
     
-    public func handleJSONCompletion(_ router: RouterProtocol, response: Response<AnyObject, NSError>, completionHandler: (_ request: NSURLRequest?, _ response: HTTPURLResponse?, _ result: MappableObject?, _ status: APIResponseStatus) -> Void) {
+    public func handleJSONCompletion(_ router: RouterProtocol, response: DataResponse<Any>, completionHandler: (_ request: URLRequest?, _ response: HTTPURLResponse?, _ result: MappableObject?, _ status: APIResponseStatus) -> Void) {
         
         switch response.result {
-        case .Success(let value):
+        case .success(let value):
             
             // Valid JSON! Does not mean that the JSON contains valid content.
             
             // Check status for success
             if let urlResponse = response.response , urlResponse.statusCode < 200 || urlResponse.statusCode >= 300 {
                 // Request failed (we do not care about redirects, just do not do that on your API. Return error but also the JSON object, might be useful for debugging.
-                let error = APIResponseStatus.RequestFailedWithResponse(statusCode: urlResponse.statusCode, response: urlResponse)
+                let error = APIResponseStatus.requestFailedWithResponse(statusCode: urlResponse.statusCode, response: urlResponse)
                 
                 // If the response is a dictionary we try to parse it
                 if let dict = value as? [String: AnyObject] {
 
-                    let map = Map(representation: dict)
+                    let map = Map(representation: dict as AnyObject)
                     let object = router.failureResult(forMap: map)
                     
                     // If we could parse something, pass that error object
                     if let object = object , map.error == nil {
-                        completionHandler(request: response.request, response: urlResponse, result: object, status: APIResponseStatus.FailedRequest(statusCode: urlResponse.statusCode))
+                        completionHandler(response.request, urlResponse, object, APIResponseStatus.failedRequest(statusCode: urlResponse.statusCode))
                         return
                     }
                 }
                 
-                completionHandler(request: response.request, response: urlResponse, result: nil, status: APIResponseStatus.FailedRequest(statusCode: urlResponse.statusCode))
+                completionHandler(response.request, urlResponse, nil, APIResponseStatus.failedRequest(statusCode: urlResponse.statusCode))
                 return
             }
             
             // Try to construct object from JSON structure
             callCompletionAfterJSONParsing(value, router: router, response: response, completionHandler: completionHandler)
             
-        case .Failure(let error):
+        case .failure(let error):
             // No valid JSON.
             
             // But maybe the status code is valid, and we got no JSON Body.
@@ -154,13 +154,13 @@ extension Alamofire.Request {
                 // Let router know that a request failed (in case ui wants to visualize that)
                 router.requestFailed()
                 
-                let apiError = APIResponseStatus.InvalidValue(description: error.localizedDescription)
-                completionHandler(request: response.request, response: response.response, result: nil, status: apiError)
+                let apiError = APIResponseStatus.invalidValue(description: error.localizedDescription)
+                completionHandler(response.request, response.response, nil, apiError)
             }
         }
     }
     
-    public func responseObject(_ router: RouterProtocol, completionHandler: (_ request: NSURLRequest?, _ response: NSHTTPURLResponse?, _ result: MappableObject?, _ status: APIResponseStatus) -> Void) -> Self {
+    public func responseObject(_ router: RouterProtocol, completionHandler: @escaping (_ request: URLRequest?, _ response: HTTPURLResponse?, _ result: MappableObject?, _ status: APIResponseStatus) -> Void) -> Self {
         
         
 //        return responseString { response in
@@ -171,6 +171,7 @@ extension Alamofire.Request {
 //        return responseString(completionHandler: { response in
 //            self.handleJSONCompletion(router, response: response, completionHandler: completionHandler)
 //        })
+        
         return responseJSON(completionHandler: { response in
             self.handleJSONCompletion(router, response: response, completionHandler: completionHandler)
         })        
@@ -183,7 +184,7 @@ extension Alamofire.Request {
             // Load JSON from mock response file
             do {
                 
-                let jsonObject: AnyObject = try JSONSerialization.JSONObjectWithData(mockData, options: NSJSONReadingOptions.AllowFragments)
+                let jsonObject: Any = try JSONSerialization.jsonObject(with: mockData as Data, options: JSONSerialization.ReadingOptions.allowFragments)
                 
                 // Try to construct the object from the JSON structure
                 
@@ -197,7 +198,7 @@ extension Alamofire.Request {
                     
                     if let object = object , map.error == nil {
                         // Call completion handler wiht result
-                        completionHandler(object, .Success)
+                        completionHandler(object, .success)
                     } else {
                         if let error = map.error {
                             // Call completion handler with error result
@@ -205,7 +206,7 @@ extension Alamofire.Request {
                         }
                         else {
                             // Call completion handler with error result
-                            completionHandler(nil, APIResponseStatus.UnknownProblem)
+                            completionHandler(nil, APIResponseStatus.unknownProblem)
                         }
                     }
                     
@@ -226,20 +227,20 @@ extension Alamofire.Request {
                     if resultArray.count == array.count {
                         
                         // Construct collection entity to wrap the array
-                        let collection = CollectionEntity(map: Map(representation: []))
-                        collection.items.appendContentsOf(resultArray)
+                        let collection = CollectionEntity(map: Map(representation: [String: AnyObject]() as AnyObject))
+                        collection.items.append(contentsOf: resultArray)
                         
                         // Call completion handler wiht result
-                        completionHandler(collection, .Success)
+                        completionHandler(collection, .success)
                     } else {
                         // Call completion handler with error result
-                        completionHandler(nil, APIResponseStatus.UnknownProblem)
+                        completionHandler(nil, APIResponseStatus.unknownProblem)
                     }
                     
                 default:
                     
                     // Call completion handler with error result
-                    completionHandler(nil, APIResponseStatus.InvalidTopLevelJSONType)
+                    completionHandler(nil, APIResponseStatus.invalidTopLevelJSONType)
                 }
 
                 
@@ -257,7 +258,7 @@ extension Alamofire.Request {
             }
             catch {
                 
-                let apiError = APIResponseStatus.InvalidMockResponse(path: path)
+                let apiError = APIResponseStatus.invalidMockResponse(path: path)
                 completionHandler(nil, apiError)
             }            
         }
