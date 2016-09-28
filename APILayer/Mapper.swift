@@ -144,7 +144,7 @@ open class Mapper {
     
     // MARK: Parameters for routers
     
-    open func parametersForRouter(_ router: RouterProtocol) -> [String : AnyObject]? {
+    open func parametersForRouter(_ router: RouterProtocol) -> [String : Any]? {
         print("You need to implement the method parametersForRouter() in your Mapper subclass in order to have parameters in your requests")
         return nil
     }

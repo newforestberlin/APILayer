@@ -38,7 +38,8 @@ public protocol TokenRefreshDelegate {
     // If refresh was successful, the waiting requests are performed in order and everything goes on. If however
     // refreshing failed, all waiting requests are cancelled and the delegates tokenRefreshHasFailed() method is called,
     // so that the app can react to that (log out for example).
-    func tokenRefresh(_ completion: (_ refreshWasSuccessful: Bool) -> ())
+    //func tokenRefresh(_ completion: (_ refreshWasSuccessful: Bool) -> ())
+    func tokenRefresh(_ completion: @escaping (_ refreshWasSuccessful: Bool) -> ())
     
     // Called if token refresh has failed. In this case all waiting requests are removed and the app should react to that.
     func tokenRefreshHasFailed()
