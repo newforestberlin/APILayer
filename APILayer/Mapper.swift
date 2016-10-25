@@ -288,7 +288,11 @@ open class Mapper {
     
     open func value<T: MappableObject>(fromRepresentation representation: AnyObject, key: String, error: inout APIResponseStatus?) -> [T] {
         
-        if let validObject: Any = representation.value(forKey: key), let validAnyObjectArray = validObject as? AnyObject {
+        let validObject = representation.value(forKey: key)
+        
+        if validObject != nil {
+            
+            let validAnyObjectArray = validObject as AnyObject
             
             let validArray: [T]? = entityArray(fromRepresentation: validAnyObjectArray)
             if let validArray = validArray{
@@ -297,7 +301,6 @@ open class Mapper {
             else {
                 error = APIResponseStatus.invalidValue(description: "Could not parse entity array for key '\(key)'. Value is invalid.")
             }
-            
         }
         
         error = APIResponseStatus.missingKey(description: "Could not parse entity array for key '\(key)'. Key is missing.")
